@@ -1,0 +1,3 @@
+<span *ngIf="stateLocalstorage() === 'false' || stateLocalstorage() === 'null'"><a class="nav-link-name"
+    (click)="openConnector()">Connect</a></span>
+<span class="nav-link-name" *ngIf="stateLocalstorage() === 'true'"><a (click)="descWallet()">Disconnect</a></span>

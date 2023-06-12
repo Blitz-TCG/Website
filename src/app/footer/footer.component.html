@@ -1,0 +1,15 @@
+<footer *ngIf="general$ | async as general">
+  <a data-analytics-title="discord" class="icon-footer-discord" [href]="general['discord-link']" target="_blank">
+  </a>
+  <a data-analytics-title="youtube" class="icon-footer-yt" [href]="general['youtube-link']" target="_blank">
+  </a>
+  <a data-analytics-title="youtube" class="icon-footer-twitter" [href]="general['twitter-link']" target="_blank">
+  </a>
+  <ul class="footer-list">
+    <li *ngFor="let item of footerMenu$ | async"><a [href]="item.url" [class.disabled]="item.disabled" (click)="clickOnFooter(item.disabled)">
+        <!-- <span class="disabled-text">Coming soon!</span> -->
+        <span class="link-text">{{item.name}}</span></a>
+    </li>
+  </ul>
+  <p class="text-xs-center">{{general['copyright-text']}}</p>
+</footer>

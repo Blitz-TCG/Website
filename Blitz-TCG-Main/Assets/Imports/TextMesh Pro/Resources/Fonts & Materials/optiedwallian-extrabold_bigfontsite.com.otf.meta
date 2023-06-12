@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: bf42a57c99f6fcb429d3374a657c906d
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - OPTIEdwallian
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 3918df6b71141fc488486e8a2db0b4a0, type: 3}
+  - {fileID: 12800000, guid: 674754ed4ec95584ca9098490ee8c745, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

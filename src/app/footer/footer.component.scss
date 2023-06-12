@@ -1,0 +1,119 @@
+footer {
+  text-align: center;
+  color: #fff;
+  position: relative;
+  background-position: bottom;
+  background-size: cover;
+  background-image: url(/assets/Footer_BG.png);
+  background-repeat: no-repeat;
+  z-index: 99999;
+  &::before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background-position: top;
+    background-size: cover;
+    background-image: url(/assets/Footer_Border_top.png);
+    top: 0px;
+    left: 0;
+  }
+  &::after {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background-position: bottom;
+    background-size: cover;
+    background-image: url(/assets/Footer_Border_Bottom.png);
+    bottom: 0;
+    left: 0;
+  }
+  a:not(.btn-play),
+  .t-black .footer p {
+    font-size: 16px;
+    line-height: normal;
+    text-align: center;
+    text-shadow: 0.342px 0.94px 2px rgb(0 0 0 / 0%);
+  }
+  p {
+    margin: 0px;
+    padding: 10px 0px;
+    color: #556e8a;
+    font-size: 14px;
+  }
+  & > a {
+    z-index: 99999;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    background-position: center;
+    background-size: cover;
+    width: 53px;
+    height: 53px;
+    top: -21px;
+    margin: 0px 10px;
+    transition: all 0.3s ease-in-out;
+    &.icon-footer-yt {
+      background-image: url("/assets/Footer_Youtube_btn_not pressed.png");
+    }
+    &:hover.icon-footer-yt {
+      background-image: url("/assets/Footer_Youtube_btn_pressed.png");
+    }
+    &.icon-footer-twitter {
+      background-image: url("/assets/Footer_Tweeter_btn_not pressed.png");
+    }
+    &:hover.icon-footer-twitter {
+      background-image: url("/assets/Footer_Tweeter_btn_pressed.png");
+    }
+    &.icon-footer-discord {
+      background-image: url("/assets/Footer_Discord_btn_not pressed.png");
+    }
+    &:hover.icon-footer-discord {
+      background-image: url("/assets/Footer_Discord_btn_pressed.png");
+    }
+  }
+}
+
+.footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  li {
+    z-index: 99999;
+    a {
+      color: #7d7d7d;
+      margin: 0 5px;
+      text-decoration: none;
+      position: relative;
+      text-align: center;
+      .disabled-text {
+        position: absolute;
+        opacity: 0;
+        color: #7d7d7d;
+        width: 100%;
+      }
+      .link-text {
+        opacity: 1;
+        transition: all 0.3s ease-in-out;
+      }
+      &.disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+        text-decoration: none;
+      }
+      // &.disabled:hover {
+      //   .disabled-text {
+      //     opacity: 1;
+      //   }
+      //   .link-text {
+      //     opacity: 0;
+      //   }
+      // }
+    }
+  }
+}

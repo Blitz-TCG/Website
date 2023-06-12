@@ -1,0 +1,70 @@
+<div class="header container" #stickySlider [class.sticky]="sticky" *ngIf="general$ | async as general"
+  [ngStyle]="{'background-image': 'url(' + (general['roadmapImage'] | async)+ ')'}">
+  <div class="blurriness blurriness-left"></div>
+  <div class="header-container">
+    <!-- <img src="assets/Page_Header_Image.png" alt="" srcset=""> -->
+  </div>
+  <div class="blurriness blurriness-right"></div>
+</div>
+<div class="intro">
+  <h1 class="header-title">Roadmap</h1>
+  <div class="intro-box" *ngIf="general$ | async as general">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <p class="intro-text"> {{general['roadmap-intro']}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page-content">
+  <div class="container">
+    <div class="milestones-container" *ngIf="roadmap$ | async as roadmap">
+      <div class="row milestone">
+        <!-- <span [ngStyle]="{'background-image': 'url(' + roadmap[0]['image'] + ')', 'background-position': 'left'}"
+          ></span> -->
+        <div class="col-12 col-sm-5">
+          <img [src]="roadmap[0]['image'] | async" class="milestone-image" alt="">
+        </div>
+        <div class="col-12 col-sm-7">
+          <h2 class="milestone-title">{{roadmap[0]['title']}}</h2>
+          <p class="milestone-paragraph">{{roadmap[0]['description']}}</p>
+        </div>
+      </div>
+      <div class="row milestone">
+        <div class="col-12 col-sm-5 col-mobile-image">
+          <img [src]="roadmap[1]['image'] | async" class="milestone-image" alt="">
+        </div>
+        <div class="col-12 col-sm-7">
+          <h2 class="milestone-title">{{roadmap[1]['title']}}</h2>
+          <p class="milestone-paragraph">{{roadmap[1]['description']}}</p>
+        </div>
+        <div class="col-12 col-sm-5 col-desktop-image">
+          <img [src]="roadmap[1]['image'] | async" class="milestone-image" alt="">
+        </div>
+      </div>
+      <div class="row milestone">
+        <div class="col-12 col-sm-5">
+          <img [src]="roadmap[2]['image'] | async" class="milestone-image" alt="">
+        </div>
+        <div class="col-12 col-sm-7">
+          <h2 class="milestone-title">{{roadmap[2]['title']}}</h2>
+          <p class="milestone-paragraph">{{roadmap[2]['description']}}</p>
+        </div>
+      </div>
+      <div class="row milestone">
+        <div class="col-12 col-sm-5 col-mobile-image">
+          <img [src]="roadmap[3]['image'] | async" class="milestone-image" alt="">
+        </div>
+        <div class="col-12 col-sm-7">
+          <h2 class="milestone-title">{{roadmap[3]['title']}}</h2>
+          <p class="milestone-paragraph">{{roadmap[3]['description']}}</p>
+        </div>
+        <div class="col-12 col-sm-5 col-desktop-image">
+          <img [src]="roadmap[3]['image'] | async" class="milestone-image" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

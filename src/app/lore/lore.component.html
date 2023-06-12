@@ -1,0 +1,83 @@
+<div class="header container" [class.sticky]="sticky">
+    <div class="select-story container">
+        <h1 class="title">Select a Story</h1>
+        <swiper class="stories-covers" #swiper [config]="config" (slideChange)="onSlideChange()">
+            <ng-template swiperSlide *ngFor="let book of booksData$ | async ;index as i;">
+                <div class="cover-container cover-container-web" (click)="selectStory(book)">
+                    <div class="cover-content">
+                        <h3 class="cover-title" [style.fontSize]="book['title-size']+'%'">{{book.title}}</h3>
+                        <p class="cover-text" [style.fontSize]="book['excerpt-size']+'%'">{{book.excerpt}}</p>
+                    </div>
+                    <span class="cover-highlight"
+                        *ngIf="(selectedCover != book.position && selectedCover != null) || (selectedCover == null && i!= 0)"></span>
+                    <img class="main" [src]="'/assets/'+book.cover" alt="">
+                </div>
+                <div class="cover-container cover-container-mobile">
+                    <img class="main" [src]="'/assets/'+book.cover" alt="" (click)="selectMobileStory(book)">
+                    <img class="main" class="book-bg-mobile" *ngIf="showMobileBook" src="/assets/Book_Mobile_book.png"
+                        alt="">
+                    <div class="book-container-mobile" *ngIf="showMobileBook && mobilePages.length > 0">
+                        <div *ngFor="let page of mobilePages; index as i">
+                            <div class="book-text" *ngIf="selectedMobilePage == i">
+                                <div *ngFor="let p of page; first as isFirst">
+                                    <p class="page-paragraph-mobile"
+                                        [ngClass]="{'paragraph-space': p.substring(0, 2) == '##'}">
+                                        {{p.replace("##","")}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="page-arrow page-arrow-next" *ngIf="selectedMobilePage < mobilePages.length -1"
+                            (click)="pageMobileNext()"></span>
+                        <span class="page-arrow page-arrow-prev" *ngIf="selectedMobilePage > 0"
+                            (click)="pageMobilePrev()"></span>
+                    </div>
+                    <span class="cover-highlight"
+                        *ngIf="(selectedCover != book.position && selectedCover != null) || (selectedCover == null && i!= 0)"></span>
+                </div>
+            </ng-template>
+        </swiper>
+    </div>
+</div>
+<div class="container story-section">
+    <div class="stories-container">
+        <audio id="flip-sound">
+            <source src="/assets/book_page-45210.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="close-sound">
+            <source src="/assets/book-closing-48311.mp3" type="audio/mpeg">
+        </audio>
+        <div class="book-bg-container">
+            <div *ngFor="let book of  booksData$ | async;">
+                <div class="book-bg cover" (click)="openCover(book.position)" [ngStyle]="getStyle(book.cover)"
+                    *ngIf="selectedCover == book.position">
+                </div>
+            </div>
+            <div id="book-opening" class="book-bg book-opening"></div>
+            <div id="flip" class="book-bg flip" *ngIf="selectedPages != null"></div>
+        </div>
+        <div *ngIf="selectedCoverContainer && (booksData$ | async)[selectedCoverContainer -1]?.pages?.length > 0">
+            <div *ngFor="let page of (booksData$ | async)[selectedCoverContainer -1]?.pages; index as i">
+                <div class="story-content">
+                    <div class="pages-container" *ngIf="selectedPages == i">
+                        <div class="page-content left-page">
+                            <div *ngFor="let p of page.left; first as isFirst">
+                                <p class="page-paragraph" [ngClass]="{'paragraph-space': p.substring(0, 2) == '##'}">
+                                    {{p.replace("##","")}}</p>
+                            </div>
+                        </div>
+                        <div class="page-content right-page">
+                            <div *ngFor="let p of page.right; first as isFirst">
+                                <p class="page-paragraph" [ngClass]="{'paragraph-space': p.substring(0, 2) == '##'}">
+                                    {{p.replace("##","")}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span class="flip-arrow flip-arrow-next"
+                *ngIf="selectedPages < ((booksData$ | async)[selectedCoverContainer -1]?.pages?.length -1)"
+                (click)="flipNext()"></span>
+            <span class="flip-arrow flip-arrow-prev" *ngIf="selectedPages > 0" (click)="flipPrev()"></span>
+        </div>
+    </div>
+</div>

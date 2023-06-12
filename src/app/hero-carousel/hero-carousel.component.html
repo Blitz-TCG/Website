@@ -1,0 +1,22 @@
+<div class="slider container" #stickySlider [class.sticky]="sticky">
+  <div class="blurriness blurriness-left"></div>
+
+  <swiper #swiper [spaceBetween]="30" [pagination]="{ clickable: true }" [autoplay]="{
+  delay: 5000,
+  disableOnInteraction: false
+}">
+    <ng-template swiperSlide *ngFor="let slide of homeSlider$ | async">
+      <div class="slide-container desktop-image"
+        [ngStyle]="{'background-image': 'url(' + (slide.image | async)  + ')'}">
+      </div>
+      <div class="slide-container mobile-image"
+        [ngStyle]="{'background-image': 'url(' + (slide.imageMobile| async) + ')'}">
+      </div>
+    </ng-template>
+  </swiper>
+  <div class="blurriness blurriness-right"></div>
+  <div class=" swiper-buttons">
+    <button class="swiper-button next" (click)="slidePrev()"></button>
+    <button class="swiper-button prev" (click)="slideNext()"> </button>
+  </div>
+</div>
