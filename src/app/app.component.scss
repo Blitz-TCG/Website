@@ -1,0 +1,53 @@
+:host {
+  & > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-content: stretch;
+    min-height: 100vh;
+    &.auth-container {
+      background-image: url(/assets/login_reg_page_BG.png);
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+    }
+  }
+  &::after {
+    content: " ";
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      rgb(14 11 21) 3%,
+      transparent 10%,
+      transparent 90%,
+      rgb(14 11 21) 97%,
+      rgb(14 11 21)
+    );
+    position: absolute;
+    top: 0;
+    z-index: 1;
+  }
+}
+.app-container-loading {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+.loading-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #000000;
+  position: absolute;
+  width: 100%;
+  z-index: 9999999;
+  height: 100vh;
+  img {
+    width: 100%;
+    max-width: 300px;
+  }
+}

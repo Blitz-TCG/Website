@@ -1,0 +1,18 @@
+.nav-link-name {
+  font-family: "OPTIEdwallianExtraBold" !important;
+  text-decoration: none;
+  background: linear-gradient(
+    to bottom,
+    #cfc09f 22%,
+    #c3a776 24%,
+    #cfc09f 26%,
+    #cfc09f 27%,
+    #ffecb3 40%,
+    #ca9c3d 78%
+  ) !important;
+  -webkit-background-clip: text !important;
+  // &:hover {
+  //   background: none !important;
+  //   -webkit-text-fill-color: #efe6ed !important;
+  // }
+}

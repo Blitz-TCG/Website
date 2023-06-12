@@ -1,0 +1,51 @@
+<div class="auth-container" #stickyElem [class.sticky]="sticky">
+  <div class="container">
+    <div class="form-container">
+      <div class="form-block">
+        <div class="auth-block">
+          <!-- <h3 class="form-title">Sign In</h3> -->
+          <form [formGroup]="signinForm" (submit)="submit()" #myForm="ngForm">
+            <div class="input-container">
+              <input type="email" class="form-control" placeholder="Email Address" required maxlength="64"
+                formControlName="email" tabindex="1" #input autocomplete="Email Address" autofocus>
+              <div *ngIf="email?.invalid && myForm.submitted" class="input-error-container">
+                <div class="text-danger" *ngIf="email?.errors?.['required']">
+                  Missing Email.
+                </div>
+                <div class="text-danger" *ngIf="email?.errors?.['maxLength']">
+                  Email address too long.
+                </div>
+                <div class="text-danger" *ngIf="email?.errors?.['pattern']">
+                  Invalid Email.
+                </div>
+              </div>
+            </div>
+            <div class="input-container">
+              <input type="password" class="form-control" placeholder="Password" formControlName="password" autocomplete="Password" tabindex="2"
+                required>
+              <div *ngIf="password?.invalid && myForm.submitted" class="input-error-container">
+                <div class="text-danger" *ngIf="password?.errors?.['required']">
+                  Missing Password.
+                </div>
+              </div>
+            </div>
+            <div class="input-container" *ngIf="errorMessage">
+              <div class="text-danger">
+                {{errorMessage}}
+              </div>
+            </div>
+            <!-- Calling SignIn Api from AuthService -->
+            <div class="submit-container">
+              <input type="button" class="btn submit-btn" [ngClass]="{'submitted': myForm.submitted}" value="Sign In"
+                type="submit" tabindex="5" />
+              <button type="button" class="btn back-btn" routerLink="/register-user" tabindex="5">Register</button>
+            </div>
+            <div *ngIf="!signinForm.valid && myForm.submitted" class="form-error-message">
+              Please resolve the errors
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

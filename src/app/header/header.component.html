@@ -1,0 +1,115 @@
+<header class="header" #stickyMenu [class.sticky]="sticky">
+  <nav class="navbar navbar-expand-md">
+    <div class="navbar-container container">
+      <a class="navbar-brand" href="#">
+        <img src="assets/Header_Logo.png" alt="" srcset="">
+      </a>
+      <button class="navbar-toggler" [ngClass]="{'collapsed': navbarCollapsed}" type="button" data-toggle="collapse"
+        data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-label="Toggle navigation"
+        (click)="navbarCollapsed = !navbarCollapsed" [attr.aria-expanded]="!navbarCollapsed">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-list"
+          viewBox="0 0 16 16">
+          <path fill-rule="evenodd" fill="#fff"
+            d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+        </svg>
+      </button>
+      <div class="collapse navbar-collapse" [ngClass]="{'show': navbarCollapsed}" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item" *ngFor="let item of items$ | async; let i = index"
+            [ngClass]="{'show-sub-items': activeIndex === i, 'active': activeIndex === i, 'disabled': item.disabled}">
+            <span class="tooltip-message" *ngIf="item['disabled']">Coming soon!</span>
+            <a class="nav-link" (click)="clickOnMenu(i,item.disabled, item['sub-menu']?.length )">
+              <span class="nav-link-text">
+                <span class="nav-link-name">{{item.name}}</span>
+                <span *ngIf="item['sub-menu']?.length > 0" [class]="'nav-icon-arrow nav-icon-down-arrow'"></span>
+              </span>
+            </a>
+            <ul class="nav-sub-items" *ngIf="item['sub-menu']?.length > 0">
+              <li class="nav-sub-item" *ngFor="let subItem of item['sub-menu']"
+                [ngClass]="{'disabled': subItem.disabled}">
+                <span class="tooltip-message">Coming soon!</span>
+                <a *ngIf="subItem.external" target="_blank" [href]="subItem.url"
+                  (click)="clickOnMenu(i,subItem.disabled)">{{subItem.name}}</a>
+                <a *ngIf="!subItem.external" [routerLink]="subItem.url"
+                  (click)="clickOnMenu(i,subItem.disabled)">{{subItem.name}}</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="navbar-nav profile-info ms-auto">
+          <li [ngStyle]="{'padding':authService.userData ? '0px 12px': '0px'}" class="connect-link nav-item">
+            <a *ngIf="authService.userData" class="nav-link" (click)="clickOnMenu(90,false)">
+              <span class="nav-link-text">
+                <span class="nav-link-name">
+                  <app-connector></app-connector>
+                </span>
+              </span>
+            </a>
+          </li>
+          <li *ngIf="!authService.userData" class="nav-item mobile-sign-in-btn">
+            <a class="nav-link" routerLink="/sign-in" (click)="clickOnMenu(90,false)">
+              <span class="nav-link-text">
+                <span class="nav-link-name">
+                  Sign In
+                </span>
+              </span>
+            </a>
+          </li>
+          <li class="nav-item mobile-sign-in-btn"
+            [ngClass]="{'show-sub-items': activeIndex === 99, 'active': activeIndex === 99}"
+            *ngIf="authService.userData as user">
+            <a class="nav-link" (click)="clickOnMenu(99,false, true )">
+              <span class="nav-link-text">
+                <span class="nav-link-name">Profile</span>
+                <span [class]="'nav-icon-arrow nav-icon-down-arrow'"></span>
+              </span>
+            </a>
+            <ul class="nav-sub-items">
+              <li class="nav-sub-item" (click)="clickOnMenu(99,false)">
+                <a href="#">Hello: <strong
+                    class="display-name">{{(user.displayName) ? user.displayName : 'User'}}</strong></a>
+              </li>
+              <li class="nav-sub-item">
+                <a class="sign-out-btn" (click)="signout()">Sign Out</a>
+              </li>
+            </ul>
+          </li>
+          <li class="signin-btn-container"
+            [ngClass]="{'show-sub-items': activeIndex === 99, 'active': activeIndex === 99}">
+            <span class="user-pfp-container" (click)="clickOnMenu(99,false, true )">
+              <div class=" pfp-image" *ngIf="authService.userProfile as profile" [ngStyle]="{'background-image': profile.pfp === 'Abyss' ? 'url(/assets/abyss.png)' :
+              profile.pfp === 'Margo' ? 'url(/assets/margo.png)' :
+              profile.pfp === 'Mios' ? 'url(/assets/mios.png)' :
+              profile.pfp === 'Nasse' ? 'url(/assets/nasse.png)' :
+              'url(/assets/Header_User_Image_Placeholder.png)'}">
+              </div>
+              <div class="pfp-image" *ngIf="!authService.userData"></div>
+              <div class="user-level">
+                LVL #
+              </div>
+            </span>
+            <button class="signin-btn" *ngIf="!authService.userData" routerLink="/sign-in">
+              <span class="auth-btn signin-btn-text"></span>
+            </button>
+            <div *ngIf="authService.userData as user">
+              <button class="signin-btn" (click)="clickOnMenu(99,false, true )"><span
+                  class="auth-btn profile-btn-text"></span></button>
+              <ul class="nav-sub-items">
+                <li class="nav-sub-item" (click)="clickOnMenu(99,false)">
+                  <a href="#">Hello: <strong
+                      class="display-name">{{(user.displayName) ? user.displayName : 'User'}}</strong></a>
+                </li>
+                <li class="nav-sub-item">
+                  <a class="sign-out-btn" (click)="signout()">Sign Out</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div *ngIf="isAuthPage" class="container" style="padding: 30px 0px;">
+    <div class="top-badge"></div>
+  </div>
+</header>

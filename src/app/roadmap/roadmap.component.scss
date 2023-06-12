@@ -1,0 +1,202 @@
+.header {
+  background-size: cover;
+  position: relative;
+  height: 520px;
+  width: 100%;
+  background-position: center;
+  &.sticky {
+    margin-top: 103px;
+  }
+  img {
+    margin: 0 auto;
+    display: block;
+    max-width: 100%;
+  }
+  .header-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    &::before {
+      content: " ";
+      width: calc(100% - 6px);
+      height: calc(100% - 6px);
+      background: linear-gradient(
+        to bottom,
+        rgba(14, 11, 20, 0.9) 5%,
+        transparent 80%,
+        transparent
+      );
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      opacity: 0.1;
+    }
+  }
+}
+.intro-box {
+  margin: 0 auto;
+  position: relative;
+  color: #fff;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  &::before {
+    content: " ";
+    position: absolute;
+    inset: 0;
+    border-radius: 5px;
+    padding: 3px;
+    background: linear-gradient(
+      to right,
+      #a99151 22%,
+      #877036 24%,
+      #ffffcf 26%,
+      #d0b46c 27%,
+      #f2d68d 40%,
+      #a49053 78%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+}
+
+.intro {
+  position: relative;
+  padding-top: 2rem;
+  &::before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 100px;
+    background-position: top;
+    background-size: cover;
+    background-image: url(/assets/Border_Body_Top.png);
+    top: 0px;
+  }
+  .header-title {
+    font-weight: 800;
+    background: linear-gradient(
+      to bottom,
+      #ffc107 10%,
+      #ffcb30 20%,
+      #e77517 25%,
+      #f3bc19 30%,
+      #ffce3c 40%,
+      #ffc107 50%,
+      #e1771f 70%,
+      #ff8c2c 80%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #efede6;
+    font-size: 3rem;
+    color: #ffaa4d;
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+}
+.milestone-image {
+  width: 100%;
+  margin: 0 auto;
+  display: block;
+  max-width: 270px;
+}
+.col-mobile-image {
+  display: none;
+}
+.col-desktop-image {
+  display: block;
+}
+.intro-text {
+  width: 80%;
+  margin: 0 auto;
+  padding: 2rem 0px;
+}
+.milestones-container {
+  width: 80%;
+  margin: 0 auto;
+  .milestone {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    z-index: 99999;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-bottom: 2rem;
+    background-color: #214076;
+    padding: 25px;
+    &::before {
+      content: " ";
+      position: absolute;
+      inset: 0;
+      border-radius: 5px;
+      padding: 5px;
+      background: linear-gradient(
+        to right,
+        #5c5c5c 22%,
+        #6f6f6f 24%,
+        #686868 26%,
+        #505050 27%,
+        #454545 40%,
+        #444444 60%,
+        #4b4b4b 80%,
+        #414141 78%
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+    }
+    &:last-child {
+      margin-bottom: 5rem;
+    }
+    .milestone-title {
+      font-weight: 800;
+      background: linear-gradient(
+        to bottom,
+        #ffc107 10%,
+        #ffcb30 20%,
+        #e77517 25%,
+        #f3bc19 30%,
+        #ffce3c 40%,
+        #ffc107 50%,
+        #e1771f 70%,
+        #ff8c2c 80%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: #efede6;
+    }
+    & > * {
+      color: #fff;
+      z-index: 9;
+    }
+    .milestone-paragraph {
+      font-size: 1.15rem;
+      margin-top: 20px;
+    }
+  }
+}
+@media screen and (max-width: 768px) {
+  .col-mobile-image {
+    display: block;
+  }
+  .col-desktop-image {
+    display: none;
+  }
+  .intro-text {
+    width: 90%;
+  }
+  .milestones-container {
+    width: 90%;
+    .milestone {
+      padding: 5px;
+      .milestone-image {
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+    }
+  }
+}

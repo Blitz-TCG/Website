@@ -1,0 +1,95 @@
+<div class="auth-container" #stickyElem [class.sticky]="sticky">
+  <div class="container">
+    <div class="form-container">
+      <div class="form-block">
+        <div class="auth-block">
+          <!-- <h3 class="form-title">Register</h3> -->
+          <form [formGroup]="registerForm" (submit)="submit()">
+            <div class="input-container">
+              <input type="email" class="form-control" placeholder="Email Address" autocomplete="off" required
+                maxlength="64" formControlName="email" tabindex="1" #input autofocus />
+              <div *ngIf="email?.invalid && submitted" class="input-error-container">
+                <div class="text-danger" *ngIf="email?.errors?.['required']">
+                  Email is required.
+                </div>
+                <div class="text-danger" *ngIf="email?.errors?.['maxLength']">
+                  Email address too long.
+                </div>
+                <div class="text-danger" *ngIf="email?.errors?.['pattern']">
+                  Invalid Email.
+                </div>
+              </div>
+            </div>
+            <div class="input-container">
+              <input type="text" class="form-control" placeholder="Username" minlength="1" formControlName="username"
+                required tabindex="2" />
+              <div *ngIf="username?.invalid && submitted" class="input-error-container">
+                <div class="text-danger" *ngIf="username?.errors?.['required']">
+                  Username is required.
+                </div>
+                <div class="text-danger" *ngIf="username?.errors?.['pattern']">
+                  Usernames are alphanumeric and can contain '-' and '_'.
+                </div>
+                <div class="text-danger" *ngIf="username?.errors?.['minlength']">
+                  Username must be at least 1 character long.
+                </div>
+                <div class="text-danger" *ngIf="username?.errors?.['maxlength']">
+                  Username must be less than 12 characters.
+                </div>
+                <div class="text-danger" *ngIf="username?.errors?.['forbiddenName']">
+                  Inappropriate Username.
+                </div>
+              </div>
+            </div>
+            <div class="input-container">
+              <input type="text" id="password" autocomplete="off" class="password form-control" placeholder="Password"
+                formControlName="password" required tabindex="3" />
+              <div *ngIf="password?.invalid && submitted" class="input-error-container">
+                <div class="text-danger" *ngIf="password?.errors?.['required']">
+                  Password is required.
+                </div>
+                <div class="text-danger" *ngIf="password?.errors?.['minlength']">
+                  Password must contain 8 characters.
+                </div>
+                <div class="text-danger" *ngIf="password?.errors?.['hasNumber']">
+                  Password must contain at least one number.
+                </div>
+                <div class="text-danger" *ngIf="password?.errors?.['hasLetter']">
+                  Password must contain at least one letter.
+                </div>
+                <div class="text-danger" *ngIf="password?.errors?.['hasSpecialCharacters']">
+                  Password must contain at least one symbol.
+                </div>
+              </div>
+            </div>
+            <div class="input-container">
+              <input type="text" id="confirmPassword" autocomplete="off" class="confirmPassword form-control"
+                placeholder="Confirm Password" formControlName="confirmPassword" tabindex="4" required />
+              <div *ngIf="confirmPassword?.invalid && submitted" class="input-error-container">
+                <div class="text-danger" *ngIf="confirmPassword?.errors?.['required']">
+                  Confirm Password is required.
+                </div>
+                <div class="text-danger" *ngIf="confirmPassword?.errors?.['NoPassswordMatch']">
+                  Password does not match
+                </div>
+              </div>
+            </div>
+            <div class="input-container" *ngIf="errorMessage">
+              <div class="text-danger">
+                {{errorMessage}}
+              </div>
+            </div>
+            <div class="submit-container">
+              <input type="button" class="btn submit-btn" [ngClass]="{'submitted': submitted}" value="Register"
+                type="submit" tabindex="5" />
+              <button type="button" class="btn back-btn" (click)="back()" tabindex="5">Back</button>
+            </div>
+            <div *ngIf="!registerForm.valid && submitted" class="form-error-message">
+              Please resolve the errors
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

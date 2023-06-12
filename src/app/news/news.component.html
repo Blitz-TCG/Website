@@ -1,0 +1,60 @@
+<div class="first-container">
+  <div class="container" *ngIf="homeBoxes$ | async as boxes">
+    <div class="row">
+      <div class="col-lg-6 col-12">
+        <a [href]="boxes[1]['url']" [target]="boxes[1]['youtube'] ? '_self' : '_blank'" class="news-content left"
+          [ngClass]="{'youtube-content': boxes[1]['youtube']}"
+          [ngStyle]="{'background-image': 'url(' + (boxes[1]['image'] | async)+ ')'}">
+          <iframe *ngIf="boxes[1]['youtube']; else notFrame1" width="100%" height="100%"
+            [src]="boxes[1]['url']"></iframe>
+          <ng-template #notFrame1>
+            <h1 class="title">{{boxes[1]['title']}}</h1>
+            <span class="card-content">{{boxes[1]['description']}}</span>
+          </ng-template>
+        </a>
+      </div>
+      <div class="col-lg-6 col-12">
+        <a [href]="boxes[2]['url']" [target]="boxes[2]['youtube'] ? '_self' : '_blank'" class="news-content right-top"
+          [ngClass]="{'youtube-content': boxes[2]['youtube']}"
+          [ngStyle]="{'background-image': 'url(' + (boxes[2]['image'] | async)+ ')'}">
+          <iframe *ngIf="boxes[2]['youtube']; else notFrame1" width="100%" height="100%"
+            [src]="boxes[2]['url']"></iframe>
+          <ng-template #notFrame1>
+            <h1 class="title">{{boxes[2]['title']}}</h1>
+            <span class="card-content">{{boxes[2]['description']}}</span>
+          </ng-template>
+        </a>
+        <a [href]="boxes[3]['url']" [target]="boxes[3]['youtube'] ? '_self' : '_blank'"
+          class="news-content right-bottom" [ngClass]="{'youtube-content': boxes[1]['youtube']}"
+          [ngStyle]="{'background-image': 'url(' + (boxes[3]['image'] | async)+ ')'}">
+          <iframe *ngIf="boxes[3]['youtube']; else notFrame1" width="100%" height="100%"
+            [src]="boxes[3]['url']"></iframe>
+          <ng-template #notFrame1>
+            <h1 class="title">{{boxes[3]['title']}}</h1>
+            <span class="card-content">{{boxes[3]['description']}}</span>
+          </ng-template>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="second-container">
+  <div class="container" *ngIf="homeBoxes$ | async as boxes">
+    <div class="row">
+      <div class="col-12">
+        <a [href]="boxes[0]['url']" [target]="boxes[0]['youtube'] ? '_self' : '_blank'" class="news-content top"
+          [ngClass]="{'youtube-content': boxes[0]['youtube']}"
+          [ngStyle]="{'background-image': 'url(' + (boxes[0]['image'] | async)+ ')'}">
+          <div class="ratio ratio-16x9">
+            <iframe *ngIf="boxes[0]['youtube']; else notFrame1" width="100%" height="100%"
+              [src]="boxes[0]['url']"></iframe>
+          </div>
+          <ng-template #notFrame1>
+            <h1 class="title">{{boxes[0]['title']}}</h1>
+            <span class="card-content">{{boxes[0]['description']}}</span>
+          </ng-template>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
