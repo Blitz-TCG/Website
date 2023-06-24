@@ -1,8 +1,11 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
   ElementRef,
   HostListener,
+  Inject,
   OnInit,
+  PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
@@ -22,7 +25,8 @@ export class RoadmapComponent implements OnInit {
   general$: Observable<any>;
   constructor(
     public afs: AngularFirestore,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    @Inject(PLATFORM_ID) private platformId: any
   ) {
     this.general$ = afs
       .collection('general')
@@ -57,14 +61,16 @@ export class RoadmapComponent implements OnInit {
         })
       );
   }
-  ngOnInit(): void {}
+  ngOnInit(): void { }
   @HostListener('window:scroll', ['$event'])
   handleScroll() {
-    const windowScroll = window.pageYOffset;
-    if (windowScroll > 0) {
-      this.sticky = true;
-    } else {
-      this.sticky = false;
+    if (isPlatformBrowser(this.platformId)) {
+      const windowScroll = window.pageYOffset;
+      if (windowScroll > 0) {
+        this.sticky = true;
+      } else {
+        this.sticky = false;
+      }
     }
   }
 }

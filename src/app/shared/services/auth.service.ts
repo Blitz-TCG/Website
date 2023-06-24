@@ -1,5 +1,6 @@
+import { isPlatformBrowser } from '@angular/common';
 import { Expression } from '@angular/compiler';
-import { Injectable, NgZone } from '@angular/core';
+import { Inject, Injectable, NgZone, PLATFORM_ID } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Router } from '@angular/router';
@@ -16,25 +17,28 @@ export class AuthService {
     public adb: AngularFireDatabase, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
-    public ngZone: NgZone // NgZone service to remove outside scope warning
+    public ngZone: NgZone, // NgZone service to remove outside scope warning
+    @Inject(PLATFORM_ID) private platformId: any
   ) {
     /* Saving user data in localstorage when
     logged in and setting up null when logged out */
     this.afAuth.authState.subscribe(async (user: any) => {
-      if (user && user.emailVerified) {
-        this.checkIfUserExists(user.displayName).then((snapshot: any) => {
-          if (snapshot.length > 0) {
-            this.userProfile = snapshot[0].payload.val();
-          }
-          this.userData = user;
-          localStorage.setItem('user', JSON.stringify(this.userData));
-          localStorage.setItem('profile', JSON.stringify(this.userProfile));
-        });
-      } else {
-        localStorage.setItem('user', 'null');
-        localStorage.setItem('profile', 'null');
-        this.userData = null;
-        this.userProfile = null;
+      if (isPlatformBrowser(this.platformId)) {
+        if (user && user.emailVerified) {
+          this.checkIfUserExists(user.displayName).then((snapshot: any) => {
+            if (snapshot.length > 0) {
+              this.userProfile = snapshot[0].payload.val();
+            }
+            this.userData = user;
+            localStorage.setItem('user', JSON.stringify(this.userData));
+            localStorage.setItem('profile', JSON.stringify(this.userProfile));
+          });
+        } else {
+          localStorage.setItem('user', 'null');
+          localStorage.setItem('profile', 'null');
+          this.userData = null;
+          this.userProfile = null;
+        }
       }
     });
   }
@@ -45,8 +49,10 @@ export class AuthService {
       .then((result) => {
         if (result.user?.emailVerified) {
           this.afAuth.authState.subscribe((user) => {
-            if (user) {
-              window.location.href = '/';
+            if (isPlatformBrowser(this.platformId)) {
+              if (user) {
+                window.location.href = '/';
+              }
             }
           });
         } else {
@@ -95,16 +101,23 @@ export class AuthService {
     return this.afAuth
       .sendPasswordResetEmail(passwordResetEmail)
       .then(() => {
-        window.alert('Password reset email sent, check your inbox.');
+        if (isPlatformBrowser(this.platformId)) {
+          window.alert('Password reset email sent, check your inbox.');
+        }
       })
       .catch((error) => {
-        window.alert(error);
+        if (isPlatformBrowser(this.platformId)) {
+          window.alert(error);
+        }
       });
   }
   // Returns true when user is looged in and email is verified
   get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user')!);
-    return user !== null && user.emailVerified !== false ? true : false;
+    if (isPlatformBrowser(this.platformId)) {
+      const user = JSON.parse(localStorage.getItem('user')!);
+      return user !== null && user.emailVerified !== false ? true : false;
+    }
+    return false;
   }
   /* Setting up user data when sign in with username/password,
   sign up with username/password and sign in with social auth
@@ -157,7 +170,9 @@ export class AuthService {
   SignOut() {
     this.NautilusDisconnect();
     return this.afAuth.signOut().then(() => {
-      localStorage.removeItem('user');
+      if (isPlatformBrowser(this.platformId)) {
+        localStorage.removeItem('user');
+      }
     });
   }
   getUserData(uid: any) {

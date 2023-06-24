@@ -33,6 +33,7 @@ import { EulaComponent } from './eula/eula.component';
 import { DisclaimerComponent } from './disclaimer/disclaimer.component';
 import { UseComponent } from './use/use.component';
 import { WhitepaperComponent } from './whitepaper/whitepaper.component';
+import { CollectiblesComponent } from './collectibles/collectibles.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,13 +55,14 @@ import { WhitepaperComponent } from './whitepaper/whitepaper.component';
     EulaComponent,
     DisclaimerComponent,
     UseComponent,
-    WhitepaperComponent
+    WhitepaperComponent,
+    CollectiblesComponent
   ],
   imports: [
     FormsModule,
     ReactiveFormsModule,
     SwiperModule,
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     HttpClientModule,
     AngularSvgIconModule.forRoot(),
