@@ -66,8 +66,8 @@
             </a>
             <ul class="nav-sub-items">
               <li class="nav-sub-item" (click)="clickOnMenu(99,false)">
-                <a href="#">Hello: <strong
-                    class="display-name">{{(user.displayName) ? user.displayName : 'User'}}</strong></a>
+                <a href="#">Hello: <strong class="display-name">{{(user.displayName) ? user.displayName :
+                    'User'}}</strong></a>
               </li>
               <li class="nav-sub-item">
                 <a class="sign-out-btn" (click)="signout()">Sign Out</a>
@@ -77,14 +77,15 @@
           <li class="signin-btn-container"
             [ngClass]="{'show-sub-items': activeIndex === 99, 'active': activeIndex === 99}">
             <span class="user-pfp-container" (click)="clickOnMenu(99,false, true )">
-              <div class=" pfp-image" *ngIf="authService.userProfile as profile" [ngStyle]="{'background-image': profile.pfp === 'Abyss' ? 'url(/assets/abyss.png)' :
+              <div class="pfp-image" *ngIf="authService.userProfile as profile" [ngStyle]="{'background-image': profile.pfp === 'Abyss' ? 'url(/assets/abyss.png)' :
               profile.pfp === 'Margo' ? 'url(/assets/margo.png)' :
               profile.pfp === 'Mios' ? 'url(/assets/mios.png)' :
               profile.pfp === 'Nasse' ? 'url(/assets/nasse.png)' :
               'url(/assets/Header_User_Image_Placeholder.png)'}">
               </div>
-              <div class="pfp-image" *ngIf="!authService.userData"></div>
-              <div class="user-level">
+              <a routerLink="/sign-in" class="pfp-image" *ngIf="!authService.userData"></a>
+              <a routerLink="/sign-in" class="user-level" *ngIf="!authService.userData">LVL #</a>
+              <div *ngIf="authService.userData"class="user-level">
                 LVL #
               </div>
             </span>
@@ -96,8 +97,8 @@
                   class="auth-btn profile-btn-text"></span></button>
               <ul class="nav-sub-items">
                 <li class="nav-sub-item" (click)="clickOnMenu(99,false)">
-                  <a href="#">Hello: <strong
-                      class="display-name">{{(user.displayName) ? user.displayName : 'User'}}</strong></a>
+                  <a href="#">Hello: <strong class="display-name">{{(user.displayName) ? user.displayName :
+                      'User'}}</strong></a>
                 </li>
                 <li class="nav-sub-item">
                   <a class="sign-out-btn" (click)="signout()">Sign Out</a>

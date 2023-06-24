@@ -8,7 +8,7 @@
           <iframe *ngIf="boxes[1]['youtube']; else notFrame1" width="100%" height="100%"
             [src]="boxes[1]['url']"></iframe>
           <ng-template #notFrame1>
-            <h1 class="title">{{boxes[1]['title']}}</h1>
+            <!-- <h1 class="title">{{boxes[1]['title']}}</h1> -->
             <span class="card-content">{{boxes[1]['description']}}</span>
           </ng-template>
         </a>
@@ -20,7 +20,7 @@
           <iframe *ngIf="boxes[2]['youtube']; else notFrame1" width="100%" height="100%"
             [src]="boxes[2]['url']"></iframe>
           <ng-template #notFrame1>
-            <h1 class="title">{{boxes[2]['title']}}</h1>
+            <!-- <h1 class="title">{{boxes[2]['title']}}</h1> -->
             <span class="card-content">{{boxes[2]['description']}}</span>
           </ng-template>
         </a>
