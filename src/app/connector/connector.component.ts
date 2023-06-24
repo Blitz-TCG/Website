@@ -1,10 +1,9 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Ergo, ergoConnector } from './conn';
 import { getAuth } from 'firebase/auth';
 
 import { environment } from '../../environments/environment';
 import { getDatabase, ref, child, get, update } from 'firebase/database';
-import { isPlatformBrowser } from '@angular/common';
 
 // npm install sweetalert2
 // import swal from 'sweetalert2';
@@ -18,6 +17,20 @@ declare global {
   }
 }
 
+// Nautilus disconnect
+// Removing from Connected dApps in Nautilus
+window.addEventListener('ergo_wallet_disconnected', () => {
+  try {
+    ergoConnector.nautilus.disconnect();
+    console.log('You have successfully disconnected from your wallet!');
+    // swal.fire('You have successfully disconnected from your wallet!');
+    verifyUserAndUpdateWallet('none');
+    localStorage.setItem('userIsConnected', 'false');
+  } catch {
+    console.log(`Impossible disconnect Nautilus!`);
+    // swal.fire(`Impossible disconnect Nautilus!`);
+  }
+});
 // Disconnecting from the website button
 function NautilusDisconnect() {
   try {
@@ -36,7 +49,7 @@ function NautilusDisconnect() {
 // End Nautilus disconnect
 
 // Verify none in wallet
-function verifyNone() {
+function verifyNone(){
   const auth = getAuth();
   const user = auth.currentUser;
   const firebaseConfig = environment.firebase;
@@ -53,7 +66,8 @@ function verifyNone() {
         } else {
           localStorage.setItem('userIsConnected', 'true');
         }
-      })
+      }
+    })
   }
 }
 // End verify
@@ -200,69 +214,24 @@ function getAddress() {
   styleUrls: ['./connector.component.scss'],
 })
 export class ConnectorComponent implements OnInit {
-  constructor(@Inject(PLATFORM_ID) private platformId: any) { }
-
-  // Nautilus wallet
-  popupNautilus() {
-    try {
-      ergoConnector.nautilus.connect().then((access_granted) => {
-        if (isPlatformBrowser(this.platformId)) {
-          // I have a wallet connected
-          if (access_granted) {
-            localStorage.setItem('userIsConnected', 'true');
-            console.log(`You have a wallet connected!`);
-            // swal.fire(`You have a wallet connected!`);
-            getAddress();
-          } else {
-            // Cancel Nautilus
-            localStorage.setItem('userIsConnected', 'false');
-            console.log(`You don't connect the wallet to the website!`);
-            // swal.fire(`You don't connect the wallet to the website!`);
-          }
-        }
-      });
-    } catch (error) {
-      console.log(
-        `Impossible to connect Nautilus, check to have Nautilus installed and your internet connection!`
-      );
-      // swal.fire(`Impossible to connect Nautilus, check to have Nautilus installed and your internet connection!`);
-    }
-  }
-  // End Nautilus wallet
   descWallet() {
     NautilusDisconnect();
   }
 
   openConnector() {
-    this.popupNautilus();
+    popupNautilus();
   }
 
   stateLocalstorage(): any {
-    if (isPlatformBrowser(this.platformId)) {
-      return localStorage.getItem('userIsConnected');
-    }
+    return localStorage.getItem('userIsConnected');
   }
 
+  constructor() {}
+
   ngOnInit(): void {
-    // Nautilus disconnect
-    // Removing from Connected dApps in Nautilus
-    if (isPlatformBrowser(this.platformId)) {
-      window.addEventListener('ergo_wallet_disconnected', () => {
-        try {
-          ergoConnector.nautilus.disconnect();
-          console.log('You have successfully disconnected from your wallet!');
-          // swal.fire('You have successfully disconnected from your wallet!');
-          verifyUserAndUpdateWallet('none');
-          localStorage.setItem('userIsConnected', 'false');
-        } catch {
-          console.log(`Impossible disconnect Nautilus!`);
-          // swal.fire(`Impossible disconnect Nautilus!`);
-        }
-      });
-      verifyNone();
-      if (!localStorage.getItem('userIsConnected')) {
-        localStorage.setItem('userIsConnected', 'false');
-      }
+    verifyNone();
+    if (!localStorage.getItem('userIsConnected')) {
+      localStorage.setItem('userIsConnected', 'false');
     }
   }
 }
