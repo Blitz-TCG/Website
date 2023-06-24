@@ -62,6 +62,7 @@ function verifyNone(){
       if (snapshot.exists()) {
         if(snapshot.val() === 'none') {
           localStorage.setItem('userIsConnected', 'false');
+          ergoConnector.nautilus.disconnect();
         } else {
           localStorage.setItem('userIsConnected', 'true');
         }
@@ -72,26 +73,87 @@ function verifyNone(){
 // End verify
 
 // firebase - Verify user active and update wallet
+
+// function verifyUserAndUpdateWallet(address: any) {
+//   // user auth
+//   const auth = getAuth();
+//   const user = auth.currentUser;
+//   if (user) {
+//     console.log(`ID user: ${user?.uid}`);
+//     // ddbb Config
+//     const firebaseConfig = environment.firebase;
+//     const database = getDatabase();
+//     const dbRef = ref(database);
+//     // Verify user wallet and update wallet
+//     get(child(dbRef, `users/${user?.uid}/wallet`))
+//       .then((snapshot) => {
+//         if (snapshot.exists()) {
+//           // Update database with wallet value
+//           const updateWallet: any = {};
+//           const datosParaActualizar = { wallet: address };
+//           updateWallet[`users/${user?.uid}/wallet`] =
+//             datosParaActualizar.wallet;
+//           update(ref(database), updateWallet);
+//         } else {
+//           console.log('The update was not carried out correctly!');
+//         }
+//       })
+//       .catch((error) => {
+//         console.error(error);
+//       });
+//   } else {
+//     console.log('There is no logged in user!');
+//   }
+// }
+
 function verifyUserAndUpdateWallet(address: any) {
-  // user auth
+  // User auth
   const auth = getAuth();
   const user = auth.currentUser;
+
   if (user) {
     console.log(`ID user: ${user?.uid}`);
-    // ddbb Config
+
+    // DB Config
     const firebaseConfig = environment.firebase;
     const database = getDatabase();
     const dbRef = ref(database);
-    // Verify user wallet and update wallet
-    get(child(dbRef, `users/${user?.uid}/wallet`))
+
+    // Get all users' data
+    get(child(dbRef, 'users'))
       .then((snapshot) => {
         if (snapshot.exists()) {
-          // Update database with wallet value
-          const updateWallet: any = {};
-          const datosParaActualizar = { wallet: address };
-          updateWallet[`users/${user?.uid}/wallet`] =
-            datosParaActualizar.wallet;
-          update(ref(database), updateWallet);
+          let walletAlreadyExists = false;
+
+          // Iterate through each user's data
+          snapshot.forEach((userSnapshot) => {
+            const userData = userSnapshot.val();
+
+            // Check if the wallet address already exists for a different user
+            if (userData.wallet === address && userSnapshot.key !== user?.uid && address !== "none") {
+              walletAlreadyExists = true;
+              console.log("user that has address: " + userSnapshot.key);
+              console.log("signed in user " + user?.uid);
+              console.log('The wallet ID is already associated with another user.');
+              ergoConnector.nautilus.disconnect();
+            }
+          });
+
+          if (!walletAlreadyExists) {
+            // Update database with wallet value
+            console.log("signed in user " + user?.uid);
+            const updateWallet: any = {};
+            const datosParaActualizar = { wallet: address };
+            console.log(datosParaActualizar);
+            updateWallet[`users/${user?.uid}/wallet`] = datosParaActualizar.wallet;
+            update(ref(database), updateWallet);
+            if (address === "none"){
+              localStorage.setItem('userIsConnected', 'false');
+            }
+            else{
+              localStorage.setItem('userIsConnected', 'true');
+            }
+          }
         } else {
           console.log('The update was not carried out correctly!');
         }
@@ -100,9 +162,11 @@ function verifyUserAndUpdateWallet(address: any) {
         console.error(error);
       });
   } else {
-    console.log('There is no logged in user!');
+    console.log('There is no logged-in user!');
   }
 }
+
+
 // End firebase - Verify user active and update wallet
 
 // Nautilus wallet
@@ -110,16 +174,14 @@ function popupNautilus() {
   try {
     ergoConnector.nautilus.connect().then((access_granted) => {
       // I have a wallet connected
+      console.log(access_granted);
       if (access_granted) {
-        localStorage.setItem('userIsConnected', 'true');
-        console.log(`You have a wallet connected!`);
-        // swal.fire(`You have a wallet connected!`);
         getAddress();
+        console.log(`Nautilus confirmed`);
       } else {
         // Cancel Nautilus
         localStorage.setItem('userIsConnected', 'false');
         console.log(`You don't connect the wallet to the website!`);
-        // swal.fire(`You don't connect the wallet to the website!`);
       }
     });
   } catch (error) {
