@@ -1,9 +1,11 @@
-import { Location } from '@angular/common';
+import { isPlatformBrowser, Location } from '@angular/common';
 import {
   Component,
   ElementRef,
   HostListener,
+  Inject,
   OnInit,
+  PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
 import {
@@ -25,25 +27,27 @@ import { blockedWords } from '../shared/services/blocked';
 export class SignUpComponent implements OnInit {
   @ViewChild('stickyElem', { static: false }) menuElement?: ElementRef;
   sticky: boolean = false;
-  constructor(public authService: AuthService, private location: Location) {}
+  constructor(public authService: AuthService, private location: Location, @Inject(PLATFORM_ID) private platformId: any) { }
   registerForm!: FormGroup;
   errorMessage!: string;
   submitted: boolean = false;
 
   ngOnInit() {
-    var f = document.getElementsByTagName('FORM');
-    for (var i = 0; i < f.length; i++) {
-      (function (i) {
-        //@ts-ignore
-        f[i].elements[f[i].length - 1].onkeydown = function (e) {
-          var keyCode = e.keyCode || e.which;
-          if (keyCode == 9) {
-            //@ts-ignore
-            f[i].elements[0].focus();
-            e.preventDefault();
-          }
-        };
-      })(i);
+    if (isPlatformBrowser(this.platformId)) {
+      var f = document.getElementsByTagName('FORM');
+      for (var i = 0; i < f.length; i++) {
+        (function (i) {
+          //@ts-ignore
+          f[i].elements[f[i].length - 1].onkeydown = function (e) {
+            var keyCode = e.keyCode || e.which;
+            if (keyCode == 9) {
+              //@ts-ignore
+              f[i].elements[0].focus();
+              e.preventDefault();
+            }
+          };
+        })(i);
+      }
     }
     this.registerForm = new FormGroup(
       {
@@ -151,11 +155,13 @@ export class SignUpComponent implements OnInit {
   }
   @HostListener('window:scroll', ['$event'])
   handleScroll() {
-    const windowScroll = window.pageYOffset;
-    if (windowScroll > 0) {
-      this.sticky = true;
-    } else {
-      this.sticky = false;
+    if (isPlatformBrowser(this.platformId)) {
+      const windowScroll = window.pageYOffset;
+      if (windowScroll > 0) {
+        this.sticky = true;
+      } else {
+        this.sticky = false;
+      }
     }
   }
 }

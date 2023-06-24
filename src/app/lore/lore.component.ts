@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, Renderer2, ElementRef, HostListener } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, ViewChild, Renderer2, ElementRef, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable, switchMap } from 'rxjs';
 import SwiperCore, { SwiperOptions, Pagination, Scrollbar } from 'swiper';
@@ -21,7 +22,7 @@ export class LoreComponent implements OnInit {
     mobilePages: any = [];
     selectedMobilePage: number = 0;
     @ViewChild('swiper', { static: false }) swiper?: SwiperComponent;
-    constructor(public afs: AngularFirestore, private renderer: Renderer2) {
+    constructor(public afs: AngularFirestore, private renderer: Renderer2, @Inject(PLATFORM_ID) private platformId: any) {
         this.booksData$ = afs
             .collection('stories')
             .valueChanges()
@@ -63,11 +64,13 @@ export class LoreComponent implements OnInit {
     };
 
     ngOnInit(): void {
-        const title = document.querySelector('.cover-title')
-        if (title) {
-            //@ts-ignore
-            var width = title?.offsetWidth;
-            this.renderer.setStyle(title, 'font-size', (width / 5 | 0) + 'px');
+        if (isPlatformBrowser(this.platformId)) {
+            const title = document.querySelector('.cover-title')
+            if (title) {
+                //@ts-ignore
+                var width = title?.offsetWidth;
+                this.renderer.setStyle(title, 'font-size', (width / 5 | 0) + 'px');
+            }
         }
     }
 
@@ -76,11 +79,12 @@ export class LoreComponent implements OnInit {
     }
     selectStory(book: any) {
         if (!book.show) return;
+        if (isPlatformBrowser(this.platformId)) {
+            let coverOpen = document.querySelector('.book-opening');
+            if (coverOpen) {
+                this.renderer.setStyle(coverOpen, 'animation', 'none');
 
-        let coverOpen = document.querySelector('.book-opening');
-        if (coverOpen) {
-            this.renderer.setStyle(coverOpen, 'animation', 'none');
-
+            }
         }
         this.selectedPages = null;
         this.selectedCoverContainer = null;
@@ -98,95 +102,105 @@ export class LoreComponent implements OnInit {
         }
     }
     openCover(item: number) {
-        let coverOpen = document.querySelector('.book-opening'), closeSound = document.getElementById('close-sound');
-        if (coverOpen && closeSound) {
-            //@ts-ignore
-            closeSound?.currentTime = 0;
-            //@ts-ignore
-            closeSound?.play();
-            this.selectedCover = null;
-            this.selectedCoverContainer = item;
-            this.renderer.setStyle(coverOpen, 'animation', 'flip-next-gif steps(40) 1s both');
-            setTimeout(() => {
-                this.selectedPages = 0;
-            }, 1000);
+        if (isPlatformBrowser(this.platformId)) {
+            let coverOpen = document.querySelector('.book-opening'), closeSound = document.getElementById('close-sound');
+            if (coverOpen && closeSound) {
+                //@ts-ignore
+                closeSound?.currentTime = 0;
+                //@ts-ignore
+                closeSound?.play();
+                this.selectedCover = null;
+                this.selectedCoverContainer = item;
+                this.renderer.setStyle(coverOpen, 'animation', 'flip-next-gif steps(40) 1s both');
+                setTimeout(() => {
+                    this.selectedPages = 0;
+                }, 1000);
+            }
         }
     }
 
     flipNext() {
-        let pages = document.querySelectorAll(".page-content"), flip = document.getElementById('flip'),
-            flipSound = document.getElementById('flip-sound');
-        this.booksData$.subscribe((data) => {
-            if (this.selectedCoverContainer && data.length > 0) {
-                const pagesLength = data[this.selectedCoverContainer - 1]?.pages?.length;
-                if (flip && flipSound && pagesLength > 0) {
-                    if (this.selectedPages < pagesLength - 1) {
-                        this.renderer.setStyle(flip, 'animation', 'flip-next-gif steps(47) 1s both');
-                        // pages.forEach(element => {
-                        //     this.renderer.setStyle(element, 'animation', '');
-                        // });
-                        setTimeout(() => {
-                            this.renderer.setStyle(flip, 'animation', '');
+        if (isPlatformBrowser(this.platformId)) {
+            let pages = document.querySelectorAll(".page-content"), flip = document.getElementById('flip'),
+                flipSound = document.getElementById('flip-sound');
+            this.booksData$.subscribe((data) => {
+                if (this.selectedCoverContainer && data.length > 0) {
+                    const pagesLength = data[this.selectedCoverContainer - 1]?.pages?.length;
+                    if (flip && flipSound && pagesLength > 0) {
+                        if (this.selectedPages < pagesLength - 1) {
+                            this.renderer.setStyle(flip, 'animation', 'flip-next-gif steps(47) 1s both');
                             // pages.forEach(element => {
-                            //     this.renderer.setStyle(element, 'animation', 'text-gif 1s ease-in-out');
+                            //     this.renderer.setStyle(element, 'animation', '');
                             // });
-                        }, 1000);
-                        //@ts-ignore
-                        flipSound?.currentTime = 0;
-                        //@ts-ignore
-                        flipSound?.play();
-                        this.selectedPages += 1;
+                            setTimeout(() => {
+                                this.renderer.setStyle(flip, 'animation', '');
+                                // pages.forEach(element => {
+                                //     this.renderer.setStyle(element, 'animation', 'text-gif 1s ease-in-out');
+                                // });
+                            }, 1000);
+                            //@ts-ignore
+                            flipSound?.currentTime = 0;
+                            //@ts-ignore
+                            flipSound?.play();
+                            this.selectedPages += 1;
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
     }
 
     flipPrev() {
-        let flip = document.getElementById('flip'),
-            flipSound = document.getElementById('flip-sound');
-        this.booksData$.subscribe((data) => {
-            if (this.selectedCoverContainer && data.length > 0) {
-                const pagesLength = data[this.selectedCoverContainer - 1]?.pages?.length;
-                if (flip && flipSound && pagesLength > 0) {
-                    if (this.selectedPages > 0) {
-                        this.renderer.setStyle(flip, 'animation', 'flip-prev-gif steps(47) 1s both');
-                        setTimeout(() => {
-                            this.renderer.setStyle(flip, 'animation', '');
-                        }, 1000);
-                        //@ts-ignore
-                        flipSound?.currentTime = 0;
-                        //@ts-ignore
-                        flipSound?.play();
-                        this.selectedPages -= 1;
+        if (isPlatformBrowser(this.platformId)) {
+            let flip = document.getElementById('flip'),
+                flipSound = document.getElementById('flip-sound');
+            this.booksData$.subscribe((data) => {
+                if (this.selectedCoverContainer && data.length > 0) {
+                    const pagesLength = data[this.selectedCoverContainer - 1]?.pages?.length;
+                    if (flip && flipSound && pagesLength > 0) {
+                        if (this.selectedPages > 0) {
+                            this.renderer.setStyle(flip, 'animation', 'flip-prev-gif steps(47) 1s both');
+                            setTimeout(() => {
+                                this.renderer.setStyle(flip, 'animation', '');
+                            }, 1000);
+                            //@ts-ignore
+                            flipSound?.currentTime = 0;
+                            //@ts-ignore
+                            flipSound?.play();
+                            this.selectedPages -= 1;
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
     }
     pageMobileNext() {
-        let flipSound = document.getElementById('flip-sound');
-        if (this.selectedMobilePage < this.mobilePages.length - 1) {
-            if (flipSound) {
-                //@ts-ignore
-                flipSound?.currentTime = 0;
-                //@ts-ignore
-                flipSound?.play();
+        if (isPlatformBrowser(this.platformId)) {
+            let flipSound = document.getElementById('flip-sound');
+            if (this.selectedMobilePage < this.mobilePages.length - 1) {
+                if (flipSound) {
+                    //@ts-ignore
+                    flipSound?.currentTime = 0;
+                    //@ts-ignore
+                    flipSound?.play();
+                }
+                this.selectedMobilePage = this.selectedMobilePage + 1;
             }
-            this.selectedMobilePage = this.selectedMobilePage + 1;
         }
     }
     pageMobilePrev() {
-        let flipSound = document.getElementById('flip-sound');
+        if (isPlatformBrowser(this.platformId)) {
+            let flipSound = document.getElementById('flip-sound');
 
-        if (this.selectedMobilePage > 0) {
-            if (flipSound) {
-                //@ts-ignore
-                flipSound?.currentTime = 0;
-                //@ts-ignore
-                flipSound?.play();
+            if (this.selectedMobilePage > 0) {
+                if (flipSound) {
+                    //@ts-ignore
+                    flipSound?.currentTime = 0;
+                    //@ts-ignore
+                    flipSound?.play();
+                }
+                this.selectedMobilePage--;
             }
-            this.selectedMobilePage--;
         }
     }
 
@@ -198,11 +212,13 @@ export class LoreComponent implements OnInit {
 
     @HostListener('window:scroll', ['$event'])
     handleScroll() {
-        const windowScroll = window.pageYOffset;
-        if (windowScroll > 0) {
-            this.sticky = true;
-        } else {
-            this.sticky = false;
+        if (isPlatformBrowser(this.platformId)) {
+            const windowScroll = window.pageYOffset;
+            if (windowScroll > 0) {
+                this.sticky = true;
+            } else {
+                this.sticky = false;
+            }
         }
     }
 }

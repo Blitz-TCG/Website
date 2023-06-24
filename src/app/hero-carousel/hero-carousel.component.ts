@@ -1,8 +1,11 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
   ElementRef,
   HostListener,
+  Inject,
   OnInit,
+  PLATFORM_ID,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -30,7 +33,8 @@ export class HeaderCarouselComponent implements OnInit {
 
   constructor(
     public afs: AngularFirestore,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    @Inject(PLATFORM_ID) private platformId: any
   ) {
     this.homeSlider$ = afs
       .collection('home-slider')
@@ -52,14 +56,16 @@ export class HeaderCarouselComponent implements OnInit {
         })
       );
   }
-  ngOnInit(): void {}
+  ngOnInit(): void { }
   @HostListener('window:scroll', ['$event'])
   handleScroll() {
-    const windowScroll = window.pageYOffset;
-    if (windowScroll > 0) {
-      this.sticky = true;
-    } else {
-      this.sticky = false;
+    if (isPlatformBrowser(this.platformId)) {
+      const windowScroll = window.pageYOffset;
+      if (windowScroll > 0) {
+        this.sticky = true;
+      } else {
+        this.sticky = false;
+      }
     }
   }
   slideNext() {

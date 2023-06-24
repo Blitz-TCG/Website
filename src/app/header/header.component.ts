@@ -2,7 +2,9 @@ import {
   Component,
   ElementRef,
   HostListener,
+  Inject,
   OnInit,
+  PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
@@ -18,6 +20,7 @@ import {
 } from 'rxjs';
 import { AuthService } from '../shared/services/auth.service';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -37,7 +40,8 @@ export class HeaderComponent implements OnInit {
     public afs: AngularFirestore,
     public adb: AngularFireDatabase,
     public authService: AuthService,
-    public router: Router
+    public router: Router,
+    @Inject(PLATFORM_ID) private platformId: any
   ) {
     this.items$ = afs
       .collection('header-menu')
@@ -60,12 +64,14 @@ export class HeaderComponent implements OnInit {
   }
   @HostListener('window:scroll', ['$event'])
   handleScroll() {
-    const windowScroll = window.pageYOffset;
-    if (!this.isAuthPage) {
-      if (windowScroll > 0) {
-        this.sticky = true;
-      } else {
-        this.sticky = false;
+    if (isPlatformBrowser(this.platformId)) {
+      const windowScroll = window.pageYOffset;
+      if (!this.isAuthPage) {
+        if (windowScroll > 0) {
+          this.sticky = true;
+        } else {
+          this.sticky = false;
+        }
       }
     }
   }
@@ -84,24 +90,28 @@ export class HeaderComponent implements OnInit {
   }
   // To check internet connection stability
   checkNetworkStatus() {
-    this.networkStatus = navigator.onLine;
-    this.networkStatus$ = merge(
-      of(null),
-      fromEvent(window, 'online'),
-      fromEvent(window, 'offline')
-    )
-      .pipe(map(() => navigator.onLine))
-      .subscribe((status) => {
-        this.networkStatus = status;
-        const user = localStorage.getItem('user');
-        if (!status && user) {
-          this.signout();
-        }
-      });
+    if (isPlatformBrowser(this.platformId)) {
+      this.networkStatus = navigator.onLine;
+      this.networkStatus$ = merge(
+        of(null),
+        fromEvent(window, 'online'),
+        fromEvent(window, 'offline')
+      )
+        .pipe(map(() => navigator.onLine))
+        .subscribe((status) => {
+          this.networkStatus = status;
+          const user = localStorage.getItem('user');
+          if (!status && user) {
+            this.signout();
+          }
+        });
+    }
   }
   signout() {
     this.authService.SignOut().then(() => {
-      window.location.reload();
+      if (isPlatformBrowser(this.platformId)) {
+        window.location.reload();
+      }
     });
   }
 }

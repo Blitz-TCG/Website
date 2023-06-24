@@ -1,8 +1,1215 @@
-<div [class.sticky]="sticky">
-    <iframe
-        src="https://onedrive.live.com/embed?cid=A3FA1A8BEF2E0348&resid=A3FA1A8BEF2E0348%2129417&authkey=AEH3o89t4se5W7U&em=2"
-        width="100%" height="100vh" frameborder="0" scrolling="no"></iframe>
+<!-- <div [class.sticky]="sticky">
+    <iframe src="https://onedrive.live.com/embed?cid=A3FA1A8BEF2E0348&resid=A3FA1A8BEF2E0348%2129417&authkey=AEH3o89t4se5W7U&em=2" width="100%" height="100vh" frameborder="0" scrolling="no"></iframe>
 
+    <a type="button" class="btn submit-btn" target="_blank" href="https://firebasestorage.googleapis.com/v0/b/blitz-tcg-test.appspot.com/o/Blitz-TCG-Whitepaper.pdf?alt=media&token=cfa9cfbb-4082-44aa-8768-ef7d88da1f25">Download</a>
+</div> -->
+<div class="container" [class.sticky]="sticky">
+    <a type="button" class="btn submit-btn" style="margin-bottom: 20px;" target="_blank"
+        href="https://firebasestorage.googleapis.com/v0/b/blitz-tcg-test.appspot.com/o/Blitz-TCG-Whitepaper.pdf?alt=media&token=cfa9cfbb-4082-44aa-8768-ef7d88da1f25">Download</a>
+    <h1 class="page-title">Blitz TCG Whitepaper</h1>
+    <p class="page-intro">A reimagining of competitive trading card games using blockchain technology to facilitate
+        digital ownership and longevity for players</p>
+    <img class="header-image" src="/assets/page1.png" alt="">
+    <p style="text-align: center; font-size: 18px; margin-top: 10px;">All Socials: <a
+            href="https://linktr.ee/blitztcg">Blitz TCG</a></p>
+    <p style="text-align: center; font-size: 15px; margin-top: 10px;">Last updated: April 21, 2023, Version 0.81</p>
+    <p style="text-align: center; font-size: 15px; margin-top: 10px;">All Blitz TCG related code managed by 16-Bit Hero,
+        LLC will be made open source closer to launch</p>
+    <h2>Contents</h2>
+    <ul>
+        <li><a href="/whitepaper#Introduction">Introduction</a>
+
+        </li>
+        <li><a href="/whitepaper#Theory">Theory</a>
+            <ul>
+                <li><a href="/whitepaper#MechanicsTheory">Mechanics Theory</a></li>
+                <li><a href="/whitepaper#TokenomicsTheory">Tokenomics Theory</a></li>
+            </ul>
+        </li>
+
+        <li><a href="/whitepaper#Lore">Lore</a></li>
+        <li><a href="/whitepaper#Mechanics">Mechanics</a>
+            <ul>
+                <li><a href="/whitepaper#Design">Design Mockups</a></li>
+                <li><a href="/whitepaper#Rules">Rules</a></li>
+            </ul>
+        </li>
+
+        <li><a href="/whitepaper#TokenomicsandRarity">Tokenomics and Rarity</a>
+            <ul>
+                <li><a href="/whitepaper#PacksandCards">Packs and Cards</a>
+                </li>
+                <li><a href="/whitepaper#BlitzTCGToken">Blitz TCG Token (BLTZ)</a>
+                </li>
+            </ul>
+        </li>
+
+        <li><a href="/whitepaper#Roadmap">Roadmap and Future Vision</a></li>
+        <li><a href="/whitepaper#Team">Team</a> </li>
+        <li><a href="/whitepaper#Partners">Partners</a> </li>
+        <li> <a href="/whitepaper#Disclaimer">Disclaimer</a></li>
+        <li><a href="/whitepaper#References">References</a> </li>
+        <li><a href="/whitepaper#Appendix">Appendix</a></li>
+    </ul>
+    <h2 id="introduction">Introduction</h2>
+    <p>The basic premise of competitive Trading Card Games (TCGs) has remained unchanged since the early 90s when Magic:
+        The Gathering stormed onto the scene paving the way for the many physical and digital card game variants to
+        follow [1]. Competitive TCGs revolve around players using preplanned decks from which cards are typically drawn
+        at random throughout a match. Players then use those cards to outplay enemy cards in a turn-by-turn environment.
+        In the most popular of TCGs, there is often a payment associated with playing certain cards; a few examples:
+        Hearthstone&rsquo;s mana [2] (i.e., primary resource), Pok&eacute;mon&rsquo;s energy [3] (i.e., secondary
+        cards), and classical Yu-Gi-Oh!&rsquo;s monsters [4] (i.e., primary cards).</p>
+    <p>Blitz TCG&trade; breaks free from these traditional factors through several key traits: allowing players access
+        to their entire deck, implementing a chess-like timebank system, General abilities, and adding NPC alternatives
+        to the gameboard. Our goal is to create a digital TCG that mixes iconic aspects from several game genres
+        together to create a refreshing alternative to standard TCG gameplay. Balancing Blitz&rsquo;s two primary
+        resources, Gold and XP (experience), while choosing a General that compliments a player&rsquo;s deck, will
+        ensure that there are always new strategies to explore. Learn about the world of Blitz, game design, decision
+        making, mock-ups, rules, tokenomics, and more in the following sections.</p>
+    <h2 id="Theory">Theory</h2>
+    <p>Blitz draws inspiration from several sources, including Warhammer, Gods Unchained, Hearthstone, Magic: The
+        Gathering, DOTA, BattleForge, and the Blitz format of chess. Gods Unchained is an excellent example of what is
+        possible using blockchain technology to facilitate digital ownership of cards and exchanges between players [5].
+        However, there are opportunities for innovation in both standard gameplay mechanics and digital ownership.
+        Development, design, and general decisions about the game and tokenomics will always lean toward a
+        &ldquo;Gameplay First&rdquo; mantra: by creating fun, engaging, and low barrier-to-entry gameplay, other aspects
+        of the game will naturally prosper. This section will focus on the thought processes associated with the
+        specifics found in the <a href="/whitepaper#Mechanics">Mechanics</a>
+        and <a href="/whitepaper#TokenomicsTheory">Tokenomics</a>
+        sections.</p>
+    <h3 id="MechanicsTheory">Mechanics Theory</h3>
+    <p>For many competitive players, one virtue of gaming remains desired: consistency. In TCGs, this is the ability for
+        a player to predict how their strategy will affect the state of a match, given the chance of drawing a specific
+        card within a given number of turns. Some might compare consistency to fairness, specifically the minimizing of
+        the chance a player will win or lose based on luck. Thus, one of the most inconsistent factors in TCGs is the
+        drawing of cards used in each match. For some, this is a staple of what makes a TCG unique. For others, it is a
+        reason to avoid the game genre. Blitz will remove this factor from matches entirely, allowing players to access
+        their entire decks from the start of a match. The only limiting factors in playing cards will be the amount of
+        Gold a player has acquired and, in some cases, the level of their General. Blitz&rsquo;s deck concept is most
+        like an item store available in popular MOBAs.</p>
+    <p>Competitive TCGs like Hearthstone and Gwent have 7-minute and 12-minute average game lengths, respectively [7,
+        8]. Blitz will be a turn-based game and rely on a timebank system with the same parameters as the Blitz format
+        of fast chess [6]. Players will start a match with 3 minutes of banked time. After each player&rsquo;s turn,
+        they will be awarded 2 additional seconds of banked time. Thus, the maximum amount of time a Blitz game can last
+        is approximately 15 minutes, assuming turns take at most 20 seconds. A timebank system will help ensure gameplay
+        remains active and engaging. Matches will only end in a draw if neither General has been damaged.
+    </p>
+    <p>Gold is Blitz&rsquo;s first approach to a unique TCG resource system. Players will start a match with the same
+        amount of Gold. At the start of a match, players will bid a certain amount of Gold to determine which player
+        moves first. Gold will be obtained passively throughout a match, by defeating enemy cards, and by defeating
+        NPCs. Hence, players will need to weigh the benefit of spending versus saving to acquire stronger cards. For
+        example, players might purchase cards with the intent to defeat NPCs to obtain more Gold than otherwise could
+        have been gained by just saving. Given that a player&rsquo;s cards must be active on the board before they are
+        able to attack NPCs and the limitation that, unless specified otherwise, a single card can only attack once per
+        turn, it may not always be advantageous to spend a turn attacking NPCs when there are enemy cards to consider.
+    </p>
+    <p>Level is Blitz&rsquo;s second approach to resources. Generals will start a match at Level 1. Level can be
+        increased by gaining XP through battling enemy cards, NPCs, or card abilities. Higher level Generals can use
+        more of their abilities. In addition, some of the most powerful cards will require a certain General, minimum
+        Level, and some cost of Gold to be able to play. By Generals directly influencing the game through unique
+        abilities, it will encourage players to strategize their gameplay to some degree around what their General
+        brings to each match. The player who defeats an opposing player&rsquo;s General or whose General has the highest
+        amount of Health at the end of the game wins the match.</p>
+    <p>Gold and Level will maintain a strong relationship over the course of individual matches and, moreover, game
+        design and balancing. Players will develop varying strategies surrounding both resources e.g., rushing one
+        resource over another with the intent to overwhelm in the early game versus late game.</p>
+    <h3 id="TokenomicsTheory">Tokenomics Theory</h3>
+    <p>Ergo, Cardano, and Nervos are slated to be the backbone of the smart contracts and tokens necessary to facilitate
+        the player-to-player exchange ecosystem. Ergo was selected due to it being an up-and-comer in the crypto space,
+        it being backed by a strong and active development team, and the low fees inherent to its Layer 1 (L1) platform.
+        There is less competition and more room to grow on a blockchain like Ergo relative to a platform like Ethereum.
+        The community is known to be one of the best in crypto, providing an excellent platform for engagement and
+        feedback. Cardano brings a significant userbase and maintains similar ethics and great community. Nervos allows
+        for a novel approach to cross-chain integration that will ideally allow Blitz to become the first true universal
+        blockchain game. Blitz will be the first of its kind to utilize two separate blockchains that have different
+        consensus algorithms, PoW and PoS.</p>
+    <p>The Gods Unchained TCG on the Ethereum network is a notable example of implementing digital ownership for
+        players. Much of the theory surrounding the tokenomics of Blitz was derived from understanding the successes and
+        pitfalls of Gods Unchained [5]. In Blitz, there will be improvements made to the Gods Unchained card token
+        ecosystem.</p>
+    <p>Initially, players will be able acquire digital packs of cards. These packs will have their own associated token
+        for each production run, akin to how cards are printed for physical TCGs. Purely for example, the &ldquo;Initial
+        1st Edition Set&rdquo; will have packs minted, say 100,000 minted packs. Those packs will be acquired by players
+        for a set amount of currency, say 5 ERG. There will never be additional packs minted of the Initial 1st Edition
+        Set after they are sold, but there will be &ldquo;Unlimited Edition&rdquo; runs produced to ensure players can
+        gain access to limited high value cards &ndash; very similar to Pok&eacute;mon and Yu-Gi-Oh! print runs.</p>
+    <p>Acquired packs will be exchangeable via a smart contract for five cards. Card generation will follow a
+        pseudorandom methodology based on the type of pack purchased. A player will be able to connect an Ergo, Cardano,
+        or Nervos Wallet that maintains packs and open (i.e., exchange) those packs for cards. Based on our 100,000-pack
+        example above for the Initial 1st Edition Set, this means that there will only ever be 500,000 cards minted for
+        this imaginary set. Players might choose to leave packs unopened as demand for unopened packs could exceed
+        individual cards depending on the cost of individual cards, like many modern physical TCGs. In the spirit of
+        proper free-to-play games, there will be a standard set of competitive non-token cards that all players can use.
+    </p>
+    <p>Rarity is a topic of debate and is one of the most diverse aspects between TCGs, both physical and digital. Blitz
+        will maintain a more traditional approach to rarity. Card rarity will follow rarity indicators more like
+        Pok&eacute;mon and Yu-Gi-Oh! compared to Gods Unchained (i.e., something more like holographic cards and
+        editions versus card frame colors). Pull rates of rare cards will be dependent on the types of packs purchased
+        (i.e., a common pack will cost less but be less likely to provide players with rare cards).</p>
+    <p>Although not necessary for initial release, a future requirement to allow a better player driven economy to
+        flourish on the Ergo blockchain is a Layer 2 (L2) solution like the Immutable X platform on Ethereum. L2
+        solutions cut down on fees associated with exchanging tokens and currency, and increases transaction speed
+        (i.e., the opening of packs). Ergo already has the capability to facilitate a L1 player exchange system, but it
+        will carry across the current transaction fee and speed of the Ergo blockchain. At minimum, players will be able
+        to view tokens and exchange tokens (i.e., MetaMask-like signature confirmation when confirming a transaction,
+        review of transactions able to be acted on, and routing of tokens/funds based on what was exchanged). Linking
+        Ergo, Cardano, and Nervos Wallets to user accounts will be necessary to utilize cards in-game.</p>
+    <p>After the technical aspects of packs and cards are solidified, General variants and gameboard variants will be
+        able to be acquired and traded (completely cosmetic in utility). The theory for these items does not differ much
+        from what was stated above; additional ways to add ownership to a player&rsquo;s experience will help ensure
+        longevity and interaction with the game.</p>
+    <p>A token native to Blitz (BLTZ) might be minted, distributed, and utilized for various purposes. Some uses of the
+        token will include governance/card balance voting, payment of trade transaction fees, community funding,
+        development funding, purchasing of packs, and more. Once Blitz has all core mechanics and basic tokenomics in
+        place, and likely before full release, a Play-and-Earn system might be introduced comparable to Gods
+        Unchained&rsquo;s GODS token system. In Gods Unchained, GODS tokens are earned by players during community
+        events and through playing the game online against other players [5]. The design of the Play-and-Earn system is
+        the least defined at this point as it depends on the core aspects of Blitz being refined and implemented first
+        &ndash; ensuring that the Play-and-Earn system compliments the game design of Blitz requires play testing and
+        feedback from players which will not come until later phases.</p>
+    <h2 id="Lore">Lore</h2>
+    <p>Longevity in games is often dictated by replayability and investment into its characters or story. Blitz&rsquo;s
+        central theme will be that surrounding a time and society millenniums ahead of today. In Blitz, a universal
+        conflict is inevitable as resources have grown too thin for the many races that inhabit its worlds. To
+        circumvent an all-out war and destruction of races, all intelligent lifeforms abide by the Blitz Treaty. The
+        Blitz Treaty states that every century each race will pit their best leaders, tacticians, or warriors (i.e.,
+        Generals) against one another in a battle of wits. By winning matches of Blitz, Generals secure resources for
+        their race under the Blitz Treaty, thus prolonging their races longevity.</p>
+    <p>As the game progresses, specifics regarding races, their interests, their Generals, the universe, and more will
+        be expanded upon. Our official website will maintain all Lore documentation. For example:</p>
+    <div class="row">
+        <div class="col-3"> <img src="/assets/page5.jpg" alt=""> </div>
+        <div class="col-9"> <b>Margo, Queen of the Masquerades</b>
+            <p>Little is known about the Masquerade clan. What is known paints images of violence and countless
+                tragedies spanning the cosmos. Margo, the current leader of the Masquerades, is told to be a ruthless
+                fighter, unforgiving and lacking any notion for mercy. The mask she dons is rumored to be carved and
+                painted from the skull of the Masquerades previous leader, Margo&rsquo;s father. </p>
+        </div>
+    </div>
+    <h2 id="Mechanics">Mechanics</h2>
+    <h3 id="Design">Design Mockups</h3>
+    <p>The gameboard shown below is a minimalist mockup that will help readers understand and visualize the key
+        mechanical and gameplay features inherent to Blitz. Further below, readers can find actual images of the
+        gameboard and examples of cards.</p>
+    <img class="mb-4" src="/assets/page6.png" alt="">
+    <p class="image-description">Image 1: Basic layout of a Blitz gameboard where the blue arrow indicates hover to
+        discover, #g is Gold, #x/#xp
+        is Experience, #a is Attack, and #d is defense.</p>
+    <p>Although the locations and format of all content shown in Image 1 will inevitably change, the core elements are
+        summarized as follows.</p>
+    <ol>
+        <li>
+            <p><b>Resource Shop:</b> UI dedicated to allowing players to purchase cards from their preassembled decks
+                assuming
+                adequate Gold and Level requirements have been met.</p>
+        </li>
+        <li>
+            <p> <b>Hand:</b> holding area for all cards that have been purchased but not yet played.</p>
+        </li>
+        <li>
+            <p> <b>Match Info:</b> announces resources gained, unit information, and any major abilities played.</p>
+        </li>
+        <li>
+            <p> <b>Field:</b> location available to play purchased cards. As show in Image 1, there is a Frontline and
+                Backline.
+                The total amount of playable field spaces is yet to be determined. </p>
+        </li>
+        <li>
+            <p> <b>Wall:</b> the first line of defense to destroy before an enemy General can be attacked.</p>
+        </li>
+        <li>
+            <p> <b>NPCs:</b> targetable NPCs will spawn along the center line of the game board and be attacked by both
+                players.
+                NPCs will offer Gold and XP that scales depending on the length of the game.</p>
+        </li>
+        <li>
+            <p> <b>General:</b> an artistic representation of Generals will be visible on-screen as well as the
+                General&rsquo;s
+                current health and Level.</p>
+        </li>
+        <li>
+            <p> <b>Abilities:</b> Generals level up by defeating enemies, allowing them access to stronger units and new
+                abilities. Abilities will be a mix of active use skills or passive effects depending on the General.</p>
+        </li>
+        <li>
+            <p> <b>Cards:</b> players will find cards in the Resource Shop, a player&rsquo;s Hand, and Field. Most cards
+                will
+                have seven distinct gameplay elements: Attack (top left), Health (top right), Gold (mid left), XP
+                (mid
+                right), Race, Ability, and Level Requirement. See Image 2 below for the basic visual detail.</p>
+            <img class="mb-4" src="/assets/page7.png" alt="">
+            <p class="image-description"><b>Image 2:</b> Basic layout of a Blitz card where ATT is Attack, HP is Health,
+                Ed is Edition, and R is Rarity.
+            </p>
+        </li>
+    </ol>
+    <p>Examples of in-game UI and cards can be found below.</p>
+    <img class="mb-4" src="/assets/page7(1).png" alt="">
+    <p class="image-description">Image 3: Mockup of current in-game Blitz TCG gameboard (no text and no General
+        abilities).</p>
+    <div class="row my-4">
+        <div class="col"> <img class="card-image" src="/assets/page8.png" alt=""> </div>
+        <div class="col"> <img class="card-image" src="/assets/page8(1).png" alt=""> </div>
+    </div>
+    <p class="image-description">Image 4: Mockup of a Blitz TCG card.</p>
+    <h3 id="Rules">Rules</h3>
+    <p>Details of the ruleset below are subject to change based on playtesting. The <a
+            href="/whitepaper#Roadmap">Roadmap
+            and Future Vision</a> section explores additional ideas that could alter the ruleset described below e.g.,
+        2v2 matches.</p>
+    <ol>
+        <li>
+            <p>Each player will each start with the same amount of Gold.</p>
+        </li>
+        <li>
+            <p>Each player will start with their selected General at Level 1. Generals will have a max Level of 10.</p>
+        </li>
+        <li>
+            <p>Players will start a match with 3 minutes of banked time. After each player&rsquo;s turn, they will be
+                awarded 2 additional seconds of banked time. If a player took less than 2 seconds to move, they will not
+                gain any time back. A player that moves within 2.0 to 3.9 seconds will only receive 1.0-1.9 seconds of
+                time back, respectively. </p>
+        </li>
+        <li>
+            <p>Players will receive gold passively at the ends of their turns, ramping up depending on how long the
+                match has lasted.</p>
+        </li>
+        <li>
+            <p>Each player is allowed up to a certain number of total cards in their decks (number to be determined
+                based on future balancing).</p>
+        </li>
+        <li>
+            <p>Each player will only be allowed up to a certain number of cards based on Level requirement e.g., up to
+                10 Level 1 cards, up to five Level 2-5 cards, and so forth (actual numbers to be determined based on
+                future balancing).</p>
+        </li>
+        <li>
+            <p>Field Limits will exist for some cards meaning that only a limited number of said cards can be on a
+                friendly field at the same time. This is to prevent game breaking stackable buffs or debuffs.</p>
+        </li>
+        <li>
+            <p>Each player will have a max of 20 seconds per turn to set and use cards or abilities. Turns will
+                automatically end at the 20 second limit. There will be incentives for moving faster based on time
+                thresholds. For example, if a player moves in less than 5 seconds, they will receive some ## of Gold at
+                the end of their turn. Players that end their turns between 5-10 seconds will receive some lesser amount
+                of Gold, and so forth.</p>
+        </li>
+        <li>
+            <p>Players can purchase cards during their opponent&rsquo;s turn but can only set and use cards during their
+                own turn. Some General abilities will be useable during an opponent&rsquo;s turn.</p>
+        </li>
+        <li>
+            <p>Some race-locked cards will only be playable when using a General of the same race.</p>
+        </li>
+        <li>
+            <p>After a global countdown for the match to begin, there will be a blind auction that lasts up to 30
+                seconds or until each player bids to determine which player moves first. For example, if each player
+                starts with 500 Gold and Player 1 bids 300 and Player 2 bids 400, Player 2 will get to move first.
+                Player 2 loses 400 Gold in exchange for moving first, whereas Player 1 loses no Gold. If players do not
+                bid or there is a tie, then a player will be chosen at random.</p>
+        </li>
+        <li>
+            <p>After the blind auction ends, the match will officially start after 5 seconds. Players can purchase cards
+                with their remaining blind auction Gold in this timeframe.</p>
+        </li>
+        <li>
+            <p>Cards set, unless specified otherwise, must wait 1 turn before attacking or moving.</p>
+        </li>
+        <li>
+            <p>Players can only set up to 12 cards on the field at a time and hold up to 8 in their hand (numbers
+                expected to change based on play testing). Other than available field space and resources, there is no
+                limit to the number of cards a player can set per turn.</p>
+        </li>
+        <li>
+            <p>Cards will remain on the field until defeated (i.e., health reaches zero).</p>
+        </li>
+        <li>
+            <p>If a player&rsquo;s friendly Wall is intact, any cards placed on the friendly Backline are hidden from
+                opposing attackers and unattackable unless specified otherwise.</p>
+        </li>
+        <li>
+            <p>If a player&rsquo;s friendly Wall is intact, any cards placed on the friendly Backline will be unable to
+                attack any cards or NPCs unless specified otherwise.</p>
+        </li>
+        <li>
+            <p>Frontline cards will be able to attack the opposing players cards, NPCs, and Wall. Once an enemy Wall is
+                destroyed, attacking players can attack any opposing Cards on the field and enemy General. After a
+                friendly Wall is destroyed, Backline cards will be able to attack opposing cards, NPCs, and enemy
+                General (assuming the enemy Wall is also destroyed).</p>
+        </li>
+        <li>
+            <p>Players can move a card from the Backline to Frontline or vice versa. Moving a card from one field area
+                to another will cost that card its action for the turn unless specified otherwise. Once a player&rsquo;s
+                friendly Wall is destroyed, there is no longer any concept of Backline or Frontline, and their friendly
+                field is treated as a singular entity.</p>
+        </li>
+        <li>
+            <p>Walls will have some set amount of health (not yet defined). Upon the health of a Wall reaching zero, it
+                is destroyed and cannot be rebuilt.</p>
+        </li>
+        <li>
+            <p>Cards will deal damage based on their current Attack.</p>
+        </li>
+        <li>
+            <p>Cards and NPCs that are attacked (i.e., defending cards), unless specified otherwise, will damage the
+                attacker for the Attack of the defending card.</p>
+        </li>
+        <li>
+            <p>Each player will have a friendly NPC that spawns at the start of the match and at the end of every sixth
+                turn. NPCs that meet one another will attack each other at the end of each player&rsquo;s turn. If there
+                is no opposing NPC, the friendly NPC will continue to move. If an NPC makes it into the enemy
+                player&rsquo;s NPC spawner, the friendly player will receive a substantial number of resources. For
+                example, on turn 1 both NPCs will be as is shown below and proceed toward the center of the gameboard by
+                turn 3. It takes 6 turns for an uninhibited NPC to reach an enemy spawner. Further, when an enemy NPC is
+                destroyed, the friendly player will gain resources.</p> <img class="mb-4" src="/assets/page9.png"
+                alt="">
+        </li>
+        <li>
+            <p>When the health of a Card, NPC, Wall, or General reaches zero it is destroyed, and the opposing player
+                will get some amount of Gold and XP in return (defeating a General will end the match).</p>
+        </li>
+        <li>
+            <p>When the health of the friendly or opposing General reaches zero the match is over, and the player of the
+                conquering General is victorious.</p>
+        </li>
+        <li>
+            <p>At the point a player&rsquo;s timebank reaches zero, the opposing player will get one additional turn,
+                and then the player whose General has the highest percentage of health remaining is victorious. If no
+                Generals have been damaged or Generals have the same remaining health, then the match is counted as a
+                draw.</p>
+        </li>
+        <li>
+            <p>Future: Some cards will have tiers meaning that they will have evolved or upgraded forms available during
+                a match. Although the previous form of a card will not be required to play the upgraded form, the
+                previous form will be able to be exchanged for the upgraded form for the player to receive some amount
+                of Gold in return.</p>
+        </li>
+    </ol>
+    <h2 id="TokenomicsandRarity">Tokenomics and Rarity (section in progress)</h2>
+    <h3 id="PacksandCards">Packs and Cards</h3>
+    <p>There are two factors proven time and time again that must remain consistent for a competitive game to flourish
+        and remain relevant: removing or minimizing any pay-to-win aspects and ensuring gameplay remains fresh. To some
+        degree, these two concepts are at odds with the ideas of purchasing cards, cryptocurrency, tokens, and the like.
+        For example, when tokens are minted, they are often unable to be changed and thus the balancing of card
+        abilities becomes more difficult. Moreover, as sets are produced, there will be a limited number of packs able
+        to be purchased and thus prices of cards within those packs could increase making the barrier of entry too high
+        for some players.
+    </p>
+    <p>To avoid these pitfalls, Blitz will implement tokenomics and gameplay choices that ensure players are able to
+        remain engaged despite typical token complications.</p>
+    <ol>
+        <li>
+            <p>The first minting run of every set will be the &ldquo;1st Edition&rdquo; (1ED) version of the set. The
+                1ED version of sets will have a very limited production and provide players with unique cosmetic
+                experiences in-game. For example, certain cards within the 1ED set will have different skins, appear
+                differently on the gameboard, or even have different sound effects when compared to the &ldquo;Unlimited
+                Edition&rdquo; (UED) of the same card (specifics TBD). Players that own 1ED cards will also be awarded
+                more Blitz TCG tokens compared to players who use UED cards (Blitz TCG token specifics defined further
+                below). The 1ED sale period ends when all 1ED packs have been sold.</p>
+        </li>
+        <li>
+            <p>Upon the start of a competitive season, an &ldquo;Unlimited Edition&rdquo; (UED) run will occur. The UED
+                run will allow players to acquire all cards necessary for competitive play, albeit with less exclusivity
+                and thus less collectible value. UED packs will be purchasable throughout the entirety of the
+                competitive season in which they were introduced. After the current competitive season ends and new sets
+                are introduced, pack token generation of the previous set will be terminated. Therefore, although UED
+                packs have no upper limit during a competitive season, the supply of UED cards will hit a cap once the
+                season ends. Given that there will always be some cards from previous sets still allowed in competitive
+                play in future seasons, this will allow some amount of value appreciation on UED cards.</p>
+        </li>
+        <li>
+            <p>Much like Hearthstone&rsquo;s approach to competitive gameplay balancing, sets will be rotated out of
+                competitive play on some seasonal basis. All cards will still be useable in certain noncompetitive game
+                modes, but only approved cards from previous sets and current in-season sets will be useable in
+                competitive play.</p>
+        </li>
+        <li>
+            <p>Players might able to burn card tokens in exchange for Blitz TCG tokens (i.e., exchange cards directly to
+                a standing contract). For example, if a player opens 20 packs (100 cards) and only wants to keep 10 of
+                them, they can choose to sell the remaining 90 cards on the open market, or they can choose to exchange
+                those cards for a set amount of Blitz TCG tokens based on card rarity. Those acquired Blitz tokens can
+                then be used to purchase additional packs or utilized in one of the other manners described in the <a
+                    href="/whitepaper#BlitzTCGToken">Blitz
+                    Token (BLTZ)</a> section.</p>
+        </li>
+        <li>
+            <p>Cards in Blitz will be more like tokens versus typical NFTs. There will not be any mint numbers, e.g., 1
+                Margo = 1 Margo, and no Margo is rarer than another Margo in each set. The token images will have a
+                character image, card frame, some character descriptions, and so forth, but the card values like Health
+                and Attack will not be present. This will allow us to freely balance our cards in order to put gameplay
+                first. To learn more about this different approach, we recommend watching <a
+                    href="https://youtu.be/EFqTkuPhNw4">this video</a></p>
+        </li>
+    </ol>
+    <p>The following illustrations and numerical values represent the current plan and estimations for initial pack sale
+        volumes and pack types. As Blitz gets closer to the minting of the first set, these values are expected to
+        change. See <a href="/whitepaper#Appendix">Appendix
+            [A]</a> for additional calculation detail surrounding how these values were derived.</p>
+    <img class="graph-image my-4" src="/assets/page11.png" alt="">
+    <p class="image-description">Image 5: An estimation of the percentage of contributed values based on pack types.
+        Assumes a 1,000,000-pack
+        sale, all packs selling, and that packs contain 5 cards each.</p>
+    <div style="overflow: auto;" align="center">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <p>Pack Type</p>
+                    </td>
+                    <td>
+                        <p>USD/Pack</p>
+                    </td>
+                    <td>
+                        <p>ERG/Pack (8/21/22)</p>
+                    </td>
+                    <td>
+                        <p>Percent of Packs</p>
+                    </td>
+                    <td>
+                        <p>Total Packs</p>
+                    </td>
+                    <td>
+                        <p>Total Cards</p>
+                    </td>
+                    <td>
+                        <p>Total Value (USD)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Common Packs</p>
+                    </td>
+                    <td>
+                        <p>5.00</p>
+                    </td>
+                    <td>
+                        <p>1.60</p>
+                    </td>
+                    <td>
+                        <p>70.00%</p>
+                    </td>
+                    <td>
+                        <p>700,000</p>
+                    </td>
+                    <td>
+                        <p>3,500,000</p>
+                    </td>
+                    <td>
+                        <p>3,500,000</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Uncommon Packs</p>
+                    </td>
+                    <td>
+                        <p>7.50</p>
+                    </td>
+                    <td>
+                        <p>2.40</p>
+                    </td>
+                    <td>
+                        <p>25.00%</p>
+                    </td>
+                    <td>
+                        <p>250,000</p>
+                    </td>
+                    <td>
+                        <p>1,250,000</p>
+                    </td>
+                    <td>
+                        <p>1,875,000</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Rare Packs</p>
+                    </td>
+                    <td>
+                        <p>10.00</p>
+                    </td>
+                    <td>
+                        <p>3.21</p>
+                    </td>
+                    <td>
+                        <p>5.00%</p>
+                    </td>
+                    <td>
+                        <p>50,000</p>
+                    </td>
+                    <td>
+                        <p>250,000</p>
+                    </td>
+                    <td>
+                        <p>500,000</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><br></td>
+                    <td><br></td>
+                    <td>
+                        <p>Totals:</p>
+                    </td>
+                    <td>
+                        <p>100</p>
+                    </td>
+                    <td>
+                        <p>1,000,000</p>
+                    </td>
+                    <td>
+                        <p>5,000,000</p>
+                    </td>
+                    <td>
+                        <p>5,875,000</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p><br></p>
+    <p>Assuming packs are purchased in the percentage distribution described by Image 5, the average cost of a Blitz
+        card will be 1.18 USD. This is in line with what a consumer finds reasonable to pay based on the research
+        conducted into prior TCG card sales, specifically those of Gods Unchained&rsquo;s initial set (<a
+            href="/whitepaper#Appendix">Appendix
+            [A]</a>).</p>
+    <p>Upon the start of a competitive season, UED packs will be available for purchase. The UED sale period will last
+        the entire length of the current competitive season with no upper limit on pack sales during that time. After a
+        competitive season ends, UED packs from that season will no longer be sold. Pack prices for UED runs will not be
+        defined here until data is aggregated and reviewed for initial 1ED set sales.</p>
+    <p>Cards in Blitz will maintain 1 of 4 rarity indicators (CURL):</p>
+    <ol>
+        <li>
+            <p><b>Common</b> &ndash; the most basic and standard cards</p>
+        </li>
+        <li>
+            <p><b>Uncommon</b> &ndash; cards that inherently have more depth, restrictions, or specific uses</p>
+        </li>
+        <li>
+            <p><b>Rare</b> &ndash; cards that are likely General-specific and improve General-based strategies</p>
+        </li>
+        <li>
+            <p><b>Legendary</b> &ndash; cards likely key for end-game strategy or that bring overwhelming change</p>
+        </li>
+    </ol>
+    <p>Cards in Blitz will also maintain 1 of 4 Level Brackets:</p>
+    <ol>
+        <li>
+            <p><b>Starter</b> &ndash; level 1 cards.</p>
+        </li>
+        <li>
+            <p><b>Low</b> &ndash; level 2-4 cards.</p>
+        </li>
+        <li>
+            <p><b>Mid</b> &ndash; level 5-7 cards</p>
+        </li>
+        <li>
+            <p><b>Upper</b> &ndash; level 8-10 cards</p>
+        </li>
+    </ol>
+    <p>Thus, in total, there are 16 potential rarities in Blitz. The rarest card will be Legendary-Upper (LU), while the
+        lowest will be Common-Starter (CS). If edition is considered, then there are 32 potential rarities (16 1ED and
+        16 UED)</p>
+    <p>Tetlon&rsquo;s Medium article does an excellent job describing and analyzing what a user could expect rarity-wise
+        from purchasing certain pack types from GU&rsquo;s initial pack sale. Much of the detail here uses
+        Tetlon&rsquo;s analysis as a basis, albeit Blitz&rsquo;s rarity will be simpler in that there are no card
+        &ldquo;shines&rdquo; [9]. In Blitz, the chances of receiving certain rarity cards will depend on the rarity of
+        the pack purchased; higher rarity packs will have higher chances of containing higher rarity cards. Again, these
+        values are expected to change as the game matures. There will be 3 types of packs in Blitz; in ascending order
+        of rarity: Common, Uncommon, and Rare.</p>
+    <div style="overflow: auto;" align="center">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <p>Card Rarity</p>
+                    </td>
+                    <td>
+                        <p>Common Pack</p>
+                    </td>
+                    <td>
+                        <p>Uncommon Pack</p>
+                    </td>
+                    <td>
+                        <p>Rare Pack</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Common</p>
+                    </td>
+                    <td>
+                        <p>50.00%</p>
+                    </td>
+                    <td>
+                        <p>15.00%</p>
+                    </td>
+                    <td>
+                        <p>5.00%</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Uncommon</p>
+                    </td>
+                    <td>
+                        <p>25.00%</p>
+                    </td>
+                    <td>
+                        <p>50.00%</p>
+                    </td>
+                    <td>
+                        <p>15.00%</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Rare</p>
+                    </td>
+                    <td>
+                        <p>15.00%</p>
+                    </td>
+                    <td>
+                        <p>20.00%</p>
+                    </td>
+                    <td>
+                        <p>50.00%</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Legendary</p>
+                    </td>
+                    <td>
+                        <p>10.00%</p>
+                    </td>
+                    <td>
+                        <p>15.00%</p>
+                    </td>
+                    <td>
+                        <p>30.00%</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Totals:</p>
+                    </td>
+                    <td>
+                        <p>100.00%</p>
+                    </td>
+                    <td>
+                        <p>100.00%</p>
+                    </td>
+                    <td>
+                        <p>100.00%</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>Upon opening a pack, cards will be assigned pseudorandomly based on this percent distribution. On average, users
+        can expect something like the table below when it comes to cards received per pack type.</p>
+    <div align="left">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <p>Card Rarity</p>
+                    </td>
+                    <td>
+                        <p>Cards per Common Pack</p>
+                    </td>
+                    <td>
+                        <p>Cards per Uncommon Pack</p>
+                    </td>
+                    <td>
+                        <p>Cards per Rare Pack</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Common</p>
+                    </td>
+                    <td>
+                        <p>2.5</p>
+                    </td>
+                    <td>
+                        <p>0.75</p>
+                    </td>
+                    <td>
+                        <p>0.25</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Uncommon</p>
+                    </td>
+                    <td>
+                        <p>1.25</p>
+                    </td>
+                    <td>
+                        <p>2.5</p>
+                    </td>
+                    <td>
+                        <p>0.75</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Rare</p>
+                    </td>
+                    <td>
+                        <p>0.75</p>
+                    </td>
+                    <td>
+                        <p>1</p>
+                    </td>
+                    <td>
+                        <p>2.5</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Legendary</p>
+                    </td>
+                    <td>
+                        <p>0.5</p>
+                    </td>
+                    <td>
+                        <p>0.75</p>
+                    </td>
+                    <td>
+                        <p>1.5</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Totals:</p>
+                    </td>
+                    <td>
+                        <p>5</p>
+                    </td>
+                    <td>
+                        <p>5</p>
+                    </td>
+                    <td>
+                        <p>5</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p><br></p>
+    <p>A more comprehensive breakdown of card rarities obtainable per pack type can be found in <a
+            href="/whitepaper#Appendix">Appendix
+            [C]</a>; the figure found there describes the relationship between the CURL rarities and Level Brackets
+        insofar as chances to obtain each type of card per pack.</p>
+    <h2 id="BlitzTCGToken">Blitz TCG Token (BLTZ) (section in progress)</h2>
+    <p>As Blitz grows and users become more invested in the success of the project and game, there must be a structure
+        to promote healthy growth of the ecosystem. To that end, blockchains might be used to generate Blitz TCG tokens
+        (BLTZ). BLTZ will be a digital asset that will be used in a variety of ways, including card
+        balancing/governance, ecosystem stability, player incentives (card burning, profit sharing), and Play-and-Earn
+        rewards. The current and most discussed strategy is to create a novel closed-loop game economy unseen in the
+        current blockchain and gaming landscape.</p>
+    <p>More details to follow with token uses, allocation breakdowns, etc. in the coming months.</p>
+
+    <h2 id="Roadmap">Roadmap and Future Vision</h2>
+    <p>The Blitz TCG 2022 roadmap is provided in a visual format below. Dates are rough estimates based on how long
+        similar well-thought projects in this space typically take.</p>
+    <img class="mb-4" src="/assets/page14.png" alt="">
+    <p class="image-description">Image 6: Blitz TCG 2023 Roadmap.</p>
+    <p>There are additional features that could be added into the game if time and resources allow. Examples can be
+        found below.</p>
+    <ol>
+        <li class="line-style">
+            <p>Gameboards and Skins: gameboards, skins, and other cosmetic collectables add value to a player&rsquo;s
+                experience &ndash; tokens or otherwise, the more there is to achieve, the more likely players will stick
+                around. This is in scope as of February 2023.</p>
+        </li>
+        <li>
+            <p>Play-and-Earn: the end state of Blitz should have a token inherent to Blitz itself that players can earn
+                through competition and community events. Those tokens could then be exchanged for packs, cards, or
+                placed directly on the broader crypto market.</p>
+        </li>
+        <li>
+            <p>Campaign: computer AI are often a good teaching tool and would be useful to have in-game via a story mode
+                where, upon completion, additional Generals or non-token cards will be unlocked. </p>
+        </li>
+        <li>
+            <p>2v2 Game Mode: due to the nature of Blitz, specifically its more active gameplay style, expanding the
+                amount of field spaces in a thoughtful manner and allowing two players to simultaneously play together
+                would add a level of complexity and engagement unprecedented in the current digital TCG landscape.</p>
+        </li>
+        <li>
+            <p>Additional Content: broadly speaking, given enough time and resources, additional cards, additional Lore,
+                Generals, game modes, collectibles, ladders, and more could be introduced.</p>
+        </li>
+    </ol>
+    <h2 id="Team">Team</h2>
+    <p>Blitz TCG will remain a small, talented, and decentralized team for the foreseeable future.</p>
+    <div class="team-container" align="left">
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage1.png" alt=""> </div>
+            <div class="col-9">
+                <p><b>Mick Blackwell (Project Lead)</b></p>
+                <p>An avid competitive video game player and card collector (<a
+                        href="https://www.instagram.com/mickblac/">@mickblac</a>) with prior presences on <a
+                        href="https://www.youtube.com/channel/UC8VLeovHioelyEH1-6TUbtg">YouTube</a> and <a
+                        href="https://www.twitch.tv/lowkeyn3rd">Twitch</a>, Mick has ample experience knowing what makes
+                    good games tick. Mick&rsquo;s academic background is in Engineering and Mathematics whereas his
+                    professional career is most notable as an Implementation Lead at Epic, one of the largest healthcare
+                    software companies on the planet. His goal is to create a novel and unique TCG that leverages
+                    blockchain technologies to their fullest potential.</p>
+                <p>LinkedIn: <a
+                        href="https://www.linkedin.com/in/mick-blackwell-eit-b034aba0/">https://www.linkedin.com/in/mick-blackwell-eit-b034aba0/</a>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peoplepage2.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Maxim Khodyriev (Concept Artist):</b></p>
+                <p>Maxim is a freelance digital artist (2D Artist/Concept Artist/Game Designer), and he has been working
+                    for more than 12 years in the game development industry (iOS/Android/Mac/PC). Maxim is passionate
+                    about games, art for games, and the broader games industry. He started drawing seriously in 2008 and
+                    wants to continuously improve his art skills through game design and development.</p>
+                <p>Fiverr: <a href="https://www.fiverr.com/maximkhodyriev">https://www.fiverr.com/maximkhodyriev</a>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage3.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Ignacio Oyola (Dev Advisor)</b></p>
+                <p>Self-taught and wildly creative; Ignacio learned to program in MS-DOS and Cobol a long time ago
+                    (using 5&frac14;&quot; floppy disks and no internet). Now, he writes code to relax &ndash; it&apos;s
+                    his personal Yoga. He enjoys collaborating in OpenSource projects and developing new electronics
+                    devices. As a kid, he beat both Monkey Island games in English without knowing the language, just by
+                    trying everything that could be done in the game.</p>
+                <p>Insta: <a href="https://www.instagram.com/ladopixel/">https://www.instagram.com/ladopixel/</a> </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage4.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Clarence Yapp (Composer)</b></p>
+                <p>Clarence Yapp started as a film director enthusiast before realizing that film composition was
+                    equally fun. He has been writing since 2010 while attending graduate school at Oxford, UK. Some of
+                    his work has been used in movie campaigns for Hydro, the Hunger Games, and Xmen Apocalypse.
+                    Recently, he has written music for science animations at Harvard Medical School where he is also
+                    responsible for helping scientists design better experiments and developing computer models to look
+                    for diseases.</p>
+                <p>Sound Cloud: <a
+                        href="https://soundcloud.com/epickayay-musicflavor">https://soundcloud.com/epickayay-musicflavor</a>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage5.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Yassine Ennaim (Website Developer)</b></p>
+                <p>Yassine&rsquo;s passion is making ideas come to life, be it working solo, as part of a team, or
+                    leading a team of fellow developers. Throughout his 10 years of development experience, he&rsquo;s
+                    worked everywhere from startups to large firms, building products from the ground up and
+                    implementing new features for existing products.</p>
+                <p>Fiverr: <a
+                        href="https://business.fiverr.com/freelancers/ennaim">https://business.fiverr.com/freelancers/ennaim</a>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage6.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Feliciah Delrie (Character Designer)</b></p>
+                <p>Feliciah is a 2D character designer and illustrator who has worked as a freelancer for over two
+                    years. She is a self-taught artist and has been drawing for most of her life. Feliciah is incredibly
+                    passionate about game design, character creation, and the various nuances that go into creating
+                    illustrations.</p>
+                <p>Fiverr: <a href="https://www.fiverr.com/feliciah_delrie">https://www.fiverr.com/feliciah_delrie</a>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage7.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Nilson Vilela (Card Artist)</b></p>
+                <p>Nilson has been an illustrator for 6 years and has been drawing digital art for about 2 years.
+                    He&rsquo;s been working in this field as a freelancer and has experience as a character designer,
+                    concept artist, and environment designer. His passion for games led him to want to draw game related
+                    characters and concepts.</p>
+                <p>ArtStation: <a href="https://www.artstation.com/noslinart">https://www.artstation.com/noslinart</a>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage8.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Jeferson Sadzinski (Card Artist)</b></p>
+                <p>Jeferson is a 2D digital artist. He worked for about five years as a freelance comic book
+                    illustrator. He is currently looking to expand his experience in the games industry. He is
+                    passionate about expanding his understanding of art and loves to work on exciting new art projects.
+                </p>
+                <p>ArtStation: <a
+                        href="https://artstation.com/jefersonsadzinski">https://artstation.com/jefersonsadzinski</a>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage9.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Benj Galutan (Card Artist)</b></p>
+                <p>Benj has been a freelance illustrator (character artist/comic illustrator) for more than 4 years. He
+                    is a self-taught artist and has been drawing since his childhood. Benj is also a passionate
+                    sculptor; during longer breaks on his illustration projects, he diverts his artistic skills to
+                    sculpting characters to further improve his skills.</p>
+                <p>Twitter: <a href="https://twitter.com/benjkreations">https://twitter.com/benjkreations</a> </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage10.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Abner Koenigma (Card Artist)</b></p>
+                <p>Abner has been working as a professional illustrator since 2018. His dream started with traditional
+                    illustration during his first years of art study and expanded to other areas such as character
+                    design and environments. After a digital painting workshop, he acquired a love for digital mediums
+                    which allows us to be creative and versatile. His love continues for both traditional and digital
+                    art. Abner is always looking to learn and improve his skills.</p> <br>
+                <p>Instagram: <a href="https://www.artstation.com/abner-1994">https://www.artstation.com/abner-1994</a>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage11.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Levi Aquino (Card Artist)</b></p>
+                <p>Levi has been a student of art for about 9 years and started teaching art classes around 5 years ago.
+                    This led her to start to draw digitally in 2020 during the pandemic and now her main job is
+                    illustration and concept art. Levi is a big fan of horror, rainy days, and MF DOOM!</p> <br><br>
+                <p>Instagram: <a
+                        href="https://www.instagram.com/mrs.aquinoart">https://www.instagram.com/mrs.aquinoart</a> </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage12.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Douglas &quot;Dogzy&quot; Azevedo (Card Artist)</b></p>
+                <p>Dogzy, from Brazil, has been working with illustration for 6 years and has spent 1 year in the
+                    digital space. He&rsquo;s been drawing since he was a child. His passion and creativity awoke very
+                    early, mainly due to strong influences from the games he played. He loves creating and discovering
+                    new things &ndash; themes like apocalyptic, futuristic, space, fantasy, and so on are always fun to
+                    work on!</p>
+                <p>ArtStation: <a href="https://www.artstation.com/dogzy">https://www.artstation.com/dogzy</a> </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage13.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Matheus da Costa Brisola (Card Artist)</b></p>
+                <p>Matheus is a freelance illustrator with 4 years of experience, and he is currently working in the
+                    concept art and character design fields. He has a strong love for art and truly wants to improve and
+                    leave a legacy on the world in the form of his art. Aside from art, Matheus is a huge fan of
+                    JoJo&rsquo;s and dark fantasy everything!</p>
+                <p>Instagram: <a href="https://www.instagram.com/_joestrela/">https://www.instagram.com/_joestrela/</a>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage14.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Satoshi Yoshihiro (Card Artist)</b></p>
+                <p>Since he was young, Satoshi has worked as a traditional artist and has spent 2 years as a digital
+                    illustrator. He began drawing digitally on his phone and quickly developed skills and passion for
+                    it. He later started working as a freelancer and earned enough to acquire a pen, tablet, and laptop
+                    to further his ambitions. His confidence in his abilities is high, which is sufficient for him to
+                    continue producing new art while improving his skills.</p>
+                <p>Twitter: <a href="https://twitter.com/Yoshihi1Satoshi">https://twitter.com/Yoshihi1Satoshi</a> </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage15.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Lara Melo (Card Artist)</b></p>
+                <p>Lara started studying illustration in 2018 and it quickly became her primary passion. In 2020, she
+                    had the talent and experience to turn her illustration efforts into a career. She currently works as
+                    a freelance illustrator for various projects and groups. She simply loves to draw, paint, and is
+                    always looking for new opportunities to improve her skills.</p>
+                <p>Twitter: <a href="https://twitter.com/larameloart">https://twitter.com/larameloart</a> </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage16.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Nathaniel &ldquo;Dough&rdquo; Dela Cruz (Card Artist)</b></p>
+                <p>Nathaniel is a freelance artist living in the Philippines who focuses mostly on character art. He
+                    does art because he loves it. Two years ago, his journey started with the advice from his friends
+                    and drawing using his phone. He&rsquo;s now drawn hundreds of works, completed several freelance
+                    projects, and is slowly improving his art setup. Passion leads Nathaniel to better his skills to
+                    increase his artistic capability and provide a better service.</p>
+                <p>Twitter: <a href="https://twitter.com/_doughnath">https://twitter.com/_doughnath</a> </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage17.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Edson Cavalcanti (Card Artist)</b></p>
+                <p>Ed lives in S&atilde;o Paulo and has been working as a freelance illustrator and concept artist for
+                    over 4 years. He started studying digital illustration in 2016. Ed is currently working as a 2D
+                    artist for a studio in the USA but is completely open to new, fun, and challenging opportunities in
+                    the freelance space.</p>
+                <p>ArtStation: <a href="https://www.artstation.com/edtavares">https://www.artstation.com/edtavares</a>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"> <img src="/assets/peaoplepage18.png" alt=""> </div>
+
+            <div class="col-9">
+                <p><b>Foeniculum (Card Artist)</b></p>
+                <p>Foe is a self-taught artist who is both cursed and blessed with a constant need to vomit all the
+                    wacky creatures that populate his mind. He gives his creatures that &ldquo;WTF&rdquo; factor that
+                    makes people question his mental wellbeing. Foe grew up on bread and Pok&eacute;mon, which ignited a
+                    passion for character design from an early age.</p>
+                <p>Twitter: <a href="https://twitter.com/ERGnomes">https://twitter.com/ERGnomes</a> </p>
+            </div>
+        </div>
+    </div>
+    <h2 id="Partners">Partners</h2>
+    <p>Blitz TCG will be working with other respected and notable groups to ensure our product is reliable and that we
+        are able to meet your expectations.</p>
+    <div class="partners-container row">
+        <div class="col-3"> <img src="/assets/partners1.png" alt=""> </div>
+
+        <div class="col-9">
+            <p><b>ErgoPad</b></p>
+            <p>ErgoPad is a token launch platform on the Ergo blockchain. They help teams crowd source funding and have
+                built an open-source python-based tech stack that Ergo developers can take advantage of. They have
+                sponsored Ergo hackathons, produced the bi-weekly Proof of Ergo podcast, and will continue to contribute
+                to the Ergo ecosystem as it grows into the future. </p>
+            <p>Website: <a href="https://ergopad.io/">https://ergopad.io/</a> </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3"> <img src="/assets/partners2.png" alt=""> </div>
+
+        <div class="col-9">
+            <p><b>Keshav Infotech</b></p>
+            <p>2006 was the birth year of Keshav Infotech when two friends, Ghanshyam and Samir, decided to take their
+                passion and provide revolutionary web and mobile solutions to the world. They started with just 3
+                computer systems out of which one was borrowed in a small room. Today, Keshav Infotech holds the finest
+                technology to provide all kinds of IT Solutions with a staff of 75+ skilled professionals.</p>
+            <p>Website: <a href="https://www.keshavinfotech.com/">https://www.keshavinfotech.com/</a> </p>
+        </div>
+    </div>
+
+    <h2 id="Disclaimer">Disclaimer</h2>
+    <p>This section will maintain information about Legal Notices, Risks Disclosures, and other pertinent information
+        related to playing Blitz TCG&trade; and purchasing any related content.</p>
+    <p>In brief, all statements and information documented in this Whitepaper and on any other official Blitz TCG&trade;
+        platforms linked from within this document involve many risks and uncertainties. All statements and information
+        other than statements of referenced historical fact are forward-looking (i.e., optimistic) statements and should
+        not be taken as fact. No information or content inherent to any of the Blitz TCG&trade; Whitepaper or official
+        Blitz TCG&trade; platforms should be considered financial, legal, investment, business, tax advice, or advice of
+        any other broker related offerings. Ensure to verify any information related to Blitz TCG&trade; has been
+        provided and communicated by a Blitz TCG&trade; authorized representative.</p>
+    <h2 id="References">References</h2>
+    <p>[1] Magic: The Gathering, Wikipedia, Wikimedia Foundation, December 9, 2021. Accessed on: December 21, 2022.
+        [Online]. Available: <a
+            href="https://en.wikipedia.org/wiki/Magic:_The_Gathering#cite_note-1">https://en.wikipedia.org/wiki/Magic:_The_Gathering#cite_note-1</a>
+    </p>
+    <p>[2] Mana, Hearthstone Wiki, FANDOM Games, December 11, 2021. Accessed on: December 21, 2022. [Online]. Available:
+        <a href="https://hearthstone.fandom.com/wiki/Mana">https://hearthstone.fandom.com/wiki/Mana</a>
+    </p>
+    <p>[3] Energy card (TCG), Bulbapedia, Bulbagarden, November 7, 2021. Accessed on: December 21, 2022. [Online].
+        Available: <a
+            href="https://bulbapedia.bulbagarden.net/wiki/Energy_card_(TCG)">https://bulbapedia.bulbagarden.net/wiki/Energy_card_(TCG)</a>
+    </p>
+    <p>[4] Monster Card, Yu-Gi-Oh! Wiki, FANDOM Games, August 5, 2021. Accessed on: December 21, 2022. [Online].
+        Available: <a href="https://yugioh.fandom.com/wiki/Monster_Card">https://yugioh.fandom.com/wiki/Monster_Card</a>
+    </p>
+    <p>[5] Gods Unchained Whitepaper, Gods Unchained, Gods Unchained Corp, September 29, 2021. Accessed on: December 22,
+        2022. [Online]. Available: <a
+            href="https://images.godsunchained.com/misc/whitepaper.pdf">https://images.godsunchained.com/misc/whitepaper.pdf</a>
+    </p>
+    <p>[6] Fast chess, Wikipedia, Wikimedia Foundation, December 30, 2021. Accessed on: January 2, 2022. [Online].
+        Available: <a href="https://en.wikipedia.org/wiki/Fast_chess">https://en.wikipedia.org/wiki/Fast_chess</a> </p>
+    <p>[7] Statistics on the Duration of Hearthstone Games, Vicious Syndicate, Vicious Syndicate Gaming, April 18, 2016.
+        Accessed on: January 2, 2022. [Online]. Available: <a
+            href="https://www.vicioussyndicate.com/statistics-on-the-duration-of-hearthstone-games-over-16000-analyzed/">https://www.vicioussyndicate.com/statistics-on-the-duration-of-hearthstone-games-over-16000-analyzed/</a>
+    </p>
+    <p>[8] Season of Love Data Overview, Team Leviathan Gaming, March 11, 2021. Accessed on: January 2, 2022. [Online].
+        Available: <a
+            href="https://teamleviathangaming.com/love-data-overview/">https://teamleviathangaming.com/love-data-overview/</a>
+    </p>
+    <p>[9] A Guide to Card Packs in Gods Unchained, Tetlon, February 20, 2019. Accessed on: January 23, 2022. [Online].
+        Available: <a
+            href="https://tetlon.medium.com/a-guide-to-card-packs-in-gods-unchained-6eead65af8c2">https://tetlon.medium.com/a-guide-to-card-packs-in-gods-unchained-6eead65af8c2</a>
+    </p>
+    <h2 id="Appendix">Appendix</h2>
+    <p>[A] Excel estimations for God&rsquo;s Unchained first pack sale and Blitz&rsquo;s fist pack sale</p>
+    <img class="mb-4" src="/assets/appendix1.png" alt="">
+    <p>Appendix Figure 1: Based on discoverable and known data about GU&rsquo;s initial sale, it&rsquo;s estimated that
+        1,335,185 packs were sold in total across the 4 different pack offerings.</p>
+    <img class="mb-4" src="/assets/appendix2.png" alt="">
+
+
+    <p>Appendix Figure 2: Although subject to change, using the derived amounts from GU&rsquo;s initial pack sale in
+        Appendix Figure 1, Blitz&rsquo;s initial pack sale will follow a similar format and aim to reach similar goals.
+    </p>
+    <p>[B] Basic infrastructure diagram for core Blitz TCG integrations</p>
+    <img class="mb-4" src="/assets/appendix3.png" alt="">
+
+
+    <p>Appendix Figure 3: Some vendors and integration pathways are likely to change as development continues and more
+        is learned about what is needed for the best user experience</p>
+    <p>[C] Enhanced Rarity Table</p>
+    <img class="mb-4" src="/assets/appendix4.png" alt="">
+
+    <p>Appendix Figure 4: Assuming 150 cards are released in the first set, this figure displays the average likelihood
+        to receive all current combinations of Rarity-Level Bracket cards</p>
+    <p>[D] Miscellaneous Game-Related To-Dos/Playtesting Goals</p>
+    <ul>
+        <li>
+            <p>Determine the proper Gold amounts for when player&rsquo;s turns end</p>
+        </li>
+        <li>
+            <p>Determine NPC defeat worth and NPC spawner invade worth</p>
+        </li>
+        <li>
+            <p>Determine ideal deck size, both min and max</p>
+            <ul>
+                <li>
+                    <p>Determine how many cards of each level brackets are allowed</p>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p>Determine proper amount of starting Gold at the start of the match to ensure active gameplay</p>
+        </li>
+        <li>
+            <p>Determine if there should be a max bid value at the start of the match</p>
+        </li>
+        <li>
+            <p>Determine specifics behind limited edition mints and/or card variants</p>
+        </li>
+        <li>
+            <p>Add a General Resource bar to show overall General winrates in the Blitz universe per season</p>
+        </li>
+    </ul>
     <a type="button" class="btn submit-btn" target="_blank"
         href="https://firebasestorage.googleapis.com/v0/b/blitz-tcg-test.appspot.com/o/Blitz-TCG-Whitepaper.pdf?alt=media&token=cfa9cfbb-4082-44aa-8768-ef7d88da1f25">Download</a>
 </div>

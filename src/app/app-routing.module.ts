@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { CollectiblesComponent } from './collectibles/collectibles.component';
 import { CookiepolicyComponent } from './cookiepolicy/cookiepolicy.component';
 import { DisclaimerComponent } from './disclaimer/disclaimer.component';
 import { EulaComponent } from './eula/eula.component';
@@ -53,12 +54,15 @@ const routes: Routes = [
   { path: 'disclaimer', component: DisclaimerComponent },
   { path: 'use', component: UseComponent },
   { path: 'whitepaper', component: WhitepaperComponent },
+  { path: 'collectibles', component: CollectiblesComponent },
   { path: '404', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    initialNavigation: 'enabledBlocking'
+  })],
   exports: [RouterModule],
 })
 export class AppRoutingModule { }
