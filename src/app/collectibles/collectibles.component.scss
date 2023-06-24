@@ -1,0 +1,779 @@
+:host {
+  z-index: 9999;
+}
+
+.message-container {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  z-index: 9999;
+  border-radius: 5px;
+  text-decoration: none;
+  background-color: rgba(7, 10, 14, 0.9);
+  padding: 5px;
+  color: #fff;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 50px;
+  text-align: center;
+  font-size: 2rem;
+
+  &::before {
+    content: " ";
+    position: absolute;
+    inset: 0;
+    border-radius: 5px;
+    padding: 3px;
+    background: linear-gradient(to right, #a99151 22%, #877036 24%, #ffffcf 26%, #d0b46c 27%, #f2d68d 40%, #a49053 78%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+  }
+}
+
+.header-section {
+  position: relative;
+  margin-top: 200px;
+}
+
+.pfp-image {
+  background-image: url(/assets/Header_User_Image_Placeholder.png);
+  width: 165px;
+  height: 165px;
+  position: absolute;
+  top: -142px;
+  left: calc(50% - 80px);
+  display: block;
+  background-size: contain;
+  z-index: 999;
+  background-repeat: no-repeat;
+  background-position-x: 0px;
+  background-position-y: 0px;
+  border-radius: 50%;
+
+  &::after {
+    content: " ";
+    background-image: url(/assets/Header_User_Image_Outline_01.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 235px;
+    height: 235px;
+    position: absolute;
+    left: -35px;
+    top: -35px;
+    z-index: 999;
+  }
+}
+
+.username-bar {
+  background-image: url(/assets/top_badge.png);
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background-size: cover;
+  background-position: center;
+  display: block;
+}
+
+.username-text {
+  text-align: center;
+  color: #FF9E00;
+  font-size: 35px;
+  padding-top: 17px;
+}
+
+.total-cards {
+  &::before {
+    content: " ";
+    width: 50px;
+    height: 50px;
+    background-image: url(/assets/Total_cards.png);
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin-right: 10px;
+  }
+}
+
+.card-type {
+  position: relative;
+
+  &::before {
+    content: " ";
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin-right: 10px;
+    position: absolute;
+    left: -40px;
+    top: 2px;
+  }
+}
+
+.first-edition::before {
+  content: " ";
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin-right: 10px;
+  background-image: url(/assets/First_Edition.png);
+}
+
+.unl-edition::before {
+  content: " ";
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin-right: 10px;
+  background-image: url(/assets/Un_Edition.png);
+}
+
+.cards-type-list {
+  .common::before {
+    background-image: url(/assets/rarity_icon_placeholder_GRAY.png);
+  }
+
+  .uncommon::before {
+    background-image: url(/assets/rarity_icon_placeholder_GREEN.png);
+  }
+
+  .rare::before {
+    background-image: url(/assets/rarity_icon_placeholder_BLUE.png);
+  }
+
+  .legendary::before {
+    background-image: url(/assets/rarity_icon_placeholder_ORANGE.png);
+  }
+}
+
+.cards-details {
+  display: flex;
+  color: #FFFFFF;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 20px auto;
+  max-width: 800px;
+}
+
+.number {
+  font-size: 24px;
+
+  &.total-cards-number {
+    font-size: 34px;
+  }
+}
+
+.submit-btn {
+  text-decoration: none;
+  background-color: transparent;
+  border-radius: 5px;
+  z-index: 99;
+  position: relative;
+  font-size: 1rem;
+  border: none !important;
+  display: block;
+  background-image: url(/assets/BTN_clear_normal.png);
+  width: 145px;
+  background-size: cover;
+  background-position: center;
+  height: 50px;
+  box-shadow: none !important;
+  color: #fff !important;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  left: -40px;
+  margin-bottom: 15px;
+
+  &:hover {
+    background-image: url(/assets/BTN_clear_selected.png);
+  }
+
+  &:focus {
+    background-image: url(/assets/BTN_clear_selected.png);
+  }
+
+  &:active {
+    background-image: url(/assets/BTN_clear_pressed.png);
+    top: 1px;
+  }
+}
+
+.filter-inputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  align-content: center;
+  position: relative;
+  flex-wrap: wrap;
+  padding-top: 25px;
+
+  .select-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: calc(16.6666666667% - 10px);
+    min-width: 145px;
+    margin-bottom: 10px;
+  }
+
+  .select-label {
+    color: #B7BEC5;
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .selected-option {
+    background-color: #00030B;
+    color: #A09B92;
+    height: 40px;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 10px;
+    border: #051526 2px solid;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    background-color: #020C2F;
+    border: 2px solid #0B1E3F;
+    border-radius: 5px;
+    position: absolute;
+    width: 100%;
+    top: 42px;
+    color: #9F9B92;
+    padding: 10px;
+    z-index: 99;
+
+    span {
+      margin-bottom: 5px;
+
+      &.active {
+        color: #FFFFFF;
+      }
+
+      &:last-child {
+        margin-bottom: 0px;
+      }
+    }
+  }
+}
+
+.cards-list {
+  position: relative;
+  background-color: #070F1C;
+
+  &::before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 100px;
+    background-position: top;
+    background-size: cover;
+    background-image: url(/assets/Border_Body_Top.png);
+    top: 0px;
+  }
+}
+
+.cards-filter {
+  max-width: 900px;
+  margin: auto;
+
+  h2 {
+    font-size: 30px;
+    color: #fff;
+    z-index: 99999;
+    position: relative;
+    text-align: center;
+    padding-top: 30px;
+    display: block;
+    padding-bottom: 15px;
+  }
+}
+
+.search-input {
+  margin-top: 20px;
+
+  input {
+    width: 65%;
+    height: 45px;
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 30px;
+    color: #577690;
+    padding-left: 15px;
+    background-color: #01030B;
+    border: 2px solid #051526;
+    outline: none;
+  }
+}
+
+::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
+  color: #577690;
+}
+
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #577690;
+}
+
+:-ms-input-placeholder {
+  /* IE 10+ */
+  color: #577690;
+}
+
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: #577690;
+}
+
+.card-container {
+  img {
+    width: 90%;
+    margin: 0 auto;
+    display: block;
+  }
+}
+
+.cards-carousel {
+  padding-bottom: 40px;
+}
+
+.filter-inputs::before {
+  content: " ";
+  position: absolute;
+  width: 100%;
+  height: 100px;
+  background-position: top;
+  background-size: contain;
+  background-image: url(/assets/Border_Body_Top.png);
+  top: 0px;
+  background-repeat: no-repeat;
+
+}
+
+.slider {
+  position: relative;
+  padding-top: 40px;
+
+  &::before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 100px;
+    background-position: top;
+    background-size: contain;
+    background-image: url(/assets/Border_Body_Top.png);
+    top: 0px;
+    background-repeat: no-repeat;
+  }
+}
+
+.swiper-buttons .swiper-button {
+  background-position: center;
+  background-size: cover;
+  background-color: transparent;
+  border: none;
+  width: 50px;
+  height: 50px;
+  margin-left: 10px;
+  position: absolute;
+  z-index: 99;
+}
+
+.swiper-buttons {
+  position: absolute;
+  top: 50%;
+  z-index: 99;
+  width: 100%;
+}
+
+.swiper-buttons .swiper-button.prev {
+  background-image: url(/assets/Section_Right_btn.png);
+  right: -25px;
+}
+
+.swiper-buttons .swiper-button.next {
+  background-image: url(/assets/Section_Left_btn.png);
+  left: -60px;
+}
+
+.pagination {
+  background-image: url(/assets/pagination-bg.png);
+  background-size: cover;
+  width: 100%;
+  height: 70px;
+  margin-bottom: 50px;
+}
+
+.pagination-items {
+  margin: 0 auto;
+  padding-top: 20px;
+  color: #FFF;
+}
+
+.first-page,
+.last-page {
+  color: #57839A;
+}
+
+.show-current-page {
+  color: #B1D5DC;
+}
+
+.arrow {
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  position: relative;
+  top: 4px;
+  margin: 0px 15px;
+}
+
+.prev-arrow {
+  background-image: url(/assets/pagination-arrow-left.png);
+}
+
+.next-arrow {
+  background-image: url(/assets/pagination-arrow-right.png);
+}
+
+.card-container {
+  display: flex;
+}
+
+.modal {
+  background-color: rgba(0, 0, 0, .5);
+  z-index: 99999;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.modal-dialog {
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  // width: 50%;
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.modal-content {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  z-index: 9999;
+  border-radius: 5px;
+  text-decoration: none;
+  background-color: rgba(7, 10, 14, 0.9);
+  padding: 5px;
+  color: #fff;
+
+  &::before {
+    content: " ";
+    position: absolute;
+    inset: 0;
+    border-radius: 5px;
+    padding: 3px;
+    background: linear-gradient(to right, #a99151 22%, #877036 24%, #ffffcf 26%, #d0b46c 27%, #f2d68d 40%, #a49053 78%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+  }
+}
+
+.close-popup {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-image: url(/assets/Close_small_BTN_00.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: none;
+  right: 10px;
+  top: 10px;
+  background-color: transparent;
+  z-index: 99999;
+}
+
+.modal-body {
+  padding: 0;
+
+  img.card-image {
+    width: 100%;
+  }
+
+  .card-name {
+    color: #FFA415;
+    font-size: 1.75rem;
+    text-align: center;
+    margin-top: 25px;
+    background-image: url(/assets/Card_popup_win_Title_Ribbon.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 120px;
+    position: relative;
+    right: -8px;
+    width: 100%;
+    background-position: right;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+  }
+}
+
+.card-image-container {
+  padding: 20px;
+}
+
+.amount-owned {
+  text-align: center;
+  margin-top: 15px;
+  color: #A8A8A7;
+
+  .amount {
+    color: #FFFFFF;
+    margin-left: 10px;
+  }
+}
+
+.card-info {
+  color: #A8A8A9;
+  font-size: 1.35rem;
+  text-align: center;
+  padding-right: 20px;
+  padding-left: 10px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.card-stats-title {
+  background-image: url(/assets/card-stats-value-bg.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-size: 1.55rem;
+  text-align: center;
+  padding: 5px 0px;
+  margin-bottom: 15px;
+  color: #E8E3DD;
+}
+
+.card-stats {
+  display: flex;
+  flex-direction: row;
+  margin: 0px 10px;
+  margin-right: 20px;
+
+  .left-stats {
+    flex: 1;
+  }
+
+  .right-stats {
+    flex: 1;
+  }
+
+  .stat {
+    background-image: url(/assets/card-details-value-bg.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    padding-left: 40px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    color: #A8A8A8;
+    font-size: 14px;
+
+    &::before {
+      content: " ";
+      width: 40px;
+      height: 40px;
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: absolute;
+      left: -5px;
+      top: -2px;
+      z-index: 999999;
+    }
+  }
+
+  .attack::before {
+    background-image: url("/assets/Tangents_icon Copy.png");
+  }
+
+  .gold::before {
+    background-image: url("/assets/Tangents_icon Copy 3.png");
+  }
+
+  .health::before {
+    background-image: url("/assets/Tangents_icon_heart.png");
+  }
+
+  .xp::before {
+    background-image: url("/assets/Tangents_icon_blance.png");
+  }
+}
+
+.stat-value {
+  float: right;
+  color: #FFF;
+}
+
+.card-details {
+  background-image: url(/assets/Card_win_Detail_section.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-top: 40px;
+}
+
+.detail {
+  position: relative;
+  padding-left: 40px;
+  padding-top: 0px;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  margin-right: 15px;
+  color: #A8A8A8;
+  font-size: 18px;
+  display: flex;
+
+  &::before {
+    content: " ";
+    width: 30px;
+    height: 35px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 999999;
+  }
+}
+
+.clan::before {
+  background-image: url("/assets/Clan_icon.png");
+}
+
+.level::before {
+  background-image: url("/assets/Lvl_icon.png");
+}
+
+.edition::before {
+  background-image: url("/assets/First_Edition.png");
+}
+
+.rarity::before {
+  background-image: url("/assets/rarity_icon_placeholder_ORANGE.png");
+}
+
+.artist::before {
+  background-image: url("/assets/Artist_icon.png");
+}
+
+.Set::before {
+  background-image: url("/assets/Set_icon.png");
+}
+
+.detail-rarity {
+  display: flex;
+  flex-direction: row;
+}
+
+.detail-value {
+  background-image: url(/assets/card-details-value-bg.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  font-size: 17px;
+  color: #FFF;
+  margin-left: 10px;
+  padding-left: 10px;
+  height: 35px;
+  flex: 1px;
+  padding-top: 4px;
+}
+
+@media screen and (max-width: 825px) {
+  .modal-dialog {
+    max-width: 600px;
+  }
+}
+
+@media screen and (max-width: 625px) {
+  .modal-dialog {
+    max-width: 600px;
+  }
+
+  .card-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-image-container {
+    width: 100%;
+  }
+
+  .card-details-container {
+    width: 100%;
+  }
+
+  .card-stats {
+    margin-left: 20px;
+  }
+
+  .card-details {
+    margin-left: 20px;
+  }
+
+  .modal-dialog {
+    width: 100%;
+    height: auto;
+    margin-top: 135px;
+    margin-bottom: 200px;
+  }
+
+}
+
+@media screen and (max-width: 460px) {
+  .cards-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .submit-btn {
+    margin-top: 15px;
+  }
+
+  .cards-carousel {
+    overflow: hidden;
+  }
+
+  .swiper-buttons .swiper-button.prev {
+    right: 20px;
+  }
+
+  .swiper-buttons .swiper-button.next {
+    left: -15px;
+  }
+
+}

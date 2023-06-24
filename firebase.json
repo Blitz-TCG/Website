@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist",
+    "public": "dist/blitz-tcg/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
