@@ -5,9 +5,6 @@ import { getAuth } from 'firebase/auth';
 import { environment } from '../../environments/environment';
 import { getDatabase, ref, child, get, update } from 'firebase/database';
 
-// npm install sweetalert2
-// import swal from 'sweetalert2';
-
 declare global {
   const ergo: Ergo;
   const ergoConnector: ergoConnector;
@@ -16,34 +13,30 @@ declare global {
     ergo: Ergo;
   }
 }
-
 // Nautilus disconnect
 // Removing from Connected dApps in Nautilus
 window.addEventListener('ergo_wallet_disconnected', () => {
   try {
     ergoConnector.nautilus.disconnect();
     console.log('You have successfully disconnected from your wallet!');
-    // swal.fire('You have successfully disconnected from your wallet!');
     verifyUserAndUpdateWallet('none');
     localStorage.setItem('userIsConnected', 'false');
   } catch {
     console.log(`Impossible disconnect Nautilus!`);
-    // swal.fire(`Impossible disconnect Nautilus!`);
   }
 });
+
 // Disconnecting from the website button
 function NautilusDisconnect() {
   try {
+    localStorage.setItem('userIsConnected', 'false');
     ergoConnector.nautilus.disconnect();
     console.log('Button web desconnect - Now you are not connected!');
-    // swal.fire('Button web desconnect - Now you are not connected!');
     verifyUserAndUpdateWallet('none');
-    localStorage.setItem('userIsConnected', 'false');
   } catch {
     console.log(
-      `Impossible disconnect Nautilus, check to have Nautilus installed and your internet connection!`
+      `Impossible disconnect Nautilus, check to have Nautilus installed and check your internet connection!`
     );
-    // swal.fire(`Impossible disconnect Nautilus, check to have Nautilus installed and your internet connection!`);
   }
 }
 // End Nautilus disconnect
@@ -65,46 +58,20 @@ function verifyNone(){
           ergoConnector.nautilus.disconnect();
         } else {
           localStorage.setItem('userIsConnected', 'true');
+          //this fixes the issue where a user had a wallet connected already but we did not connect to it upon loading the page, causing an issue with detecting the application in nautilus correctly
+          //if the user signs out and signs back while keeping the walled connected, it will ask them to reassociate the nautilus connection (as appropriate)
+          console.log((localStorage.getItem('userIsConnected')));
+          ergoConnector.nautilus.connect();
         }
       }
     })
   }
+  else{
+    ergoConnector.nautilus.disconnect();
+    localStorage.setItem('userIsConnected', 'false');
+  }
 }
 // End verify
-
-// firebase - Verify user active and update wallet
-
-// function verifyUserAndUpdateWallet(address: any) {
-//   // user auth
-//   const auth = getAuth();
-//   const user = auth.currentUser;
-//   if (user) {
-//     console.log(`ID user: ${user?.uid}`);
-//     // ddbb Config
-//     const firebaseConfig = environment.firebase;
-//     const database = getDatabase();
-//     const dbRef = ref(database);
-//     // Verify user wallet and update wallet
-//     get(child(dbRef, `users/${user?.uid}/wallet`))
-//       .then((snapshot) => {
-//         if (snapshot.exists()) {
-//           // Update database with wallet value
-//           const updateWallet: any = {};
-//           const datosParaActualizar = { wallet: address };
-//           updateWallet[`users/${user?.uid}/wallet`] =
-//             datosParaActualizar.wallet;
-//           update(ref(database), updateWallet);
-//         } else {
-//           console.log('The update was not carried out correctly!');
-//         }
-//       })
-//       .catch((error) => {
-//         console.error(error);
-//       });
-//   } else {
-//     console.log('There is no logged in user!');
-//   }
-// }
 
 function verifyUserAndUpdateWallet(address: any) {
   // User auth
@@ -134,7 +101,7 @@ function verifyUserAndUpdateWallet(address: any) {
               walletAlreadyExists = true;
               console.log("user that has address: " + userSnapshot.key);
               console.log("signed in user " + user?.uid);
-              console.log('The wallet ID is already associated with another user.');
+              console.log('Wallet ID already in use.');
               ergoConnector.nautilus.disconnect();
             }
           });
@@ -165,8 +132,6 @@ function verifyUserAndUpdateWallet(address: any) {
     console.log('There is no logged-in user!');
   }
 }
-
-
 // End firebase - Verify user active and update wallet
 
 // Nautilus wallet
@@ -188,7 +153,6 @@ function popupNautilus() {
     console.log(
       `Impossible to connect Nautilus, check to have Nautilus installed and your internet connection!`
     );
-    // swal.fire(`Impossible to connect Nautilus, check to have Nautilus installed and your internet connection!`);
   }
 }
 // End Nautilus wallet
@@ -198,12 +162,10 @@ function getAddress() {
   try {
     ergo.get_change_address().then((address) => {
       console.log('Your connected address: ' + address);
-      // swal.fire('Your connected address: ' + address);
       verifyUserAndUpdateWallet(address);
     });
   } catch (error) {
     console.log('Unable to detect wallet');
-    // swal.fire('Unable to detect wallet');
   }
 }
 // End getAddress connect
@@ -214,6 +176,7 @@ function getAddress() {
   styleUrls: ['./connector.component.scss'],
 })
 export class ConnectorComponent implements OnInit {
+
   descWallet() {
     NautilusDisconnect();
   }
