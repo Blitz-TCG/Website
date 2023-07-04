@@ -3,7 +3,7 @@ import { Ergo, ergoConnector } from './conn';
 import { getAuth } from 'firebase/auth';
 
 import { environment } from '../../environments/environment';
-import { getDatabase, ref, child, get, update } from 'firebase/database';
+import { getDatabase, ref, child, get, update, query, orderByChild } from 'firebase/database';
 
 declare global {
   const ergo: Ergo;
@@ -85,9 +85,11 @@ function verifyUserAndUpdateWallet(address: any) {
     const firebaseConfig = environment.firebase;
     const database = getDatabase();
     const dbRef = ref(database);
+    const usersRef = child(dbRef, 'users');
+    const usersQuery = query(usersRef, orderByChild('username')); // Order the users by the 'points' child property
 
     // Get all users' data
-    get(child(dbRef, 'users'))
+    get(usersQuery)
       .then((snapshot) => {
         if (snapshot.exists()) {
           let walletAlreadyExists = false;
