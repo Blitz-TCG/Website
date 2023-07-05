@@ -1,4 +1,4 @@
-<div class="container-with-bg" #stickyElem [class.sticky]="sticky" [ngStyle]="{'filter':blurStyle}">
+<div class="container-with-bg" [class.sticky]="sticky">
   <div *ngIf="!authService.isLoggedIn || !walletConnected()">
     <div class="message-container">
       <div class="message-text" *ngIf="!authService.isLoggedIn">
@@ -33,14 +33,14 @@
           <span class="number total-cards-number">{{userCardsDetail.total}}</span> Total Cards
         </div>
         <div class="first-edition">
-          <span class="number">{{userCardsDetail.firstEdition}}</span> 1rst Edition
+          <span class="number">{{userCardsDetail.firstEdition}}</span> First Edition
         </div>
         <div class="unl-edition">
-          <span class="number">{{userCardsDetail.unlEdition}}</span> unl. Edition
+          <span class="number">{{userCardsDetail.unlEdition}}</span> Unlimited Edition
         </div>
+        <input type="button" class="btn submit-btn" value="Buy Packs" type="submit" tabindex="5" disabled />
       </div>
       <div class="card-rarity">
-        <input type="button" class="btn submit-btn" value="Buy Packs" type="submit" tabindex="5" />
         <div class="cards-type-list">
           <div class="card-type common"><span class="number">{{userCardsDetail.common}}</span> Common</div>
           <div class="card-type uncommon"><span class="number">{{userCardsDetail.uncommon}}</span> Uncommon</div>
@@ -60,91 +60,101 @@
               <button class="selected-option" (click)="toggleMenu(0)">{{filter.edition.name}}</button>
               <div class="options" *ngIf="activeIndex === 0">
                 <span [class.active]="filter.edition.value === 'All'" (click)="selectEdition('All','All')">All</span>
-                <span [class.active]="filter.edition.value === '1'" (click)="selectEdition('1','Owned')">Owned</span>
-                <span [class.active]="filter.edition.value === '2'" (click)="selectEdition('2','Not
-                Owned')">Not
-                  Owned</span>
-                <span [class.active]="filter.edition.value === '3'"
-                  (click)="selectEdition('3','Processing')">Processing</span>
+                <span [class.active]="filter.edition.value === '1'" (click)="selectEdition('1','First')">First</span>
+                <span [class.active]="filter.edition.value === '2'"
+                  (click)="selectEdition('2','Unlimited')">Unlimited</span>
               </div>
             </div>
             <div class="select-container">
               <span class="select-label">Set</span>
               <button class="selected-option" (click)="toggleMenu(1)">{{filter.set.name}}</button>
               <div class="options" *ngIf="activeIndex === 1">
-                <span [class.active]="filter.set.value === 'All'" (click)="selectSet('All','')">All</span>
-                <span [class.active]="filter.set.value === '1'" (click)="selectSet('1','Owned')">Owned</span>
-                <span [class.active]="filter.set.value === '2'" (click)="selectSet('2','Not')">Not
-                  Owned</span>
-                <span [class.active]="filter.set.value === '3'" (click)="selectSet('3','Processing')">Processing</span>
+                <span [class.active]="filter.set.value === 'All'" (click)="selectSet('All','All')">All</span>
+                <span [class.active]="filter.set.value === 'base'" (click)="selectSet('base','Base')">Base</span>
               </div>
             </div>
             <div class="select-container">
               <span class="select-label">Clan</span>
               <button class="selected-option" (click)="toggleMenu(2)">{{filter.clan.name}}</button>
               <div class="options" *ngIf="activeIndex === 2">
-                <span [class.active]="filter.clan.value === 'All'" (click)="selectClan('All','')">All</span>
-                <span [class.active]="filter.clan.value === '1'" (click)="selectClan('1','')">Owned</span>
-                <span [class.active]="filter.clan.value === '2'" (click)="selectClan('2','')">Not
-                  Owned</span>
-                <span [class.active]="filter.clan.value === '3'" (click)="selectClan('3','')">Processing</span>
+                <span [class.active]="filter.clan.value === 'All'" (click)="selectClan('All','All')">All</span>
+                <span [class.active]="filter.clan.value === 'Masquerades'"
+                  (click)="selectClan('Masquerades','Masquerades')">Masquerades</span>
+                <span [class.active]="filter.clan.value === 'The Old Kingdom'"
+                  (click)="selectClan('The Old Kingdom','The Old Kingdom')">The Old Kingdom</span>
+                <span [class.active]="filter.clan.value === 'Fairytales'"
+                  (click)="selectClan('Fairytales','Fairytales')">Fairytales</span>
+                <span [class.active]="filter.clan.value === 'Dark Matter'"
+                  (click)="selectClan('Dark Matter','Dark Matter')">Dark Matter</span>
+                <span [class.active]="filter.clan.value === 'Tinkerers'"
+                  (click)="selectClan('Tinkerers','Tinkerers')">Tinkerers</span>
+                <span [class.active]="filter.clan.value === 'Factionless'"
+                  (click)="selectClan('Factionless','Factionless')">Factionless</span>
               </div>
             </div>
             <div class="select-container">
               <span class="select-label">Rarity</span>
               <button class="selected-option" (click)="toggleMenu(3)">{{filter.rarity.name}}</button>
               <div class="options" *ngIf="activeIndex === 3">
-                <span [class.active]="filter.rarity.value === 'All'" (click)="selectRarity('All','')">All</span>
-                <span [class.active]="filter.rarity.value === '1'" (click)="selectRarity('1','')">Owned</span>
-                <span [class.active]="filter.rarity.value === '2'" (click)="selectRarity('2','')">Not
-                  Owned</span>
-                <span [class.active]="filter.rarity.value === '3'" (click)="selectRarity('3','')">Processing</span>
+                <span [class.active]="filter.rarity.value === 'All'" (click)="selectRarity('All','All')">All</span>
+                <span [class.active]="filter.rarity.value === 'Common'"
+                  (click)="selectRarity('Common','Common')">Common</span>
+                <span [class.active]="filter.rarity.value === 'Uncommon'"
+                  (click)="selectRarity('Uncommon','Uncommon')">Uncommon</span>
+                <span [class.active]="filter.rarity.value === 'Rare'" (click)="selectRarity('Rare','Rare')">Rare</span>
+                <span [class.active]="filter.rarity.value === 'Legendary'"
+                  (click)="selectRarity('Legendary','Legendary')">Legendary</span>
               </div>
             </div>
             <div class="select-container">
               <span class="select-label">Level</span>
               <button class="selected-option" (click)="toggleMenu(4)">{{filter.level.name}}</button>
               <div class="options" *ngIf="activeIndex === 4">
-                <span [class.active]="filter.level.value === 'All'" (click)="selectLevel('All','')">All</span>
-                <span [class.active]="filter.level.value === '1'" (click)="selectLevel('1','')">Owned</span>
-                <span [class.active]="filter.level.value === '2'" (click)="selectLevel('2','')">Not
-                  Owned</span>
-                <span [class.active]="filter.level.value === '3'" (click)="selectLevel('3','')">Processing</span>
+                <span [class.active]="filter.level.value === 'All'" (click)="selectLevel('All','All')">All</span>
+                <span [class.active]="filter.level.value === '1'" (click)="selectLevel('1','Starter')">Starter</span>
+                <span [class.active]="filter.level.value === '2-4'" (click)="selectLevel('2-4','Lower')">Lower</span>
+                <span [class.active]="filter.level.value === '5-8'" (click)="selectLevel('5-8','Mid')">Mid</span>
+                <span [class.active]="filter.level.value === '9-10'" (click)="selectLevel('9-10','Upper')">Upper</span>
               </div>
             </div>
             <div class="select-container">
               <span class="select-label">Artist</span>
               <button class="selected-option" (click)="toggleMenu(5)">{{filter.artist.name}}</button>
               <div class="options" *ngIf="activeIndex === 5">
-                <span [class.active]="filter.artist.value === 'All'" (click)="selectArtist('All','')">All</span>
-                <span [class.active]="filter.artist.value === '1'" (click)="selectArtist('1','')">Owned</span>
-                <span [class.active]="filter.artist.value === '2'" (click)="selectArtist('2','')">Not
-                  Owned</span>
-                <span [class.active]="filter.artist.value === '3'" (click)="selectArtist('3','')">Processing</span>
+                <span [class.active]="filter.artist.value === 'All'" (click)="selectArtist('All','All')">All</span>
+                <span [class.active]="filter.artist.value === 'Nilson'"
+                  (click)="selectArtist('Nilson','Nilson')">Nilson</span>
+                <span [class.active]="filter.artist.value === 'Jef'" (click)="selectArtist('Jef','Jef')">Jef</span>
+                <span [class.active]="filter.artist.value === 'Benj'" (click)="selectArtist('3','Benj')">Benj</span>
+                <span [class.active]="filter.artist.value === 'Abner'" (click)="selectArtist('3','Abner')">Abner</span>
+                <span [class.active]="filter.artist.value === 'Levi'" (click)="selectArtist('3','Levi')">Levi</span>
+                <span [class.active]="filter.artist.value === 'Dogzy'" (click)="selectArtist('3','Dogzy')">Dogzy</span>
+                <span [class.active]="filter.artist.value === 'Joestrela'"
+                  (click)="selectArtist('3','Joestrela')">Joestrela</span>
+                <span [class.active]="filter.artist.value === 'Satoshi'"
+                  (click)="selectArtist('3','Satoshi')">Satoshi</span>
+                <span [class.active]="filter.artist.value === 'Lara'" (click)="selectArtist('3','Lara')">Lara</span>
+                <span [class.active]="filter.artist.value === 'Ed'" (click)="selectArtist('3','Ed')">Ed</span>
+                <span [class.active]="filter.artist.value === 'Foe'" (click)="selectArtist('3','Foe')">Foe</span>
               </div>
             </div>
           </div>
           <div class="search-input">
-            <input type="text" name="cardName" id="cardName" placeholder="Search Card Name...">
+            <input type="text" #cardNameInput name="cardName" id="cardName" placeholder="Search Card Name..."
+              (keyup)="applyFilter($event)">
+            <button class="clear-filter" (click)="clearFilters()">Clear Filters</button>
           </div>
         </div>
       </div>
-      <div class="cards-carousel" *ngIf="filtedCards.length > 0">
+      <div class="cards-carousel" *ngIf="showCards.length > 0">
         <div class="slider container">
-          <swiper [config]="config">
-            <ng-template *ngFor="let card of filtedCards" swiperSlide>
-              <div class="card-container" (click)="openPopup(card)">
-                <img [src]="card.image" alt="">
-              </div>
-            </ng-template>
-          </swiper>
-          <div class=" swiper-buttons">
-            <button class="swiper-button next" (click)="slidePrev()"></button>
-            <button class="swiper-button prev" (click)="slideNext()"> </button>
+          <div *ngFor="let card of showCards" [ngClass]="{'card-container': true, 'grayscale-card': !card.amount}"
+            (click)="openPopup(card)">
+            <img [src]="card.image" alt="">
           </div>
         </div>
       </div>
-      <div class="no-cards" *ngIf="filtedCards.length === 0">
+      <div class="no-cards" *ngIf="showCards.length === 0">
         <div class="message-container">
           <div class="message-text">
             No matching cards found.
@@ -158,48 +168,6 @@
           <span class="show-current-page">Page {{currentCardPage}} of {{cardsPages}}</span>
           <span class="arrow next-arrow" (click)="nextPage()"></span>
           <span class="last-page" (click)="currentCardPage=cardsPages">Last Page</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div *ngIf="authService.isLoggedIn && walletConnected() && selectedCard">
-  <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <button type="button" class="close-popup" (click)="closePopup()"></button>
-        <div class="modal-body">
-          <div class="card-container">
-            <div class="card-image-container col-6">
-              <img class="card-image" src="/assets/card_image.png" alt="">
-              <div class="amount-owned">Amount Owned <span class="amount">{{selectedCard?.amount}}</span></div>
-            </div>
-            <div class="card-details-container col-6">
-              <div class="card-name">{{selectedCard?.name}}</div>
-              <div class="card-info">{{selectedCard?.description}}</div>
-              <div class="card-stats-title">Stats</div>
-              <div class="card-stats">
-                <div class="left-stats">
-                  <div class="stat attack">Attack <span class="stat-value">{{selectedCard?.attack}}</span></div>
-                  <div class="stat gold">Gold <span class="stat-value">{{selectedCard?.gold}}</span></div>
-                </div>
-                <div class="right-stats">
-                  <div class="stat health">Health <span class="stat-value">{{selectedCard?.hp}}</span></div>
-                  <div class="stat xp">XP <span class="stat-value">{{selectedCard?.xp}}</span></div>
-                </div>
-              </div>
-              <div class="card-details">
-                <div class="detail clan">Clan <span class="detail-value">{{selectedCard?.clan}}</span></div>
-                <div class="detail level">Level <span class="detail-value">Level {{selectedCard?.level}}</span></div>
-                <div class="detail-rarity">
-                  <div class="detail edition">Edition</div>
-                  <div class="detail rarity">Rarity</div>
-                </div>
-                <div class="detail artist">Artist <span class="detail-value">{{selectedCard?.artist}}</span></div>
-                <div class="detail Set">Set <span class="detail-value">{{selectedCard?.set}}</span></div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
