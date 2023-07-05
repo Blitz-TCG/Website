@@ -153,6 +153,7 @@ export class AuthService {
       }
     });
   }
+  //can enable this in the sign out function to make a user re-connect with nautilus upon signing out and back in, assuming they already have connected their wallet
   NautilusDisconnect() {
     try {
       ergoConnector.nautilus.disconnect();
