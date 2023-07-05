@@ -1,0 +1,56 @@
+<div *ngIf="selectedCard" class="card-modal-container">
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <button type="button" class="close-popup" (click)="closeModal()"></button>
+                <div class="modal-body">
+                    <div class="card-container">
+                        <div class="card-image-container col-6">
+                            <img class="card-image" [src]="selectedCard?.image" alt="">
+                            <div class="amount-owned">Amount Owned <span class="amount">{{selectedCard?.amount ||
+                                    0}}</span>
+                            </div>
+                        </div>
+                        <div class="card-details-container col-6">
+                            <div class="card-name">{{selectedCard?.name}}</div>
+                            <div class="card-info">{{selectedCard?.description}}</div>
+                            <div class="card-stats-title">Stats</div>
+                            <div class="card-stats">
+                                <div class="left-stats">
+                                    <div class="stat attack">Attack <span
+                                            class="stat-value">{{selectedCard?.attack}}</span></div>
+                                    <div class="stat gold">Gold <span class="stat-value">{{selectedCard?.gold}}</span>
+                                    </div>
+                                </div>
+                                <div class="right-stats">
+                                    <div class="stat health">Health <span class="stat-value">{{selectedCard?.hp}}</span>
+                                    </div>
+                                    <div class="stat xp">XP <span class="stat-value">{{selectedCard?.xp}}</span></div>
+                                </div>
+                            </div>
+                            <div class="card-details">
+                                <div class="detail clan">Clan <span class="detail-value">{{selectedCard?.clan}}</span>
+                                </div>
+                                <div class="detail level">Level <span class="detail-value">Level
+                                        {{selectedCard?.level}}</span></div>
+                                <div class="detail-rarity">
+                                    <div class="detail" [ngClass]="{'first-edition': selectedCard?.edition == '1',
+                                    'unlimited-edition': selectedCard?.edition == '2'}">Edition</div>
+                                    <div class="detail rarity" [ngClass]="{'common': selectedCard?.rarity === 'Common',
+                                        'uncommon': selectedCard?.rarity === 'Uncommon',
+                                        'rare': selectedCard?.rarity === 'Rare',
+                                        'legendary': selectedCard?.rarity === 'Legendary'}">
+                                        Rarity</div>
+                                </div>
+                                <div class="detail artist">Artist <span
+                                        class="detail-value">{{selectedCard?.artist}}</span></div>
+                                <div class="detail Set">Set <span class="detail-value">{{selectedCard?.set}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

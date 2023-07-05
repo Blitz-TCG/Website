@@ -34,6 +34,7 @@ import { DisclaimerComponent } from './disclaimer/disclaimer.component';
 import { UseComponent } from './use/use.component';
 import { WhitepaperComponent } from './whitepaper/whitepaper.component';
 import { CollectiblesComponent } from './collectibles/collectibles.component';
+import { ModalComponent } from './modal/modal.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,7 +57,8 @@ import { CollectiblesComponent } from './collectibles/collectibles.component';
     DisclaimerComponent,
     UseComponent,
     WhitepaperComponent,
-    CollectiblesComponent
+    CollectiblesComponent,
+    ModalComponent
   ],
   imports: [
     FormsModule,
