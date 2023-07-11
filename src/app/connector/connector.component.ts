@@ -60,9 +60,10 @@ function verifyNone(){
         } else {
           localStorage.setItem('userIsConnected', 'true');
           //this fixes the issue where a user had a wallet connected already but we did not connect to it upon loading the page, causing an issue with detecting the application in nautilus correctly
-          //if the user signs out and signs back while keeping the walled connected, it will ask them to reassociate the nautilus connection (as appropriate)
-          console.log((localStorage.getItem('userIsConnected')));
+          //if the user signs out and signs back while keeping the wallet connected, it will ask them to reassociate the nautilus connection
+          //if the user manually removes Blitz as a connect dapp in Nautilus, then they will ask to associate the wallet on login
           ergoConnector.nautilus.connect();
+          console.log((localStorage.getItem('userIsConnected')));
         }
       }
     })
