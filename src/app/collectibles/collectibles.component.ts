@@ -73,6 +73,7 @@ export class CollectiblesComponent implements OnInit {
       value: "All"
     }
   }
+  isChecked = false;
   cardsPages = 7;
   perPage = 24;
   currentCardPage = 1;
@@ -272,7 +273,7 @@ export class CollectiblesComponent implements OnInit {
 
           this.cards = sortedCards;
           this.showCards = sortedCards.slice(0, this.perPage);
-          this.cardsPages = Math.ceil(sortedCards.length / this.perPage);
+          this.cardsPages = Math.ceil(sortedCards.length / this.perPage) || 1;
           this.calcUserCards(sortedCards.filter((c: any) => c.amount))
           observer.next(sortedCards);
           observer.complete();
@@ -290,14 +291,13 @@ export class CollectiblesComponent implements OnInit {
       if (c.edition == 1) {
         this.userCardsDetail.firstEdition += c.amount;
       } else {
-        console.log(c)
         this.userCardsDetail.unlEdition += c.amount;
       }
 
-      if (c.rarity === 'Common') this.userCardsDetail.common++;
-      if (c.rarity === 'Uncommon') this.userCardsDetail.uncommon++;
-      if (c.rarity === 'Rare') this.userCardsDetail.rare++;
-      if (c.rarity === 'Legendary') this.userCardsDetail.legendary++;
+      if (c.rarity === 'Common') this.userCardsDetail.common += (c.amount);
+      if (c.rarity === 'Uncommon') this.userCardsDetail.uncommon += (c.amount);
+      if (c.rarity === 'Rare') this.userCardsDetail.rare += (c.amount);
+      if (c.rarity === 'Legendary') this.userCardsDetail.legendary += (c.amount);
     }
   }
 
@@ -307,11 +307,12 @@ export class CollectiblesComponent implements OnInit {
     this.currentCardPage = 1;
     this.filtedCards = this.cards.filter((card: any) => {
       if (
+        (!this.isChecked || (this.isChecked && card.amount && card.amount > 0)) &&
         (this.filter.edition.value === 'All' || card.edition == this.filter.edition.value) &&
         (this.filter.set.value === 'All' || card.set === this.filter.set.value) &&
         (this.filter.clan.value === 'All' || card.clan === this.filter.clan.value) &&
         (this.filter.rarity.value === 'All' || card.rarity === this.filter.rarity.value) &&
-        (this.filter.level.value === 'All' || card.level === this.filter.level.value) &&
+        (this.filter.level.value === 'All' || this.filterLevel(card.level, this.filter.level.value)) &&
         (this.filter.artist.value === 'All' || card.artist === this.filter.artist.value) &&
         (!searchText || card.name.toLowerCase().includes(searchText.toLowerCase()))
       ) {
@@ -320,9 +321,21 @@ export class CollectiblesComponent implements OnInit {
       return false;
     });
     this.showCards = this.filtedCards.slice(0, this.perPage);
-    this.cardsPages = Math.ceil(this.filtedCards.length / this.perPage);
+    this.cardsPages = Math.ceil(this.filtedCards.length / this.perPage) || 1;
   }
 
+  filterLevel(value: number, levelName: string) {
+    switch (levelName) {
+      case "Lower":
+        return value >= 2 && value <= 4;
+      case "Mid":
+        return value >= 5 && value <= 8;
+      case "Upper":
+        return value >= 9 && value <= 10;
+      default:
+        return value === 1;
+    }
+  }
   clickOnMenu(
     itemIndex: number,
   ) {
@@ -358,8 +371,17 @@ export class CollectiblesComponent implements OnInit {
   prevPage() {
     if (this.currentCardPage > 1)
       this.currentCardPage--;
-    this.filtedCards = this.cards.slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
+    this.showCards = (this.applyedFilter ? this.filtedCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
 
+  }
+  firstPage() {
+    this.currentCardPage = 1;
+    this.showCards = (this.applyedFilter ? this.filtedCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
+  }
+
+  lastPage() {
+    this.currentCardPage = this.cardsPages;
+    this.showCards = (this.applyedFilter ? this.filtedCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
   }
 
   walletConnected(): any {
@@ -378,7 +400,11 @@ export class CollectiblesComponent implements OnInit {
     this.applyFilter();
     this.toggleMenu(0);
   }
-
+  ownedCardsOnly(event: any) {
+    const target = event.target as HTMLInputElement;
+    this.isChecked = target.checked;
+    this.applyFilter();
+  }
   selectSet(value: string, name: string): void {
     this.filter.set.value = value;
     this.filter.set.name = name;

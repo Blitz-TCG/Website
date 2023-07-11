@@ -15,7 +15,8 @@ declare global {
 }
 // Nautilus disconnect
 // Removing from Connected dApps in Nautilus
-window.addEventListener('ergo_wallet_disconnected', () => {
+
+window?.addEventListener('ergo_wallet_disconnected', () => {
   try {
     ergoConnector.nautilus.disconnect();
     console.log('You have successfully disconnected from your wallet!');

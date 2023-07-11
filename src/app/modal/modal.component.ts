@@ -31,5 +31,14 @@ export class ModalComponent implements OnInit {
     this.displayStyle = "none";
 
   }
-
+  getLevel(level: number) {
+    if (level >= 2 && level <= 4)
+      return "Lower";
+    else if (level >= 5 && level <= 8)
+      return "Mid";
+    else if (level >= 9 && level <= 10)
+      return "Upper";
+    else
+      return "Starter";
+  }
 }
