@@ -153,18 +153,17 @@ export class AuthService {
       }
     });
   }
-  //can enable this in the sign out function to make a user re-connect with nautilus upon signing out and back in, assuming they already have connected their wallet
+
+  //controls what happens when a user signs out while a wallet is associated
   NautilusDisconnect() {
     try {
-      ergoConnector.nautilus.disconnect();
+      //ergoConnector.nautilus.disconnect(); // if this is enabled, then the user has to confirm a nautilus query every time they log in, which does not seem good
+      //it will only ask them to reconfirm their wallet if they are signing into multiple accounts, which they shouldn't be for a given wallet anyways
       console.log('Button web desconnect - Now you are not connected!');
-      // this.updateWalletToNone();
-      // localStorage.setItem('userIsConnected', 'false');
     } catch {
       console.log(
         `Impossible disconnect Nautilus, check to have Nautilus installed and your internet connection!`
       );
-      // swal.fire(`Impossible disconnect Nautilus, check to have Nautilus installed and your internet connection!`);
     }
   }
   // Sign out
