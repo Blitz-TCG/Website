@@ -11,6 +11,7 @@
 .card-container {
     display: flex;
     flex-direction: row;
+    align-items: flex-end;
 }
 
 .modal-dialog {
@@ -85,7 +86,7 @@
         color: #FFA415;
         font-size: 1.75rem;
         text-align: center;
-        margin-top: 25px;
+        margin-top: 5px;
         background-image: url(/assets/Card_popup_win_Title_Ribbon.png);
         background-repeat: no-repeat;
         background-size: contain;
@@ -103,7 +104,7 @@
 }
 
 .card-image-container {
-    padding: 20px;
+    padding: 0px 10px 20px 10px;
 }
 
 .amount-owned {

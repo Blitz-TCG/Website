@@ -26,9 +26,9 @@ export class AppComponent implements OnInit {
   }
   checkIfLoaded() {
     if (isPlatformBrowser(this.platformId)) {
-      if (window.history.length <= 2) {
-        this.authService.SignOut();
-      }
+      // if (window.history.length <= 2) {
+      //   this.authService.SignOut();
+      // }
       setTimeout(() => {
         this.isLoading = false;
       }, 2500);

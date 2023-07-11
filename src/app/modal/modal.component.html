@@ -31,8 +31,8 @@
                             <div class="card-details">
                                 <div class="detail clan">Clan <span class="detail-value">{{selectedCard?.clan}}</span>
                                 </div>
-                                <div class="detail level">Level <span class="detail-value">Level
-                                        {{selectedCard?.level}}</span></div>
+                                <div class="detail level">Level <span class="detail-value">
+                                        {{selectedCard?.level ? getLevel(selectedCard?.level) : "None"}}</span></div>
                                 <div class="detail-rarity">
                                     <div class="detail" [ngClass]="{'first-edition': selectedCard?.edition == '1',
                                     'unlimited-edition': selectedCard?.edition == '2'}">Edition</div>

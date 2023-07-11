@@ -18,7 +18,13 @@
           <li class="nav-item" *ngFor="let item of items$ | async; let i = index"
             [ngClass]="{'show-sub-items': activeIndex === i, 'active': activeIndex === i, 'disabled': item.disabled}">
             <span class="tooltip-message" *ngIf="item['disabled']">Coming soon!</span>
-            <a class="nav-link" (click)="clickOnMenu(i,item.disabled, item['sub-menu']?.length )">
+            <a class="nav-link" *ngIf="item.url && item.url!== '#'" [href]="item.url">
+              <span class="nav-link-text">
+                <span class="nav-link-name">{{item.name}}</span>
+              </span>
+            </a>
+            <a class="nav-link" *ngIf="!item.url || item.url === '#'"
+              (click)="clickOnMenu(i,item.disabled, item['sub-menu']?.length )">
               <span class="nav-link-text">
                 <span class="nav-link-name">{{item.name}}</span>
                 <span *ngIf="item['sub-menu']?.length > 0" [class]="'nav-icon-arrow nav-icon-down-arrow'"></span>
@@ -85,7 +91,7 @@
               </div>
               <a routerLink="/sign-in" class="pfp-image" *ngIf="!authService.userData"></a>
               <a routerLink="/sign-in" class="user-level" *ngIf="!authService.userData">LVL #</a>
-              <div *ngIf="authService.userData"class="user-level">
+              <div *ngIf="authService.userData" class="user-level">
                 LVL #
               </div>
             </span>
