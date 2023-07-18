@@ -1,7 +1,8 @@
-<div *ngIf="selectedCard" class="card-modal-container">
+<div *ngIf="selectedCard" class="card-modal-container" (click)="onClickOutsideModal($event)">
+    <!-- Modal content here -->
     <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" id="cardModal">
                 <button type="button" class="close-popup" (click)="closeModal()"></button>
                 <div class="modal-body">
                     <div class="card-container">

@@ -36,6 +36,7 @@ export class CollectiblesComponent implements OnInit {
   @ViewChild('swiper', { static: false }) swiper?: SwiperComponent;
   @ViewChild('stickyElem', { static: false }) menuElement?: ElementRef;
   @ViewChild('cardNameInput', { static: false }) cardNameInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('ownedCardsOnlyCheckbox') ownedCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
   sticky: boolean = false;
   activeIndex: any;
   userCardsDetail = {
@@ -444,6 +445,10 @@ export class CollectiblesComponent implements OnInit {
     Object.keys(this.filter).forEach((k: string) => {
       this.filter[k as keyof typeof this.filter] = { value: "All", name: "All" };
     });
+    if (this.ownedCardsOnlyCheckbox) {
+      this.ownedCardsOnlyCheckbox.nativeElement.checked = false;
+      this.isChecked = false;
+    }
     this.cardNameInput.nativeElement.value = '';
     this.applyFilter();
   }
