@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ModalService } from './modal.service';
 
 @Component({
@@ -10,9 +10,10 @@ export class ModalComponent implements OnInit {
 
   selectedCard: any = null;
   displayStyle = "none";
+  @ViewChild('modalContainer') modalContainer!: ElementRef;
 
-  constructor(private modalService: ModalService) { }
-
+  constructor(private modalService: ModalService, private elementRef: ElementRef) { }
+  
   ngOnInit() {
     this.modalService.modalData$.subscribe(data => {
       this.selectedCard = data;
@@ -26,11 +27,25 @@ export class ModalComponent implements OnInit {
     this.closeModal();
   }
 
+  onClickOutsideModal(event: MouseEvent): void {
+    if (this.selectedCard) {
+      const targetElement = event.target as HTMLElement;
+      const modalContainerElement = this.elementRef.nativeElement;
+      const modalElement = modalContainerElement.querySelector('#cardModal');
+      console.log(modalElement)
+      console.log(modalElement.contains(targetElement))
+      if (modalElement && !modalElement.contains(targetElement)) {
+        this.closeModal();
+      }
+    }
+  }
+
   closeModal() {
     this.modalService.close();
     this.displayStyle = "none";
-
   }
+
+
   getLevel(level: number) {
     if (level >= 2 && level <= 4)
       return "Lower";

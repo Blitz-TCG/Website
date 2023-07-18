@@ -150,7 +150,7 @@
             <button class="clear-filter" (click)="clearFilters()">Clear Filters</button>
           </div>
           <div class="owned-cards-filter">
-            <input type="checkbox" name="owned-cards-only" id="ownedCardsOnly" (change)="ownedCardsOnly($event)">
+            <input type="checkbox" name="owned-cards-only" #ownedCardsOnlyCheckbox id="ownedCardsOnly" (change)="ownedCardsOnly($event)">
             <label for="ownedCardsOnly">Owned Cards Only</label>
           </div>
         </div>

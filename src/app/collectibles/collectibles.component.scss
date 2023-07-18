@@ -7,7 +7,9 @@
 .first-page,
 .prev-arrow,
 .next-arrow,
-.last-page {
+.last-page,
+input[type="checkbox"],
+label[for="ownedCardsOnly"] {
   cursor: url('/assets/Cursor_02-2_select.svg'), url('/assets/Cursor_02-2_select.svg'), auto !important;
 }
 
