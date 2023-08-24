@@ -6,15 +6,15 @@
 <div class="container" [class.sticky]="sticky">
     <a type="button" class="btn submit-btn" style="margin-bottom: 20px;" target="_blank"
         href="https://firebasestorage.googleapis.com/v0/b/blitz-tcg-test.appspot.com/o/Blitz-TCG-Whitepaper.pdf?alt=media&token=cfa9cfbb-4082-44aa-8768-ef7d88da1f25">Download</a>
-    <h1 class="page-title">Blitz TCG Whitepaper</h1>
-    <p class="page-intro">A reimagining of competitive trading card games using blockchain technology to facilitate
-        digital ownership and longevity for players</p>
+    <h1 class="page-title">Blitz TCG&reg; Whitepaper</h1>
+    <p class="page-intro">A reimagining of competitive trading card games using blockchain technology
+      to facilitate digital ownership and longevity for players</p>
     <img class="header-image" src="/assets/page1.png" alt="">
     <p style="text-align: center; font-size: 18px; margin-top: 10px;">All Socials: <a
             href="https://linktr.ee/blitztcg">Blitz TCG</a></p>
-    <p style="text-align: center; font-size: 15px; margin-top: 10px;">Last updated: June 25, 2023, Version 0.9</p>
-    <p style="text-align: center; font-size: 15px; margin-top: 10px;">All Blitz TCG related code managed by 16-Bit Hero,
-        LLC will be made open source closer to launch</p>
+    <p style="text-align: center; font-size: 15px; margin-top: 10px;">Last updated: August 20, 2023, Version 0.91</p>
+    <p style="text-align: center; font-size: 15px; margin-top: 10px;">All Blitz TCG&reg; related code managed by 16-Bit Hero,
+      LLC will be made open source closer to launch</p>
     <h2>Contents</h2>
     <ul>
         <li><a href="/whitepaper#Introduction">Introduction</a>
@@ -52,138 +52,139 @@
         <li><a href="/whitepaper#Appendix">Appendix</a></li>
     </ul>
     <h2 id="introduction">Introduction</h2>
-    <p>The basic premise of competitive Trading Card Games (TCGs) has remained unchanged since the early 90s when Magic:
-        The Gathering stormed onto the scene paving the way for the many physical and digital card game variants to
-        follow [1]. Competitive TCGs revolve around players using preplanned decks from which cards are typically drawn
-        at random throughout a match. Players then use those cards to outplay enemy cards in a turn-by-turn environment.
-        In the most popular of TCGs, there is often a payment associated with playing certain cards; a few examples:
-        Hearthstone&rsquo;s mana [2] (i.e., primary resource), Pok&eacute;mon&rsquo;s energy [3] (i.e., secondary
-        cards), and classical Yu-Gi-Oh!&rsquo;s monsters [4] (i.e., primary cards).</p>
-    <p>Blitz TCG&trade; breaks free from these traditional factors through several key traits: allowing players access
-        to their entire deck, implementing a chess-like timebank system, General abilities, and adding NPC alternatives
-        to the gameboard. Our goal is to create a digital TCG that mixes iconic aspects from several game genres
-        together to create a refreshing alternative to standard TCG gameplay. Balancing Blitz&rsquo;s two primary
-        resources, Gold and XP (experience), while choosing a General that compliments a player&rsquo;s deck, will
-        ensure that there are always new strategies to explore. Learn about the world of Blitz, game design, decision
-        making, mock-ups, rules, tokenomics, and more in the following sections.</p>
+    <p>The basic premise of competitive Trading Card Games (TCGs) has remained unchanged since the early 90s when <i>Magic:
+      The Gathering</i> stormed onto the scene paving the way for the many physical and digital card game variants to follow
+      [1]. Competitive TCGs revolve around players using preplanned decks from which cards are typically drawn at random
+      throughout a match. Players then use those cards to outplay enemy cards in a turn-by-turn environment. In the most
+      popular of TCGs, there is often a resource payment associated with playing certain cards; a few examples:
+    <i>Hearthstone&rsquo;s</i> mana [2] (i.e., primary resource), <i>Pok&eacute;mon&rsquo;s energy</i> [3] (i.e., secondary cards), and classical
+    <i>Yu-Gi-Oh!&rsquo;s</i> monsters [4] (i.e., primary cards).</p>
+    <p>Blitz TCG&reg; breaks free from these traditional factors through several key traits: allowing players access to their
+      entire deck, implementing a chess-like timebank system, General abilities, and adding NPC alternatives to the gameboard.
+       Our goal is to create a digital TCG that mixes iconic aspects from several game genres together to create a refreshing
+        alternative to standard TCG gameplay. Balancing Blitz&rsquo;s two primary resources, Gold and XP (experience), while
+        choosing a General that compliments a player&rsquo;s deck, will ensure that there are always new strategies to explore.
+         Learn about the world of Blitz, game design, decision making, mock-ups, rules, tokenomics, and more in the
+         following sections.</p>
     <h2 id="Theory">Theory</h2>
-    <p>Blitz draws inspiration from several sources, including Warhammer, Gods Unchained, Hearthstone, Magic: The
-        Gathering, DOTA, BattleForge, and the Blitz format of chess. Gods Unchained is an excellent example of what is
-        possible using blockchain technology to facilitate digital ownership of cards and exchanges between players [5].
-        However, there are opportunities for innovation in both standard gameplay mechanics and digital ownership.
-        Development, design, and general decisions about the game and tokenomics will always lean toward a
-        &ldquo;Gameplay First&rdquo; mantra: by creating fun, engaging, and low barrier-to-entry gameplay, other aspects
-        of the game will naturally prosper. This section will focus on the thought processes associated with the
-        specifics found in the <a href="/whitepaper#Mechanics">Mechanics</a>
-        and <a href="/whitepaper#TokenomicsTheory">Tokenomics</a>
+    <p>Blitz draws inspiration from several sources, including <i>Warhammer</i>, <i>Gods Unchained</i>, <i>Hearthstone</i>, <i>Magic: The Gathering</i>, <i>DOTA</i>,
+      <i>BattleForge</i>, and the <i>Blitz</i> format of chess. <i>Gods Unchained</i> is an excellent example of what is possible using blockchain
+        technology to facilitate digital ownership of cards and exchanges between players [5]. However, there are opportunities
+         for innovation in both standard gameplay mechanics and digital ownership. Development, design, and general decisions
+         about the game and tokenomics will always lean toward a &ldquo;Gameplay First&rdquo; mantra: by creating fun, engaging, and low
+         barrier-to-entry gameplay, other aspects of the game will naturally prosper. This section will focus on the thought
+          processes associated with the specifics found in the <a href="/whitepaper#Mechanics">Mechanics</a> and <a href="/whitepaper#TokenomicsTheory">Tokenomics</a>
         sections.</p>
     <h3 id="MechanicsTheory">Mechanics Theory</h3>
     <p>For many competitive players, one virtue of gaming remains desired: consistency. In TCGs, this is the ability for
-        a player to predict how their strategy will affect the state of a match, given the chance of drawing a specific
-        card within a given number of turns. Some might compare consistency to fairness, specifically the minimizing of
-        the chance a player will win or lose based on luck. Thus, one of the most inconsistent factors in TCGs is the
-        drawing of cards used in each match. For some, this is a staple of what makes a TCG unique. For others, it is a
-        reason to avoid the game genre. Blitz will remove this factor from matches entirely, allowing players to access
-        their entire decks from the start of a match. The only limiting factors in playing cards will be the amount of
-        Gold a player has acquired and, in some cases, the level of their General. Blitz&rsquo;s deck concept is most
-        like an item store available in popular MOBAs.</p>
-    <p>Competitive TCGs like Hearthstone and Gwent have 7-minute and 12-minute average game lengths, respectively [7,
-        8]. Blitz will be a turn-based game and rely on a timebank system with the same parameters as the Blitz format
-        of fast chess [6]. Players will start a match with 3 minutes of banked time. After each player&rsquo;s turn,
-        they will be awarded 2 additional seconds of banked time. Thus, the maximum amount of time a Blitz game can last
-        is approximately 15 minutes, assuming turns take at most 20 seconds. A timebank system will help ensure gameplay
-        remains active and engaging. Matches will only end in a draw if neither General has been damaged.
+      a player to predict how their strategy will affect the state of a match, given the chance of drawing a specific card
+       within a given number of turns. Some might compare consistency to fairness, specifically the minimizing of the chance
+        a player will win or lose based on luck. Thus, one of the most inconsistent factors in TCGs is the drawing of cards
+         used in each match. For some, this is a staple of what makes a TCG unique. For others, it is a reason to avoid the
+          game genre. Blitz will remove this factor from matches entirely, allowing players to access their entire decks
+          from the start of a match. The only limiting factors in playing cards will be the amount of Gold a player has
+          acquired and, in some cases, the level of their General. Blitz&rsquo;s deck concept is most like an item store available
+           in popular MOBAs.</p>
+    <p>Competitive TCGs like <i>Hearthstone</i> and <i>Gwent</i> have 7-minute and 12-minute average game lengths, respectively [7, 8].
+      Blitz will be a turn-based game and rely on a timebank system with the similar parameters as the <i>Blitz</i> format of
+      fast chess [6]. Players will start a match with 3 minutes of banked time. After each player&rsquo;s turn, they will be
+       awarded 2 additional seconds of banked time (may change based on playtesting outcomes). Thus, assuming turns
+       take at most 20 seconds, the maximum amount of time a Blitz game can last is approximately 15 minutes. A timebank
+        system will help ensure gameplay remains active and engaging. Matches will only end in a draw if neither General
+         has been damaged.</p>
+    <p>Gold is Blitz&rsquo;s first approach to a unique TCG resource system. Players will start a match with the same amount of
+      Gold. At the start of a match, players will bid a certain amount of Gold to determine which player moves first. Gold
+       will be obtained passively throughout a match, by defeating enemy cards, and by defeating NPCs. Hence, players will
+        need to weigh the benefit of spending versus saving to acquire stronger cards. For example, players might purchase
+        cards with the intent to defeat NPCs to obtain more Gold than otherwise could have been gained by just saving. Given
+         that a player&rsquo;s cards must be active on the board before they are able to attack NPCs and the limitation that,
+          unless specified otherwise, a single card can only attack once per turn, it may not always be advantageous to
+          spend a turn attacking NPCs when there are enemy cards to consider.
     </p>
-    <p>Gold is Blitz&rsquo;s first approach to a unique TCG resource system. Players will start a match with the same
-        amount of Gold. At the start of a match, players will bid a certain amount of Gold to determine which player
-        moves first. Gold will be obtained passively throughout a match, by defeating enemy cards, and by defeating
-        NPCs. Hence, players will need to weigh the benefit of spending versus saving to acquire stronger cards. For
-        example, players might purchase cards with the intent to defeat NPCs to obtain more Gold than otherwise could
-        have been gained by just saving. Given that a player&rsquo;s cards must be active on the board before they are
-        able to attack NPCs and the limitation that, unless specified otherwise, a single card can only attack once per
-        turn, it may not always be advantageous to spend a turn attacking NPCs when there are enemy cards to consider.
-    </p>
-    <p>Level is Blitz&rsquo;s second approach to resources. Generals will start a match at Level 1. Level can be
-        increased by gaining XP through battling enemy cards, NPCs, or card abilities. Higher level Generals can use
-        more of their abilities. In addition, some of the most powerful cards will require a certain General, minimum
-        Level, and some cost of Gold to be able to play. By Generals directly influencing the game through unique
-        abilities, it will encourage players to strategize their gameplay to some degree around what their General
-        brings to each match. The player who defeats an opposing player&rsquo;s General or whose General has the highest
-        amount of Health at the end of the game wins the match.</p>
-    <p>Gold and Level will maintain a strong relationship over the course of individual matches and, moreover, game
-        design and balancing. Players will develop varying strategies surrounding both resources e.g., rushing one
-        resource over another with the intent to overwhelm in the early game versus late game.</p>
+    <p>Level is Blitz&rsquo;s second approach to resources. Generals will start a match at Level 1. Level can be increased by
+      gaining XP through battling enemy cards, NPCs, or card abilities. Higher level Generals can use more of their
+      abilities. In addition, some of the most powerful cards will require a certain General, minimum Level, and some
+       cost of Gold to be able to play. By Generals directly influencing the game through unique abilities, it will
+       encourage players to strategize their gameplay to some degree around what their General brings to each match.
+        The player who defeats an opposing player&rsquo;s General or whose General has the highest amount of Health at the end
+         of the match will be declared the winner.</p>
+    <p>Gold and Level will maintain a strong relationship over the course of individual matches and, moreover, game design
+       and balancing. Players will develop varying strategies surrounding both resources e.g., rushing one resource over
+        another with the intent to overwhelm in the early game versus late game.</p>
     <h3 id="TokenomicsTheory">Tokenomics Theory</h3>
     <p>Ergo, Cardano, and Nervos are slated to be the backbone of the smart contracts and tokens necessary to facilitate
-        the player-to-player exchange ecosystem. Ergo was selected due to it being an up-and-comer in the crypto space,
-        it being backed by a strong and active development team, and the low fees inherent to its Layer 1 (L1) platform.
-        There is less competition and more room to grow on a blockchain like Ergo relative to a platform like Ethereum.
-        The community is known to be one of the best in crypto, providing an excellent platform for engagement and
-        feedback. Cardano brings a significant userbase and maintains similar ethics and great community. Nervos allows
-        for a novel approach to cross-chain integration that will ideally allow Blitz to become the first true universal
-        blockchain game. Blitz will be the first of its kind to utilize two separate blockchains that have different
-        consensus algorithms, PoW and PoS.</p>
-    <p>The Gods Unchained TCG on the Ethereum network is a notable example of implementing digital ownership for
-        players. Much of the theory surrounding the tokenomics of Blitz was derived from understanding the successes and
-        pitfalls of Gods Unchained [5]. In Blitz, there will be improvements made to the Gods Unchained card token
-        ecosystem.</p>
-    <p>Initially, players will be able acquire digital packs of cards. These packs will have their own associated token
-        for each production run, akin to how cards are printed for physical TCGs. Purely for example, the &ldquo;Initial
-        1st Edition Set&rdquo; will have packs minted, say 100,000 minted packs. Those packs will be acquired by players
-        for a set amount of currency, say 5 ERG. There will never be additional packs minted of the Initial 1st Edition
-        Set after they are sold, but there will be &ldquo;Unlimited Edition&rdquo; runs produced to ensure players can
-        gain access to limited high value cards &ndash; very similar to Pok&eacute;mon and Yu-Gi-Oh! print runs.</p>
-    <p>Acquired packs will be exchangeable via a smart contract for five cards. Card generation will follow a
-        pseudorandom methodology based on the type of pack purchased. A player will be able to connect an Ergo, Cardano,
-        or Nervos Wallet that maintains packs and open (i.e., exchange) those packs for cards. Based on our 100,000-pack
-        example above for the Initial 1st Edition Set, this means that there will only ever be 500,000 cards minted for
-        this imaginary set. Players might choose to leave packs unopened as demand for unopened packs could exceed
-        individual cards depending on the cost of individual cards, like many modern physical TCGs. In the spirit of
-        proper free-to-play games, there will be a standard set of competitive non-token cards that all players can use.
-    </p>
-    <p>Rarity is a topic of debate and is one of the most diverse aspects between TCGs, both physical and digital. Blitz
-        will maintain a more traditional approach to rarity. Card rarity will follow rarity indicators more like
-        Pok&eacute;mon and Yu-Gi-Oh! compared to Gods Unchained (i.e., something more like holographic cards and
-        editions versus card frame colors). Pull rates of rare cards will be dependent on the types of packs purchased
-        (i.e., a common pack will cost less but be less likely to provide players with rare cards).</p>
-    <p>Although not necessary for initial release, a future requirement to allow a better player driven economy to
-        flourish on the Ergo blockchain is a Layer 2 (L2) solution like the Immutable X platform on Ethereum. L2
-        solutions cut down on fees associated with exchanging tokens and currency, and increases transaction speed
-        (i.e., the opening of packs). Ergo already has the capability to facilitate a L1 player exchange system, but it
-        will carry across the current transaction fee and speed of the Ergo blockchain. At minimum, players will be able
-        to view tokens and exchange tokens (i.e., MetaMask-like signature confirmation when confirming a transaction,
-        review of transactions able to be acted on, and routing of tokens/funds based on what was exchanged). Linking
-        Ergo, Cardano, and Nervos Wallets to user accounts will be necessary to utilize cards in-game.</p>
-    <p>After the technical aspects of packs and cards are solidified, General variants and gameboard variants will be
-        able to be acquired and traded (completely cosmetic in utility). The theory for these items does not differ much
-        from what was stated above; additional ways to add ownership to a player&rsquo;s experience will help ensure
-        longevity and interaction with the game.</p>
-    <p>A token native to Blitz (BLTZ) might be minted, distributed, and utilized for various purposes. Some uses of the
-        token will include governance/card balance voting, payment of trade transaction fees, community funding,
-        development funding, purchasing of packs, and more. Once Blitz has all core mechanics and basic tokenomics in
-        place, and likely before full release, a Play-and-Earn system might be introduced comparable to Gods
-        Unchained&rsquo;s GODS token system. In Gods Unchained, GODS tokens are earned by players during community
-        events and through playing the game online against other players [5]. The design of the Play-and-Earn system is
-        the least defined at this point as it depends on the core aspects of Blitz being refined and implemented first
-        &ndash; ensuring that the Play-and-Earn system compliments the game design of Blitz requires play testing and
-        feedback from players which will not come until later phases.</p>
+      the player-to-player exchange ecosystem. Ergo was selected due to it being an up-and-comer in the crypto space, it
+       being backed by a strong and active development team, and the low fees inherent to its Layer 1 (L1) platform.
+       There is less competition and more room to grow on a blockchain like Ergo relative to a platform like Ethereum.
+        The Ergo community is known to be one of the best in crypto, providing an excellent platform for engagement
+         and feedback. Cardano brings a significant userbase and maintains similar ethics and great community. Nervos
+          allows for a novel approach to cross-chain integration that will ideally allow Blitz to become the first
+          true interoperable blockchain game. Blitz will be the first of its kind to utilize three separate blockchains
+           that have varying consensus algorithms.</p>
+    <p>The <i>Gods Unchained</i> TCG on the Ethereum network is a notable example of implementing digital ownership for players.
+      Much of the theory surrounding the tokenomics of Blitz was derived from understanding the successes and pitfalls
+      of <i>Gods Unchained</i> [5]. In Blitz, there will be improvements made to the <i>Gods Unchained</i> card token
+      ecosystem.</p>
+    <p>Initially, players will be able acquire digital packs of cards. These packs will have their own associated token for
+       each production run, akin to how cards are printed for physical TCGs. Purely for example, the &ldquo;Initial 1st Edition Set&rdquo;
+        will have packs minted, say 100,000 minted packs. Those packs will be acquired by players for a set amount of
+        currency, say 5 ERG. There will never be additional packs minted of the “Initial 1st Edition Set” after they are
+         sold, but there will be &ldquo;Unlimited Edition&rdquo; runs produced to ensure players can gain access to limited high
+         value cards &ndash; very similar to <i>Pok&eacute;mon&rsquo;s</i> and <i>Yu-Gi-Oh!&rsquo;s</i> print runs.</p>
+    <p>Acquired packs will be exchangeable via a smart contract for five cards. Card generation will follow a pseudorandom
+       methodology based on the type of pack purchased. A player will be able to connect an Ergo, Cardano, or Nervos Wallet
+        that maintains packs and open (i.e., exchange) those packs for cards. Based on our 100,000-pack example above
+        for the Initial 1st Edition Set, this means that there will only ever be 500,000 cards minted for this imaginary
+         set. Like in many modern physical TCGs, players might choose to leave packs unopened as demand for unopened
+          packs could exceed individual cards depending on the cost of individual cards. In the spirit of proper
+          free-to-play games, there will be a standard set of competitive non-blockchain cards that all players can use.</p>
+    <p>Rarity is a topic of debate and is one of the most diverse aspects when comparing TCGs, both physical and digital.
+      Blitz will maintain a more traditional approach to rarity. Card rarity will follow rarity indicators more like
+      <i>Pokémon</i> and <i>Yu-Gi-Oh!</i> compared to  <i>Gods Unchained</i>; each of the 4 card rarities will have an associated rarity
+      symbol and card frame. Pull rates of rare cards will be dependent on the types of packs purchased
+      (i.e., a common pack will cost less but be less likely to provide players with rare cards).</p>
+    <p>Although not necessary for initial release, a future requirement to allow a better player driven economy to flourish
+      on the Ergo blockchain is a Layer 2 (L2) solution like the Immutable X platform on Ethereum. L2 solutions cut down
+      on fees associated with exchanging tokens and currency, and increases transaction speed (i.e., the opening of packs).
+       Ergo already has the capability to facilitate a L1 player exchange system, but it will carry across the current
+       transaction fee and speed of the Ergo blockchain. At minimum, players will be able to view tokens and exchange
+       tokens (i.e., MetaMask-like signature confirmation when confirming a transaction, review of transactions able
+        to be acted on, and routing of tokens/funds based on what was exchanged). Linking Ergo, Cardano, and
+        Nervos Wallets to user accounts will be necessary to utilize cards in-game.</p>
+    <p>After the technical blockchain aspects of packs and cards are solidified, blockchain-based General variants and
+      gameboard variants will be able to be acquired and traded (completely cosmetic in utility). The theory for these
+      items does not differ much from what was stated above; additional ways to add ownership to a player&rsquo;s experience
+       will help ensure longevity and interaction with the game.</p>
+    <p>As of July 2023, a novel approach and inclusion for a BLTZ token was introduced. Starting on Ergo, the BLTZ token
+       will be generated based on a new internally named &ldquo;Proof of Burn&rsquo; algorithm. In short, the total available supply
+        of BLTZ tokens at launch will be 0, much like Bitcoin. BLTZ tokens will only be generated as cards are burned.
+         For example, Margo may be valued at 100 BLTZ tokens at launch so players could burn Margo to receive 100 BLTZ
+         tokens, removing the Margo that is burned from the blockchain entirely. This allows players to have an alternative
+          to selling cards on an open exchange. In addition, via Ergo smart contracts, a halving mechanism will be
+          implemented that activates after a certain number of cards are burned. Purely for example, after 10,000
+          total cards are burned, the Margo card will be worth 50 BLTZ instead of 100 BLTZ. This creates a unique
+           and dynamic economy where the value of BLTZ tokens will be purely based on the amount of cards burnt,
+            whereas the value of cards will very likely be based on the availability of the cards themselves.
+            As this is a new and novel approach to tokenomics, it is a fact that there is an inherent risk to
+            implementing it. However, we feel strongly that a fair launch and open economy is the only way to
+            promote an organic and transparent ecosystem for collectors and players.</p>
     <h2 id="Lore">Lore</h2>
     <p>Longevity in games is often dictated by replayability and investment into its characters or story. Blitz&rsquo;s
-        central theme will be that surrounding a time and society millenniums ahead of today. In Blitz, a universal
-        conflict is inevitable as resources have grown too thin for the many races that inhabit its worlds. To
-        circumvent an all-out war and destruction of races, all intelligent lifeforms abide by the Blitz Treaty. The
-        Blitz Treaty states that every century each race will pit their best leaders, tacticians, or warriors (i.e.,
-        Generals) against one another in a battle of wits. By winning matches of Blitz, Generals secure resources for
-        their race under the Blitz Treaty, thus prolonging their races longevity.</p>
-    <p>As the game progresses, specifics regarding races, their interests, their Generals, the universe, and more will
-        be expanded upon. Our official website will maintain all Lore documentation. For example:</p>
+      central theme will be that surrounding a time and society millenniums ahead of today. In Blitz, a universal
+       conflict is inevitable as resources have grown too thin for the many races that inhabit its worlds.
+       To circumvent an all-out war and destruction of races, all intelligent lifeforms abide by the Blitz Treaty.
+        The Blitz Treaty states that every century each race will pit their best leaders, tacticians, or warriors
+         (i.e., Generals) against one another in a battle of wits. By winning matches of Blitz, Generals secure
+         resources for their race under the Blitz Treaty, thus prolonging their races longevity.</p>
+    <p>As the game progresses, specifics regarding races, their interests, their Generals, the universe, and more
+      will be expanded upon. Our official website will maintain all Lore documentation. For example:</p>
     <div class="row">
         <div class="col-3"> <img src="/assets/page5.jpg" alt=""> </div>
         <div class="col-9"> <b>Margo, Queen of the Masquerades</b>
-            <p>Little is known about the Masquerade clan. What is known paints images of violence and countless
-                tragedies spanning the cosmos. Margo, the current leader of the Masquerades, is told to be a ruthless
-                fighter, unforgiving and lacking any notion for mercy. The mask she dons is rumored to be carved and
-                painted from the skull of the Masquerades previous leader, Margo&rsquo;s father. </p>
+            <p>Little is known about the Masquerade clan. What is known paints images of violence and countless tragedies
+               spanning the cosmos. Margo, the current leader of the Masquerades, is told to be a ruthless fighter,
+                unforgiving and lacking any notion for mercy. The mask she dons is rumored to be carved and painted
+                 from the skull of the Masquerades previous leader, Margo&rsquo;s father. </p>
         </div>
     </div>
     <h2 id="Mechanics">Mechanics</h2>
@@ -385,7 +386,7 @@
                 of Gold in return.</p>
         </li>
     </ol>
-    <h2 id="TokenomicsandRarity">Tokenomics and Rarity (section in progress)</h2>
+    <h2 id="TokenomicsandRarity">Tokenomics and Rarity</h2>
     <h3 id="PacksandCards">Packs and Cards</h3>
     <p>There are two factors proven time and time again that must remain consistent for a competitive game to flourish
         and remain relevant: removing or minimizing any pay-to-win aspects and ensuring gameplay remains fresh. To some
@@ -405,7 +406,7 @@
                 differently on the gameboard, or even have different sound effects when compared to the &ldquo;Unlimited
                 Edition&rdquo; (UED) of the same card (specifics TBD). Players that own 1ED cards will also be awarded
                 more Blitz TCG tokens compared to players who use UED cards (Blitz TCG token specifics defined further
-                below). The 1ED sale period ends when all 1ED packs have been sold.</p>
+                below). The 1ED sale period ends when all 1ED packs have been sold or after a certain length of time.</p>
         </li>
         <li>
             <p>Upon the start of a competitive season, an &ldquo;Unlimited Edition&rdquo; (UED) run will occur. The UED
@@ -414,31 +415,30 @@
                 competitive season in which they were introduced. After the current competitive season ends and new sets
                 are introduced, pack token generation of the previous set will be terminated. Therefore, although UED
                 packs have no upper limit during a competitive season, the supply of UED cards will hit a cap once the
-                season ends. Given that there will always be some cards from previous sets still allowed in competitive
-                play in future seasons, this will allow some amount of value appreciation on UED cards.</p>
+                season ends. Since cards can be balanced in Blitz, cards from previous seasons will still be sought
+                after in subsequent seasons, cementing their value for both the player and collector.</p>
         </li>
         <li>
-            <p>Much like Hearthstone&rsquo;s approach to competitive gameplay balancing, sets will be rotated out of
+            <p>Much like <i>Hearthstone&rsquo;s</i> approach to competitive gameplay balancing, sets will be rotated out of
                 competitive play on some seasonal basis. All cards will still be useable in certain noncompetitive game
                 modes, but only approved cards from previous sets and current in-season sets will be useable in
                 competitive play.</p>
         </li>
         <li>
-            <p>Players might able to burn card tokens in exchange for Blitz TCG tokens (i.e., exchange cards directly to
-                a standing contract). For example, if a player opens 20 packs (100 cards) and only wants to keep 10 of
-                them, they can choose to sell the remaining 90 cards on the open market, or they can choose to exchange
-                those cards for a set amount of Blitz TCG tokens based on card rarity. Those acquired Blitz tokens can
-                then be used to purchase additional packs or utilized in one of the other manners described in the <a
-                    href="/whitepaper#BlitzTCGToken">Blitz
-                    Token (BLTZ)</a> section.</p>
+            <p>Players will be able to burn cards in exchange for BLTZ tokens (i.e., exchange cards directly to a
+               standing smart contract). For example, if a player opens 20 packs (100 cards) and only wants to
+               keep 10 of them, they can choose to sell the remaining 90 cards on the open market, or they can
+                choose to exchange those cards for a set amount of BLTZ tokens based on card rarity. Those
+                acquired BLTZ tokens can then be used to purchase additional packs, sold on an exchange, or
+                perhaps at some point used to vote on game direction and balance.</p>
         </li>
         <li>
             <p>Cards in Blitz will be more like tokens versus typical NFTs. There will not be any mint numbers, e.g., 1
                 Margo = 1 Margo, and no Margo is rarer than another Margo in each set. The token images will have a
                 character image, card frame, some character descriptions, and so forth, but the card values like Health
                 and Attack will not be present. This will allow us to freely balance our cards in order to put gameplay
-                first. To learn more about this different approach, we recommend watching <a
-                    href="https://youtu.be/EFqTkuPhNw4">this video</a></p>
+                first. Learn more about this different approach to card tokenomics by watching
+                <a href="https://youtu.be/EFqTkuPhNw4">this video</a>.</p>
         </li>
     </ol>
     <p>The following illustrations and numerical values represent the current plan and estimations for initial pack sale
@@ -572,10 +572,6 @@
         conducted into prior TCG card sales, specifically those of Gods Unchained&rsquo;s initial set (<a
             href="/whitepaper#Appendix">Appendix
             [A]</a>).</p>
-    <p>Upon the start of a competitive season, UED packs will be available for purchase. The UED sale period will last
-        the entire length of the current competitive season with no upper limit on pack sales during that time. After a
-        competitive season ends, UED packs from that season will no longer be sold. Pack prices for UED runs will not be
-        defined here until data is aggregated and reviewed for initial 1ED set sales.</p>
     <p>Cards in Blitz will maintain 1 of 4 rarity indicators (CURL):</p>
     <ol>
         <li>
@@ -803,17 +799,13 @@
             href="/whitepaper#Appendix">Appendix
             [C]</a>; the figure found there describes the relationship between the CURL rarities and Level Brackets
         insofar as chances to obtain each type of card per pack.</p>
-    <h2 id="BlitzTCGToken">Blitz TCG Token (BLTZ) (section in progress)</h2>
-    <p>As Blitz grows and users become more invested in the success of the project and game, there must be a structure
-        to promote healthy growth of the ecosystem. To that end, blockchains might be used to generate Blitz TCG tokens
-        (BLTZ). BLTZ will be a digital asset that will be used in a variety of ways, including card
-        balancing/governance, ecosystem stability, player incentives (card burning, profit sharing), and Play-and-Earn
-        rewards. The current and most discussed strategy is to create a novel closed-loop game economy unseen in the
-        current blockchain and gaming landscape.</p>
-    <p>More details to follow with token uses, allocation breakdowns, etc. in the coming months.</p>
+    <h3 id="BlitzTCGToken">Blitz TCG Token (BLTZ)</h3>
+    <p>This section is reserved for future information about the BLTZ token outside of what has already been described
+      in previous sections. As the Ergo smart contracts necessary to facilitate the fair start &ldquo;Proof of Burn&rdquo;
+      algorithm become production ready, this section will be expanded upon.</p>
 
     <h2 id="Roadmap">Roadmap and Future Vision</h2>
-    <p>The Blitz TCG 2022 roadmap is provided in a visual format below. Dates are rough estimates based on how long
+    <p>The Blitz TCG 2023 roadmap is provided in a visual format below. Dates are rough estimates based on how long
         similar well-thought projects in this space typically take.</p>
     <img class="mb-4" src="/assets/page14.png" alt="">
     <p class="image-description">Image 6: Blitz TCG 2023 Roadmap.</p>
@@ -821,26 +813,21 @@
         found below.</p>
     <ol>
         <li class="line-style">
-            <p>Gameboards and Skins: gameboards, skins, and other cosmetic collectables add value to a player&rsquo;s
-                experience &ndash; tokens or otherwise, the more there is to achieve, the more likely players will stick
-                around. This is in scope as of February 2023.</p>
+            <p><b>Gameboards and Skins:</b> : gameboards, skins, and other cosmetic collectables add value to a player&rsquo;s
+               experience &ndash; blockchain tokens or otherwise. The more there is to achieve, the more likely players will
+                stick around. *Gameboards are in scope as of February 2023.</p>
         </li>
         <li>
-            <p>Play-and-Earn: the end state of Blitz should have a token inherent to Blitz itself that players can earn
-                through competition and community events. Those tokens could then be exchanged for packs, cards, or
-                placed directly on the broader crypto market.</p>
+            <p><b>Campaign:</b> computer AI are often a good player teaching and practice tool, and it would be fun to have
+              an in-game story mode where, upon completion, additional Generals or non-token cards could be unlocked.  </p>
         </li>
         <li>
-            <p>Campaign: computer AI are often a good teaching tool and would be useful to have in-game via a story mode
-                where, upon completion, additional Generals or non-token cards will be unlocked. </p>
-        </li>
-        <li>
-            <p>2v2 Game Mode: due to the nature of Blitz, specifically its more active gameplay style, expanding the
+            <p><b>2v2 Game Mode:</b> due to the nature of Blitz, specifically its more active gameplay style, expanding the
                 amount of field spaces in a thoughtful manner and allowing two players to simultaneously play together
                 would add a level of complexity and engagement unprecedented in the current digital TCG landscape.</p>
         </li>
         <li>
-            <p>Additional Content: broadly speaking, given enough time and resources, additional cards, additional Lore,
+            <p><b>Additional Content:</b> broadly speaking, given enough time and resources, additional cards, additional Lore,
                 Generals, game modes, collectibles, ladders, and more could be introduced.</p>
         </li>
     </ol>
@@ -1103,7 +1090,7 @@
 
         <div class="col-9">
             <p><b>Sophia Krainyk (Director of Media and Creative Writing)</b></p>
-            <p>Using her colorful background and thirst for adventure, Sophia cobbles together Mick’s lore into captivating
+            <p>Using her colorful background and thirst for adventure, Sophia cobbles together Mick&rsquo;s lore into captivating
                 short story arcs. Since she could hold a pencil, Sophia has been writing award-winning stories ranging in genre
                  from horror to high fantasy. In her free time, Sophia is an underwater fantasy photographer for her business,
                   Shivering Siren Studios, and free dives chilly Wisconsin waters in a mermaid tail. </p>
@@ -1154,14 +1141,14 @@
 
     <h2 id="Disclaimer">Disclaimer</h2>
     <p>This section will maintain information about Legal Notices, Risks Disclosures, and other pertinent information
-        related to playing Blitz TCG&trade; and purchasing any related content.</p>
-    <p>In brief, all statements and information documented in this Whitepaper and on any other official Blitz TCG&trade;
-        platforms linked from within this document involve many risks and uncertainties. All statements and information
-        other than statements of referenced historical fact are forward-looking (i.e., optimistic) statements and should
-        not be taken as fact. No information or content inherent to any of the Blitz TCG&trade; Whitepaper or official
-        Blitz TCG&trade; platforms should be considered financial, legal, investment, business, tax advice, or advice of
-        any other broker related offerings. Ensure to verify any information related to Blitz TCG&trade; has been
-        provided and communicated by a Blitz TCG&trade; authorized representative.</p>
+       related to playing Blitz TCG&reg; and purchasing any related content.</p>
+    <p>In brief, all statements and information documented in this Whitepaper and on any other official Blitz TCG&reg;
+      platforms linked from within this document involve many risks and uncertainties. All statements and
+      information other than statements of referenced historical fact are forward-looking (i.e., optimistic)
+       statements and should not be taken as fact. No information or content inherent to any of the Blitz TCG&reg;
+        Whitepaper or official Blitz TCG&reg; platforms should be considered financial, legal, investment, business,
+         tax advice, or advice of any other broker related offerings. Ensure to verify any information related
+          to Blitz TCG&reg; has been provided and communicated by a Blitz TCG&reg; authorized representative.</p>
     <h2 id="References">References</h2>
     <p>[1] Magic: The Gathering, Wikipedia, Wikimedia Foundation, December 9, 2021. Accessed on: December 21, 2022.
         [Online]. Available: <a
