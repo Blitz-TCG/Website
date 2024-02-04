@@ -81,8 +81,6 @@ function verifyUserAndUpdateWallet(address: any) {
   const user = auth.currentUser;
 
   if (user) {
-    console.log(`ID user: ${user?.uid}`);
-
     // DB Config
     const firebaseConfig = environment.firebase;
     const database = getDatabase();

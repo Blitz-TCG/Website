@@ -346,7 +346,7 @@ export class CollectiblesComponent implements OnInit {
 
   openPopup(card: any) {
     if (this.authService.isLoggedIn && this.walletConnected()) {
-      this.modalService.openModal(card);
+      this.modalService.openModal({ ...card, modalType: "Market", showDetails: true });
     }
   }
 

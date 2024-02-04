@@ -11,7 +11,7 @@
 .card-container {
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
 }
 
 .modal-dialog {
@@ -126,6 +126,7 @@
     padding-left: 10px;
     margin-bottom: 20px;
     margin-top: 10px;
+    overflow: hidden;
 }
 
 .card-stats-title {
@@ -212,6 +213,11 @@
     padding-top: 40px;
 }
 
+.card-row {
+    display: flex;
+    flex-direction: row;
+}
+
 .detail {
     position: relative;
     padding-left: 40px;
@@ -223,6 +229,7 @@
     font-size: 18px;
     display: flex;
     align-items: center;
+    min-width: 210px;
 
     &::before {
         content: " ";
@@ -248,11 +255,17 @@
 .first-edition::before {
     background-image: url("/assets/First_Edition.png");
 }
+
 .unlimited-edition::before {
     background-image: url("/assets/Un_Edition.png");
 }
+
 .rarity::before {
-    background-image: url("/assets/rarity_icon_placeholder_ORANGE.png");
+    background-image: url("/assets/Rarity_icon.png");
+}
+
+.edition::before {
+    background-image: url("/assets/Edition_icon.png");
 }
 
 .common::before {
@@ -295,6 +308,334 @@
     height: 35px;
     flex: 1px;
     padding-top: 4px;
+}
+
+.message {
+    text-align: center;
+    font-size: 23px;
+    color: #dc3545;
+
+    &.success-message {
+        color: #00ba63;
+    }
+}
+
+.card-buttons {
+    .card-btn.loading {
+        cursor: not-allowed;
+    }
+
+    .card-btn {
+        width: 90%;
+        height: 50px;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 0px;
+        color: #FFF;
+        border: none;
+        background-color: transparent;
+        position: relative;
+        margin: 0 auto;
+        margin-top: 3px;
+        margin-bottom: 10px;
+        cursor: url('/assets/Cursor_02-2_select.svg'), url('/assets/Cursor_02-2_select.svg'), auto !important;
+        text-decoration: none;
+        opacity: 1;
+        transition: all 0.2s ease-in-out;
+
+        &.confirm {
+            width: 60%;
+        }
+
+        &.buy,
+        &.market,
+        &.cancel,
+        &.confirm {
+            background-image: url(/assets/card-container-buy-btn-bg.png);
+        }
+
+        &.sell {
+            background-image: url(/assets/card-container-sell-btn-bg.png);
+        }
+
+        &.burn {
+            background-image: url(/assets/card-container-burn-btn-bg.png);
+        }
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .row-cancel {
+        display: flex;
+        flex-direction: row;
+
+        .edit-cancel {
+            width: 40%;
+            position: relative;
+            background-image: url(/assets/card-container-buy-btn-bg.png);
+
+            &::after {
+                content: "";
+                position: absolute;
+                display: block;
+                background-size: contain;
+                background-position: right;
+                background-repeat: no-repeat;
+                right: -17px;
+                width: 30px;
+                height: 50px;
+            }
+
+            &::before {
+                content: "";
+                position: absolute;
+                display: block;
+                background-size: contain;
+                background-position: left;
+                background-repeat: no-repeat;
+                left: -17px;
+                width: 30px;
+                height: 50px;
+            }
+
+            &::after {
+                background-image: url(/assets/card-container-buy-btn-right-bg.png);
+            }
+
+            &::before {
+                background-image: url(/assets/card-container-buy-btn-left-bg.png);
+            }
+        }
+    }
+}
+
+
+
+.price-row {
+    display: flex;
+    justify-content: flex-end;
+    width: 90%;
+    margin: 0 auto;
+
+    .price-in-erg {
+        font-size: 20px;
+    }
+
+    .price-in-usd {
+        font-size: 12px;
+        margin-bottom: 4px;
+        margin-left: 6px;
+        display: flex;
+        align-items: flex-end;
+    }
+}
+
+.listed-date {
+    width: 90%;
+    margin: 0 auto;
+    text-align: right;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.sell-modal {
+    .sell-modal-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sell-modal-title {
+        background-image: url(/assets/sell-modal-title-bg.png);
+        width: 80%;
+        height: 85px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin-left: -10px;
+        display: flex;
+        align-items: center;
+        padding-left: 30px;
+        font-size: 28px;
+        color: #EADECC;
+
+        span {
+            margin-left: 10px;
+            color: #F4A32C;
+        }
+
+        &.selling {
+            background-image: url(/assets/sell-modal-title-selling-bg.png);
+        }
+    }
+
+    .sell-modal-content-container {
+        padding: 10px 40px;
+    }
+
+    .sell-modal-content {
+        background-image: url(/assets/sell-modal-content-bg.png);
+        background-repeat: no-repeat;
+        background-size: cover;
+        padding-top: 40px;
+    }
+
+    input.amount {
+        background-color: #1a293d;
+        border: #051526 2px solid;
+        height: 45px;
+        // width: 70%;
+        padding: 0px 10px;
+        color: #a09b92;
+    }
+
+    .input-group small {
+        color: #dc3545;
+    }
+
+    .sub-title {
+        color: #e6e2dc;
+        font-size: 26px;
+        margin-bottom: 16px;
+        margin-left: 10px;
+    }
+
+    .select-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+        min-width: 145px;
+    }
+
+    .selected-option {
+        background-color: #00030B;
+        color: #A09B92;
+        height: 45px;
+        width: 100px;
+        margin: 0 auto;
+        font-size: 25px;
+        border: #051526 2px solid;
+        text-transform: uppercase;
+    }
+
+    .options {
+        display: flex;
+        flex-direction: column;
+        background-color: #020C2F;
+        border: 2px solid #0B1E3F;
+        border-radius: 5px;
+        position: absolute;
+        width: 100%;
+        top: 42px;
+        color: #9F9B92;
+        padding: 10px;
+        z-index: 999999;
+
+        &.currency {
+            text-transform: uppercase;
+        }
+
+        span {
+            margin-bottom: 5px;
+
+            &.active {
+                color: #FFFFFF;
+            }
+
+            &:last-child {
+                margin-bottom: 0px;
+            }
+        }
+    }
+
+    .amount-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .sell-modal-content-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .service-fee,
+    .service-fee-value {
+        color: #a6a6a6;
+        text-transform: uppercase;
+    }
+
+    .sell-modal-content-row .description {
+        font-size: 16px;
+        margin: 0 auto;
+
+        a {
+            color: #eaa24a;
+            text-decoration: none;
+        }
+    }
+
+    .your-earning-value {
+        text-transform: uppercase;
+    }
+
+    .modal-button {
+        width: 90%;
+        height: 37px;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 0px;
+        color: #B7BEC5;
+        border: none;
+        background-color: transparent;
+        position: relative;
+        margin: 0 auto;
+        margin-top: 3px;
+        margin-bottom: 10px;
+        cursor: url('/assets/Cursor_02-2_select.svg'), url('/assets/Cursor_02-2_select.svg'), auto !important;
+        text-decoration: none;
+        opacity: .8;
+        transition: all 0.2s ease-in-out;
+        background-image: url(/assets/card-container-sell-btn-bg.png);
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+.sell-modal-buttons {
+    .modal-button {
+        height: 60px;
+        font-size: 23px;
+        color: #FFFFFF;
+        background-size: contain;
+    }
+}
+
+.confirm-message {
+    padding: 40px;
+    margin: 0;
+    font-size: 24px;
+    text-align: center;
+
+    b {
+        color: #dc3545;
+    }
 }
 
 @media screen and (max-width: 825px) {
