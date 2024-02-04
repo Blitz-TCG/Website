@@ -35,6 +35,7 @@ import { UseComponent } from './use/use.component';
 import { WhitepaperComponent } from './whitepaper/whitepaper.component';
 import { CollectiblesComponent } from './collectibles/collectibles.component';
 import { ModalComponent } from './modal/modal.component';
+import { MarketComponent } from './market/market.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,6 +59,7 @@ import { ModalComponent } from './modal/modal.component';
     UseComponent,
     WhitepaperComponent,
     CollectiblesComponent,
+    MarketComponent,
     ModalComponent
   ],
   imports: [

@@ -1,25 +1,183 @@
 <div *ngIf="selectedCard" class="card-modal-container" (click)="onClickOutsideModal($event)">
-    <!-- Modal content here -->
-    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+    <div [ngClass]="{'modal': true, 'sell-modal': !showDetails}" tabindex="-1" role="dialog"
+        [ngStyle]="{'display':displayStyle}">
         <div class="modal-dialog" role="document">
             <div class="modal-content" id="cardModal">
                 <button type="button" class="close-popup" (click)="closeModal()"></button>
                 <div class="modal-body">
-                    <div class="card-container">
-                        <div class="card-image-container col-6">
-                            <img class="card-image" [src]="selectedCard?.image" alt="">
-                            <div class="amount-owned">Amount Owned <span class="amount">{{selectedCard?.amount ||
+                    <div class="sell-modal-container" *ngIf="showDetails === false">
+                        <div *ngIf="modalType === 'Cancel'">
+                            <p class="confirm-message">Are you sure you want to Cancel the NFT titled
+                                <b>{{selectedCard?.name}}</b> for
+                                <b>{{selectedCard?.price_erg}} ERG</b>? This action is irreversible.
+                            </p>
+                            <div *ngIf="message" [ngClass]="{'message': true, 'success-message': isSuccessful}">
+                                {{message }}
+                            </div>
+                            <div class="card-buttons">
+                                <div class="card-btn confirm" [class.loading]="isLoading"
+                                    [attr.disabled]="isLoading ? true : null"
+                                    (click)="!isLoading && delistNFT(selectedCard?.token_id)">
+                                    {{ isLoading ? 'Loading...' : 'Confirm' }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sell-modal-title selling" *ngIf="modalType === 'Sell'">Selling
+                            :
+                            <span>{{selectedCard?.name}}</span>
+                        </div>
+                        <div class="sell-modal-title" *ngIf="modalType === 'Edit'">Edit Listing
+                        </div>
+                        <div class="sell-modal-title burning" *ngIf="modalType === 'Burn'">Burning:
+                            <span>{{selectedCard?.name}}</span>
+                        </div>
+                        <div class="sell-modal-content-container">
+                            <div *ngIf="modalType === 'Sell'">
+                                <div class="sell-modal-content">
+                                    <div class="sub-title">Listing Price</div>
+                                    <div class="amount-group">
+                                        <div class="input-group flex flex-column">
+                                            <input type="number" placeholder="Enter Listing Price Here" [value]="price"
+                                                (input)="checkInput($event)" class="amount" min="0">
+                                            <div *ngIf="!isValid">
+                                                <small>Price should be a number with up to 2 decimal places</small>
+                                            </div>
+                                        </div>
+                                        <div class="select-container">
+                                            <button class="selected-option"
+                                                (click)="toggleMenu(0)">{{currency}}</button>
+                                            <div class="options currency" *ngIf="activeIndex === 0"
+                                                (mouseleave)="activeIndex = -1">
+                                                <span [class.active]="currency === 'erg'"
+                                                    (click)="selectCurrency('erg')">ERG</span>
+                                                <span [class.active]="currency === 'usd'"
+                                                    (click)="selectCurrency('usd')">USD</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sell-modal-content">
+                                    <div class="sell-modal-content-row">
+                                        <div class="service-fee">Sevice Fee (2%)</div>
+                                        <div class="service-fee-value">{{calculateFee()}} {{currency}}</div>
+                                    </div>
+                                    <div class="sell-modal-content-row">
+                                        <div class="your-earning">Your Earnings</div>
+                                        <div class="your-earning-value">{{calculateYouEarn(selectedCard?.price_erg)}}
+                                            {{currency}}</div>
+                                    </div>
+                                    <div class="sell-modal-content-row">
+                                        <div class="description">The is also an immediate fee of 0.03 ERG, find out more
+                                            in
+                                            our <a [href]="'/faqs'">FAQ</a> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="modalType === 'Edit'">
+                                <div class="sell-modal-content">
+                                    <div class="sub-title">Listing Price</div>
+                                    <div class="amount-group">
+                                        <div class="input-group flex flex-column">
+                                            <input type="number" placeholder="Enter Listing Price Here" [value]="price"
+                                                (input)="checkInput($event)" class="amount" min="0">
+                                            <div *ngIf="!isValid">
+                                                <small>Price should be a number with up to 2 decimal places</small>
+                                            </div>
+                                        </div>
+                                        <div class="select-container">
+                                            <button class="selected-option"
+                                                (click)="toggleMenu(0)">{{currency}}</button>
+                                            <div class="options currency" *ngIf="activeIndex === 0"
+                                                (mouseleave)="activeIndex = -1">
+                                                <span [class.active]="currency === 'erg'"
+                                                    (click)="selectCurrency('erg')">ERG</span>
+                                                <span [class.active]="currency === 'usd'"
+                                                    (click)="selectCurrency('usd')">USD</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sell-modal-content">
+                                    <div class="sell-modal-content-row">
+                                        <div class="service-fee">Sevice Fee (2%)</div>
+                                        <div class="service-fee-value">{{calculateFee()}} {{currency}}</div>
+                                    </div>
+                                    <div class="sell-modal-content-row">
+                                        <div class="your-earning">Your Earnings</div>
+                                        <div class="your-earning-value">{{calculateYouEarn(selectedCard?.price_erg)}}
+                                            {{currency}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="modalType === 'Burn'">
+                                <div class="sell-modal-content">
+                                    <div class="sell-modal-content-row">
+                                        <div class="burn-value">Burn Value</div>
+                                        <div class="burn-value-amout">100 BLTZ</div>
+                                    </div>
+                                </div>
+                                <div class="sell-modal-content">
+                                    <div class="sell-modal-content-row">
+                                        <div class="service-fee">Estimated Fees (5%)</div>
+                                        <div class="service-fee-value">5 BLTZ</div>
+                                    </div>
+                                    <div class="sell-modal-content-row">
+                                        <div class="your-earning">Your Earnings</div>
+                                        <div class="your-earning-value">95 BLTZ</div>
+                                    </div>
+                                    <div class="sell-modal-content-row">
+                                        <div class="description">The is also an immediate fee of 0.03 ERG, find out more
+                                            in
+                                            our <a [href]="'/faqs'">FAQ</a> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="modalType !== 'Buy' && message"
+                                [ngClass]="{'message': true, 'success-message': isSuccessful}">{{ message }}
+                            </div>
+                            <div class="sell-modal-buttons">
+                                <div class="modal-button sell" *ngIf="modalType === 'Sell'" [class.loading]="isLoading"
+                                    [attr.disabled]="isLoading ? true : null"
+                                    (click)="!isLoading && listingNFTs(selectedCard?.token_id)">
+                                    {{ isLoading ? 'Loading...' : 'Submit Sell' }}
+                                </div>
+                                <div class="modal-button sell" *ngIf="modalType === 'Edit'" [class.loading]="isLoading"
+                                    [attr.disabled]="isLoading ? true : null"
+                                    (click)="!isLoading && editNFT(selectedCard?.token_id)">
+                                    {{ isLoading ? 'Loading...' : 'Submit Change' }}
+                                </div>
+
+                                <div class="modal-button burn" *ngIf="modalType === 'Burn'">
+                                    Submit Burn</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-container" *ngIf="showDetails">
+                        <div class="card-image-container col-5">
+                            <img class="card-image" [src]="selectedCard.image" [alt]="selectedCard.name"
+                                (load)="onImageLoad(selectedCard)" (error)="onImageError(selectedCard)"
+                                *ngIf="!selectedCard.isLoaded; else loadedContent">
+                            <ng-template #loadedContent>
+                                <img class="card-image"
+                                    [src]="selectedCard.imageLoaded ? selectedCard.image : '/assets/loading-nft.jpeg'"
+                                    [alt]="selectedCard.name">
+                            </ng-template>
+                            <div class="amount-owned"
+                                *ngIf="selectedCard?.modalType === 'Sell' && selectedCard?.sellActiveTab === 'For Sale'">
+                                Amount
+                                Owned <span class="amount">{{selectedCard?.amount ||
                                     0}}</span>
                             </div>
                         </div>
-                        <div class="card-details-container col-6">
+                        <div class="card-details-container col-7">
                             <div class="card-name">{{selectedCard?.name}}</div>
                             <div class="card-info">{{selectedCard?.description}}</div>
                             <div class="card-stats-title">Stats</div>
                             <div class="card-stats">
                                 <div class="left-stats">
                                     <div class="stat attack">Attack <span
-                                            class="stat-value">{{selectedCard?.attack}}</span></div>
+                                            class="stat-value">{{selectedCard?.attack}}</span>
+                                    </div>
                                     <div class="stat gold">Gold <span class="stat-value">{{selectedCard?.gold}}</span>
                                     </div>
                                 </div>
@@ -30,24 +188,74 @@
                                 </div>
                             </div>
                             <div class="card-details">
-                                <div class="detail clan">Clan <span class="detail-value">{{selectedCard?.clan}}</span>
+                                <div class="card-row">
+                                    <div class="detail clan">Clan <span
+                                            class="detail-value">{{selectedCard?.clan}}</span>
+                                    </div>
+                                    <div class="detail level">Level <span class="detail-value">
+                                            {{selectedCard?.level ? getLevel(selectedCard?.level) : "None"}}</span>
+                                    </div>
                                 </div>
-                                <div class="detail level">Level <span class="detail-value">
-                                        {{selectedCard?.level ? getLevel(selectedCard?.level) : "None"}}</span></div>
-                                <div class="detail-rarity">
-                                    <div class="detail" [ngClass]="{'first-edition': selectedCard?.edition == '1',
-                                    'unlimited-edition': selectedCard?.edition == '2'}">Edition</div>
-                                    <div class="detail rarity" [ngClass]="{'common': selectedCard?.rarity === 'Common',
-                                        'uncommon': selectedCard?.rarity === 'Uncommon',
-                                        'rare': selectedCard?.rarity === 'Rare',
-                                        'legendary': selectedCard?.rarity === 'Legendary'}">
-                                        Rarity</div>
+                                <div class="card-row">
+                                    <div class="detail edition">Edition <span class="detail-value">
+                                            {{selectedCard?.edition}}</span>
+                                    </div>
+                                    <div class="detail rarity">Rarity <span class="detail-value">
+                                            {{selectedCard?.rarity}}</span>
+                                    </div>
                                 </div>
-                                <div class="detail artist">Artist <span
-                                        class="detail-value">{{selectedCard?.artist}}</span></div>
-                                <div class="detail Set">Set <span class="detail-value">{{selectedCard?.set}}</span>
+                                <div class="card-row">
+                                    <div class="detail artist">Artist <span
+                                            class="detail-value">{{selectedCard?.artist}}</span></div>
+                                    <div class="detail Set">Set <span class="detail-value">{{selectedCard?.set}}</span>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="card-buttons" *ngIf="selectedCard?.modalType === 'Market'">
+                                <a href="/market" class="card-btn market">Market</a>
+                            </div>
+                            <div class="card-buttons" *ngIf="selectedCard?.modalType === 'Burn'">
+                                <div class="card-btn burn" (click)="showDetails = false; modalType = 'Burn'">Burn</div>
+                            </div>
+                            <div *ngIf="selectedCard?.modalType === 'Buy'">
+                                <div class="price-row">
+                                    <div class="price-in-erg">{{selectedCard?.price_erg}} ERG</div>
+                                    <div class="price-in-usd">({{selectedCard?.price_usd}} USD)</div>
+                                </div>
+                                <div class="card-buttons">
+                                    <div [ngClass]="{'message': true, 'success-message': isSuccessful}">{{ message }}
+                                    </div>
+                                    <div class="card-btn buy" [class.loading]="isLoading"
+                                        [attr.disabled]="isLoading ? true : null"
+                                        (click)="!isLoading && buyNFT(selectedCard?.box_id)">
+                                        {{ isLoading ? 'Loading...' : 'Buy' }}
+                                    </div>
+                                </div>
+                                <div class="listed-date"> {{selectedCard?.time_ago}}
+                                </div>
+                            </div>
+                            <div *ngIf="selectedCard?.modalType === 'Sell'">
+                                <div class="price-row" *ngIf="selectedCard?.sellActiveTab === 'Sold'">
+                                    <div class="price-in-erg">{{selectedCard?.set}} ERG</div>
+                                    <div class="price-in-usd">({{selectedCard?.price_usd}} USD)</div>
+                                </div>
+                                <div class="card-buttons">
+                                    <div class="card-btn sell" *ngIf="selectedCard?.sellActiveTab === 'Owned'"
+                                        (click)="showDetails = false; modalType = 'Sell'">Sell</div>
+                                    <div class="row-cancel" *ngIf="selectedCard?.sellActiveTab === 'For Sale'">
+                                        <div class="card-btn edit-cancel"
+                                            (click)="showDetails = false; modalType = 'Cancel'">
+                                            Cancel</div>
+                                        <div class="card-btn edit-cancel"
+                                            (click)="showDetails = false; modalType = 'Edit'">
+                                            Edit</div>
+                                    </div>
+                                </div>
+                                <div class="listed-date" *ngIf="selectedCard?.sellActiveTab === 'Sold'">
+                                    Listed 18 hours ago
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

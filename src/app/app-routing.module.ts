@@ -7,6 +7,7 @@ import { EulaComponent } from './eula/eula.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { HomeComponent } from './home/home.component';
 import { LoreComponent } from './lore/lore.component';
+import { MarketComponent } from './market/market.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { RoadmapComponent } from './roadmap/roadmap.component';
@@ -55,6 +56,7 @@ const routes: Routes = [
   { path: 'use', component: UseComponent },
   { path: 'whitepaper', component: WhitepaperComponent },
   { path: 'collectibles', component: CollectiblesComponent },
+  { path: 'market', component: MarketComponent },
   { path: '404', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent },
 ];
