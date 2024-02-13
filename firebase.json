@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "blitz-tcg-test",
     "public": "dist/blitz-tcg/browser",
     "ignore": [
       "firebase.json",

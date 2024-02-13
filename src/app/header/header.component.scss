@@ -75,7 +75,7 @@ $nav-link-color-hover: #fff;
     width: 3px;
     height: 52px;
     position: absolute;
-    right: -20px;
+    right: -15px;
     top: -15px;
     z-index: 999;
   }
@@ -543,6 +543,11 @@ $nav-link-color-hover: #fff;
 
   .collapse:not(.show) {
     display: inherit;
+  }
+
+  .cards-details {
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center children horizontally */
   }
 
   #navbarCollapse {
