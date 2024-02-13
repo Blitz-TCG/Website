@@ -5,7 +5,7 @@
         To display cards, please log in.
       </div>
       <div class="message-text" *ngIf="authService.isLoggedIn && !walletConnected()">
-        To display cards, please connect an Ergo wallet.
+        To display cards, please connect a wallet.
       </div>
     </div>
   </div>
@@ -38,7 +38,7 @@
         <div class="unl-edition">
           <span class="number">{{userCardsDetail.unlEdition}}</span> Unlimited Edition
         </div>
-        <input type="button" class="btn submit-btn" value="Buy Packs" type="submit" tabindex="5" disabled />
+       <!-- <input type="button" class="btn submit-btn" value="Buy Packs" type="submit" tabindex="5" disabled /> -->
       </div>
       <div class="card-rarity">
         <div class="cards-type-list">

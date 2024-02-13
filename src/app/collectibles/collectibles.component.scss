@@ -113,7 +113,7 @@ label[for="ownedCardsOnly"] {
 }
 
 .cards-type-list {
-  margin-top: 25px;
+  align-items: center;
 }
 
 .card-type {
@@ -179,6 +179,8 @@ label[for="ownedCardsOnly"] {
   flex-direction: row;
   justify-content: space-around;
   margin: 20px auto;
+  align-items: center; // Vertically centers the child elements in the container
+  //margin-top: 100px; // example top margin, adjust the value as needed
   max-width: 800px;
 }
 
