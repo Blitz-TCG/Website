@@ -107,15 +107,15 @@
               </div>
             </div>
             <div class="select-container">
-              <span class="select-label">Level</span>
-              <button class="selected-option" (click)="toggleMenu(4)">{{filter.level.name}}</button>
+              <span class="select-label">Bracket</span>
+              <button class="selected-option" (click)="toggleMenu(4)">{{filter.bracket.name}}</button>
               <div class="options" (mouseleave)="activeIndex = -1" *ngIf="activeIndex === 4">
-                <span [class.active]="filter.level.value === 'All'" (click)="selectLevel('All','All')">All</span>
-                <span [class.active]="filter.level.value === '1'"
-                  (click)="selectLevel('Starter','Starter')">Starter</span>
-                <span [class.active]="filter.level.value === '2-4'" (click)="selectLevel('Lower','Lower')">Lower</span>
-                <span [class.active]="filter.level.value === '5-8'" (click)="selectLevel('Middle','Middle')">Middle</span>
-                <span [class.active]="filter.level.value === '9-10'" (click)="selectLevel('Upper','Upper')">Upper</span>
+                <span [class.active]="filter.bracket.value === 'All'" (click)="selectBracket('All','All')">All</span>
+                <span [class.active]="filter.bracket.value === '1'"
+                  (click)="selectBracket('Starter','Starter')">Starter</span>
+                <span [class.active]="filter.bracket.value === '2-4'" (click)="selectBracket('Lower','Lower')">Lower</span>
+                <span [class.active]="filter.bracket.value === '5-8'" (click)="selectBracket('Middle','Middle')">Middle</span>
+                <span [class.active]="filter.bracket.value === '9-10'" (click)="selectBracket('Upper','Upper')">Upper</span>
               </div>
             </div>
             <div class="select-container">
@@ -123,24 +123,25 @@
               <button class="selected-option" (click)="toggleMenu(5)">{{filter.artist.name}}</button>
               <div class="options" (mouseleave)="activeIndex = -1" *ngIf="activeIndex === 5">
                 <span [class.active]="filter.artist.value === 'All'" (click)="selectArtist('All','All')">All</span>
-                <span [class.active]="filter.artist.value === 'Noslin'"
-                  (click)="selectArtist('Noslin','Noslin')">Noslin</span>
-                <span [class.active]="filter.artist.value === 'Jef'" (click)="selectArtist('Jef','Jef')">Jef</span>
-                <span [class.active]="filter.artist.value === 'Cartunista'" (click)="selectArtist('Cartunista','Cartunista')">Benj</span>
                 <span [class.active]="filter.artist.value === 'Abner'"
                   (click)="selectArtist('Abner','Abner')">Abner</span>
-                <span [class.active]="filter.artist.value === 'Levi'" (click)="selectArtist('Levi','Levi')">Levi</span>
+                <span [class.active]="filter.artist.value === 'Cartunista'"
+                  (click)="selectArtist('Cartunista','Cartunista')">Cartunista</span>
                 <span [class.active]="filter.artist.value === 'Dogzy'"
                   (click)="selectArtist('Dogzy','Dogzy')">Dogzy</span>
-                <span [class.active]="filter.artist.value === 'Joe'"
-                  (click)="selectArtist('Joe','Joe')">Joe</span>
-                <span [class.active]="filter.artist.value === 'Satoshi'"
-                  (click)="selectArtist('Satoshi','Satoshi')">Satoshi</span>
-                <span [class.active]="filter.artist.value === 'Lara'" (click)="selectArtist('Lara','Lara')">Lara</span>
-                <span [class.active]="filter.artist.value === 'Ed'" (click)="selectArtist('Ed','Ed')">Ed</span>
-                <span [class.active]="filter.artist.value === 'Foe'" (click)="selectArtist('Foe','Foe')">Foe</span>
                 <span [class.active]="filter.artist.value === 'Dough'"
                   (click)="selectArtist('Dough','Dough')">Dough</span>
+                <span [class.active]="filter.artist.value === 'Ed'" (click)="selectArtist('Ed','Ed')">Ed</span>
+                <span [class.active]="filter.artist.value === 'Foe'" (click)="selectArtist('Foe','Foe')">Foe</span>
+                <span [class.active]="filter.artist.value === 'Jef'" (click)="selectArtist('Jef','Jef')">Jef</span>
+                <span [class.active]="filter.artist.value === 'Joe'"
+                  (click)="selectArtist('Joe','Joe')">Joe</span>
+                <span [class.active]="filter.artist.value === 'Lara'" (click)="selectArtist('Lara','Lara')">Lara</span>
+                <span [class.active]="filter.artist.value === 'Levi'" (click)="selectArtist('Levi','Levi')">Levi</span>
+                <span [class.active]="filter.artist.value === 'Noslin'"
+                  (click)="selectArtist('Noslin','Noslin')">Noslin</span>
+                <span [class.active]="filter.artist.value === 'Satoshi'"
+                  (click)="selectArtist('Satoshi','Satoshi')">Satoshi</span>
               </div>
             </div>
           </div>

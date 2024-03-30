@@ -65,7 +65,7 @@ export class CollectiblesComponent implements OnInit {
       name: "All",
       value: "All"
     },
-    level: {
+    bracket: {
       name: "All",
       value: "All"
     },
@@ -313,7 +313,7 @@ export class CollectiblesComponent implements OnInit {
         (this.filter.set.value === 'All' || card.set === this.filter.set.value) &&
         (this.filter.faction.value === 'All' || card.faction === this.filter.faction.value) &&
         (this.filter.rarity.value === 'All' || card.rarity === this.filter.rarity.value) &&
-        (this.filter.level.value === 'All' || this.filterLevel(card.level, this.filter.level.value)) &&
+        (this.filter.bracket.value === 'All' || this.filterBracket(card.bracket, this.filter.bracket.value)) &&
         (this.filter.artist.value === 'All' || card.artist === this.filter.artist.value) &&
         (!searchText || card.name.toLowerCase().includes(searchText.toLowerCase()))
       ) {
@@ -325,8 +325,8 @@ export class CollectiblesComponent implements OnInit {
     this.cardsPages = Math.ceil(this.filtedCards.length / this.perPage) || 1;
   }
 
-  filterLevel(value: number, levelName: string) {
-    switch (levelName) {
+  filterBracket(value: number, bracketName: string) {
+    switch (bracketName) {
       case "Lower":
         return value >= 2 && value <= 4;
       case "Mid":
@@ -427,9 +427,9 @@ export class CollectiblesComponent implements OnInit {
     this.toggleMenu(3);
   }
 
-  selectLevel(value: string, name: string): void {
-    this.filter.level.value = value;
-    this.filter.level.name = name;
+  selectBracket(value: string, name: string): void {
+    this.filter.bracket.value = value;
+    this.filter.bracket.name = name;
     this.applyFilter();
     this.toggleMenu(4);
   }
