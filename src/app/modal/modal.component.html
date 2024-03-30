@@ -189,11 +189,11 @@
                             </div>
                             <div class="card-details">
                                 <div class="card-row">
-                                    <div class="detail faction">faction <span
+                                    <div class="detail faction">Faction <span
                                             class="detail-value">{{selectedCard?.faction}}</span>
                                     </div>
-                                    <div class="detail level">Level <span class="detail-value">
-                                            {{selectedCard?.level ? getLevel(selectedCard?.level) : "None"}}</span>
+                                    <div class="detail bracket">Bracket <span class="detail-value">
+                                            {{selectedCard?.bracket ? getBracket(selectedCard?.bracket) : "None"}}</span>
                                     </div>
                                 </div>
                                 <div class="card-row">
@@ -212,8 +212,8 @@
                                 </div>
                             </div>
                             <div class="card-buttons" *ngIf="selectedCard?.modalType === 'Market'">
-                                <a href="/market" class="card-btn market">Market</a>
-                            </div>
+                              <a href="https://www.skyharbor.io/collection/blitztcg" target="_blank" class="card-btn market">Market</a>
+                          </div>
                             <div class="card-buttons" *ngIf="selectedCard?.modalType === 'Burn'">
                                 <div class="card-btn burn" (click)="showDetails = false; modalType = 'Burn'">Burn</div>
                             </div>

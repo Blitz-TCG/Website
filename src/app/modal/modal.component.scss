@@ -248,7 +248,7 @@
     background-image: url("/assets/Clan_icon.png");
 }
 
-.level::before {
+.bracket::before {
     background-image: url("/assets/Lvl_icon.png");
 }
 
@@ -353,7 +353,22 @@
         }
 
         &.buy,
-        &.market,
+        &.market
+        {
+          background-image: url(/assets/card-container-sell-btn-bg-standard.png);
+          &:hover {
+              background-image: url(/assets/card-container-sell-btn-bg-highlighted.png);
+          }
+
+          &:focus {
+              background-image: url(/assets/card-container-sell-btn-bg-highlighted.png);
+          }
+
+          &:active {
+              background-image: url(/assets/card-container-sell-btn-bg-off.png);
+              top: 1px;
+          }
+      }
         &.cancel,
         &.confirm {
             background-image: url(/assets/card-container-buy-btn-bg.png);

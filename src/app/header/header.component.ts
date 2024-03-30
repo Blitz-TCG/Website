@@ -36,6 +36,7 @@ export class HeaderComponent implements OnInit {
   networkStatus$: Subscription = Subscription.EMPTY;
   public activeIndex: any;
   public navbarCollapsed = false;
+
   constructor(
     public afs: AngularFirestore,
     public adb: AngularFireDatabase,
@@ -59,6 +60,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     // this.checkNetworkStatus();
   }
+
   ngAfterViewInit() {
     this.elementPosition = this.menuElement?.nativeElement.offsetTop;
   }
@@ -88,6 +90,7 @@ export class HeaderComponent implements OnInit {
   ngOnDestroy() {
     this.networkStatus$.unsubscribe();
   }
+
   // To check internet connection stability
   // checkNetworkStatus() {
   //   if (isPlatformBrowser(this.platformId)) {
