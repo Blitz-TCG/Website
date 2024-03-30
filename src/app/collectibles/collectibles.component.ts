@@ -57,7 +57,7 @@ export class CollectiblesComponent implements OnInit {
       name: "All",
       value: "All"
     },
-    clan: {
+    faction: {
       name: "All",
       value: "All"
     },
@@ -311,7 +311,7 @@ export class CollectiblesComponent implements OnInit {
         (!this.isChecked || (this.isChecked && card.amount && card.amount > 0)) &&
         (this.filter.edition.value === 'All' || card.edition == this.filter.edition.value) &&
         (this.filter.set.value === 'All' || card.set === this.filter.set.value) &&
-        (this.filter.clan.value === 'All' || card.clan === this.filter.clan.value) &&
+        (this.filter.faction.value === 'All' || card.faction === this.filter.faction.value) &&
         (this.filter.rarity.value === 'All' || card.rarity === this.filter.rarity.value) &&
         (this.filter.level.value === 'All' || this.filterLevel(card.level, this.filter.level.value)) &&
         (this.filter.artist.value === 'All' || card.artist === this.filter.artist.value) &&
@@ -413,9 +413,9 @@ export class CollectiblesComponent implements OnInit {
     this.toggleMenu(1);
   }
 
-  selectClan(value: string, name: string): void {
-    this.filter.clan.value = value;
-    this.filter.clan.name = name;
+  selectfaction(value: string, name: string): void {
+    this.filter.faction.value = value;
+    this.filter.faction.name = name;
     this.applyFilter();
     this.toggleMenu(2);
   }

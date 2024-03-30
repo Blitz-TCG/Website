@@ -49,7 +49,7 @@ export class MarketComponent implements OnInit {
       name: "All",
       value: "All"
     },
-    clan: {
+    faction: {
       name: "All",
       value: "All"
     },
@@ -279,7 +279,7 @@ export class MarketComponent implements OnInit {
     return (!this.isChecked || (this.isChecked && card.amount && card.amount > 0)) &&
       (this.filter.edition.value === 'All' || card.edition == this.filter.edition.value) &&
       (this.filter.set.value === 'All' || card.set === this.filter.set.value) &&
-      (this.filter.clan.value === 'All' || card.clan === this.filter.clan.value) &&
+      (this.filter.faction.value === 'All' || card.faction === this.filter.faction.value) &&
       (this.filter.rarity.value === 'All' || card.rarity === this.filter.rarity.value) &&
       (this.filter.level.value === 'All' || this.filterLevel(card.level, this.filter.level.value)) &&
       (this.filter.artist.value === 'All' || card.artist === this.filter.artist.value) &&
@@ -339,8 +339,8 @@ export class MarketComponent implements OnInit {
   selectSet(value: string, name: string): void {
     this.setFilterAndToggleMenu('set', value, name, 1);
   }
-  selectClan(value: string, name: string): void {
-    this.setFilterAndToggleMenu('clan', value, name, 2);
+  selectfaction(value: string, name: string): void {
+    this.setFilterAndToggleMenu('faction', value, name, 2);
   }
   selectRarity(value: string, name: string): void {
     this.setFilterAndToggleMenu('rarity', value, name, 3);
@@ -370,7 +370,7 @@ export class MarketComponent implements OnInit {
         name: "All",
         value: "All"
       },
-      clan: {
+      faction: {
         name: "All",
         value: "All"
       },
