@@ -167,7 +167,6 @@
       }
     }
   },
-  "defaultProject": "blitz-tcg",
   "cli": {
     "analytics": "0a0abba7-f6a4-4d10-beff-6ec1aefdc531"
   }
