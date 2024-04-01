@@ -92,7 +92,7 @@ export class ModalComponent implements OnInit {
     if (bracket >= 2 && bracket <= 4)
       return "Lower";
     else if (bracket >= 5 && bracket <= 8)
-      return "Mid";
+      return "Middle";
     else if (bracket >= 9 && bracket <= 10)
       return "Upper";
     else
