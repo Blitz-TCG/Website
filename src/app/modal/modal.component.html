@@ -162,11 +162,12 @@
                                     [src]="selectedCard.imageLoaded ? selectedCard.image : '/assets/loading-nft.jpeg'"
                                     [alt]="selectedCard.name">
                             </ng-template>
+                            <div class="amount-owned-collectibles">
+                              <span class="amount-owned-collectibles">Amount Owned: {{ selectedCard?.amount || 0 }}</span>
+                            </div>
                             <div class="amount-owned"
                                 *ngIf="selectedCard?.modalType === 'Sell' && selectedCard?.sellActiveTab === 'For Sale'">
-                                Amount
-                                Owned <span class="amount">{{selectedCard?.amount ||
-                                    0}}</span>
+                                Amount Owned: <span class="amount">{{selectedCard?.amount || 0}}</span>
                             </div>
                         </div>
                         <div class="card-details-container col-7">
@@ -212,7 +213,7 @@
                                 </div>
                             </div>
                             <div class="card-buttons" *ngIf="selectedCard?.modalType === 'Market'">
-                              <a href="https://www.skyharbor.io/collection/blitztcg" target="_blank" class="card-btn market">Market</a>
+                              <a href="https://www.skyharbor.io/collection/blitztcg" target="_blank" class="card-btn market">SkyHarbor Market</a>
                           </div>
                             <div class="card-buttons" *ngIf="selectedCard?.modalType === 'Burn'">
                                 <div class="card-btn burn" (click)="showDetails = false; modalType = 'Burn'">Burn</div>

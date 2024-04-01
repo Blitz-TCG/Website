@@ -256,10 +256,11 @@ export class CollectiblesComponent implements OnInit {
           const allCards = querySnapshot.docs.map((doc) => {
             const card: any = doc.data();
             const getAmount = this.tokenIds.find((token: any) => token.tokenId === card.tokenId)
-            if (getAmount)
-              return { ...card, amount: getAmount.amount }
-            else
-              return card;
+            if (getAmount) {
+              return { ...card, amount: getAmount.amount };
+            } else {
+              return { ...card, amount: 0 };
+            }
           });
           const sortedCards = allCards.sort((a: any, b: any) => a.name.localeCompare(b.name))
             .sort((a: any, b: any) => {
@@ -329,7 +330,7 @@ export class CollectiblesComponent implements OnInit {
     switch (bracketName) {
       case "Lower":
         return value >= 2 && value <= 4;
-      case "Mid":
+      case "Middle":
         return value >= 5 && value <= 8;
       case "Upper":
         return value >= 9 && value <= 10;
