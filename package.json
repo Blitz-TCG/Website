@@ -36,7 +36,7 @@
     "http-server": "^14.1.1",
     "jquery": "^3.7.1",
     "rxjs": "~7.8.1",
-    "sweetalert2": "^11.6.13",
+    "sweetalert2": "^11.10.7",
     "swiper": "^11.1.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.4"
@@ -55,6 +55,6 @@
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "^5.4.3"
+    "typescript": "~5.4.3"
   }
 }
