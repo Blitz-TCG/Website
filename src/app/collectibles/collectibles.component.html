@@ -52,9 +52,8 @@
     <div class="cards-list">
       <div class="container">
         <div class="cards-filter">
-          <h2>Cards</h2>
+          <h2><span class="cards-collected">{{ userCardsDetail.cardsCollected }}/150 Cards Collected</span></h2>
           <div class="filter-inputs">
-
             <div class="select-container">
               <span class="select-label">Edition</span>
               <button class="selected-option" (click)="toggleMenu(0)">{{filter.edition.name}}</button>

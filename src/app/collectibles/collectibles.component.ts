@@ -43,6 +43,7 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
   activeIndex: any;
   userCardsDetail = {
     total: 0,
+    cardsCollected: 0,
     firstEdition: 0,
     unlEdition: 0,
     common: 0,
@@ -121,6 +122,7 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
     // Reset other related states if necessary
     this.userCardsDetail = {
       total: 0,
+      cardsCollected: 0,
       firstEdition: 0,
       unlEdition: 0,
       common: 0,
@@ -340,6 +342,8 @@ this.walletService.walletUpdated$.subscribe(walletID => {
 
   calcUserCards(cards: any) {
     for (let index = 0; index < cards.length; index++) {
+      console.log(cards.length);
+      this.userCardsDetail.cardsCollected = cards.length;
       const c = cards[index];
       this.userCardsDetail.total += c.amount;
       if (c.edition == 1) {

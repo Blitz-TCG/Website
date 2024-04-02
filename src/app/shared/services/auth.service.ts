@@ -181,7 +181,7 @@ async loadUserXP(userID: string): Promise<number> {
       return userLevel; // Return the calculated user level
     } else {
       console.log(`XP for user ID ${userID} not found.`);
-      return 0; // Or some default level if XP is not found
+      return 1; // Or some default level if XP is not found
     }
   } catch (error) {
     console.error("Error fetching user's experience:", error);
