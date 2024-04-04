@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
   constructor(public router: Router, public authService: AuthService, @Inject(PLATFORM_ID) private platformId: any) {
     router.events.subscribe((val) => {
       this.isAuthPage =
-        this.router.url === '/register-user' || this.router.url === '/sign-in' || this.router.url === '/collectibles';
+        this.router.url === '/register-user' || this.router.url === '/sign-in' || this.router.url === '/collectibles' || this.router.url === '/forgot-password';
     });
   }
   title = 'blitz-tcg';
