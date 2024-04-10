@@ -198,9 +198,10 @@
                                     </div>
                                 </div>
                                 <div class="card-row">
-                                    <div class="detail edition">Edition <span class="detail-value">
-                                            {{selectedCard?.edition}}</span>
-                                    </div>
+                                  <div class="detail edition">Edition <span class="detail-value">
+                                          {{selectedCard?.edition == 1 ? '1st' : selectedCard?.edition}}
+                                      </span>
+                                  </div>
                                     <div class="detail rarity">Rarity <span class="detail-value">
                                             {{selectedCard?.rarity}}</span>
                                     </div>

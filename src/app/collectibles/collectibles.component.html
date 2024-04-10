@@ -33,7 +33,7 @@
           <span class="number total-cards-number">{{userCardsDetail.total}}</span> Total Cards
         </div>
         <div class="first-edition">
-          <span class="number">{{userCardsDetail.firstEdition}}</span> First Edition
+          <span class="number">{{userCardsDetail.firstEdition}}</span> 1st Edition
         </div>
         <div class="unl-edition">
           <span class="number">{{userCardsDetail.unlEdition}}</span> Unlimited Edition
@@ -59,7 +59,7 @@
               <button class="selected-option" (click)="toggleMenu(0)">{{filter.edition.name}}</button>
               <div class="options" *ngIf="activeIndex === 0" (mouseleave)="activeIndex = -1">
                 <span [class.active]="filter.edition.value === 'All'" (click)="selectEdition('All','All')">All</span>
-                <span [class.active]="filter.edition.value === '1'" (click)="selectEdition('1','First')">First</span>
+                <span [class.active]="filter.edition.value === '1'" (click)="selectEdition('1','1st')">1st</span>
                 <span [class.active]="filter.edition.value === '2'"
                   (click)="selectEdition('2','Unlimited')">Unlimited</span>
               </div>
