@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { getAuth } from 'firebase/auth';
@@ -13,6 +13,8 @@ import SwiperCore, { Pagination, SwiperOptions } from 'swiper';
 import { SwiperComponent } from 'swiper/angular';
 import { ModalService } from '../modal/modal.service';
 import { AuthService } from '../shared/services/auth.service';
+import { WalletService } from '../wallet.service';
+import { Subscription } from 'rxjs';
 
 SwiperCore.use([Pagination]);
 
@@ -32,7 +34,7 @@ interface Token {
   templateUrl: './collectibles.component.html',
   styleUrls: ['./collectibles.component.scss']
 })
-export class CollectiblesComponent implements OnInit {
+export class CollectiblesComponent implements OnInit, OnDestroy {
   @ViewChild('swiper', { static: false }) swiper?: SwiperComponent;
   @ViewChild('stickyElem', { static: false }) menuElement?: ElementRef;
   @ViewChild('cardNameInput', { static: false }) cardNameInput!: ElementRef<HTMLInputElement>;
@@ -41,6 +43,7 @@ export class CollectiblesComponent implements OnInit {
   activeIndex: any;
   userCardsDetail = {
     total: 0,
+    cardsCollected: 0,
     firstEdition: 0,
     unlEdition: 0,
     common: 0,
@@ -57,7 +60,7 @@ export class CollectiblesComponent implements OnInit {
       name: "All",
       value: "All"
     },
-    clan: {
+    faction: {
       name: "All",
       value: "All"
     },
@@ -65,7 +68,7 @@ export class CollectiblesComponent implements OnInit {
       name: "All",
       value: "All"
     },
-    level: {
+    bracket: {
       name: "All",
       value: "All"
     },
@@ -78,7 +81,7 @@ export class CollectiblesComponent implements OnInit {
   cardsPages = 7;
   perPage = 24;
   currentCardPage = 1;
-  walletID = null;
+  walletID: string | null = null;
   tokenIds: any = [];
   cards: any = [];
   filtedCards: any = [];
@@ -86,7 +89,7 @@ export class CollectiblesComponent implements OnInit {
   applyedFilter: boolean = false;
   selectedCard: any = null;
 
-  constructor(private modalService: ModalService, public adb: AngularFireDatabase, private httpClient: HttpClient, public afAuth: AngularFireAuth, public authService: AuthService, @Inject(PLATFORM_ID) private platformId: any) { }
+  constructor(private walletService: WalletService, private modalService: ModalService, public adb: AngularFireDatabase, private httpClient: HttpClient, public afAuth: AngularFireAuth, public authService: AuthService, @Inject(PLATFORM_ID) private platformId: any) { }
 
   config: SwiperOptions = {
     spaceBetween: 6,
@@ -111,7 +114,55 @@ export class CollectiblesComponent implements OnInit {
     }
   };
 
+  private subscriptions: Subscription[] = [];
+
+  resetTokenState() {
+    this.tokenIds = []; // Clear the tokenIds array
+    this.cards = []; // Clear the cards array
+    // Reset other related states if necessary
+    this.userCardsDetail = {
+      total: 0,
+      cardsCollected: 0,
+      firstEdition: 0,
+      unlEdition: 0,
+      common: 0,
+      uncommon: 0,
+      rare: 0,
+      legendary: 0
+    };
+  }
+    // Unsubscribe when the component is destroyed
+    ngOnDestroy(): void {
+      this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    }
+
   ngOnInit(): void {
+    console.log('ngOnInit triggered');
+ // Check if the wallet is already connected and load tokens
+ if (this.walletService.walletConnected()) {
+  this.loadErgoTokens().pipe(
+    switchMap(() => this.queryCards())
+  ).subscribe(
+    () => console.log('Tokens and cards loaded successfully.'),
+    error => console.error('Failed to load tokens and cards:', error)
+  );
+}
+
+this.walletService.walletUpdated$.subscribe(walletID => {
+    console.log('Tracker: walletID trigger.');
+    if (walletID) {
+      this.resetTokenState(); // Reset the state before loading new tokens
+      console.log('Tokens reset successfully.'),
+      this.walletID = walletID;
+      this.loadErgoTokens().pipe(
+        switchMap(() => this.queryCards())
+      ).subscribe(
+        () => console.log('Tokens and cards loaded successfully.'),
+        error => console.error('Failed to load tokens and cards:', error)
+      );
+    }
+});
+
     this.afAuth.authState
       .pipe(
         take(1),
@@ -142,6 +193,8 @@ export class CollectiblesComponent implements OnInit {
     //   }
     // );
   }
+
+
 
   generateRandomString(length: number) {
     let result = '';
@@ -222,6 +275,7 @@ export class CollectiblesComponent implements OnInit {
   }
 
   loadErgoTokens(): Observable<void> {
+    console.log(this.walletID)
     if (this.walletID) {
       return this.httpClient.get('https://ergo-explorer.anetabtc.io/api/v1/addresses/' + this.walletID + '/balance/confirmed')
         .pipe(
@@ -256,10 +310,11 @@ export class CollectiblesComponent implements OnInit {
           const allCards = querySnapshot.docs.map((doc) => {
             const card: any = doc.data();
             const getAmount = this.tokenIds.find((token: any) => token.tokenId === card.tokenId)
-            if (getAmount)
-              return { ...card, amount: getAmount.amount }
-            else
-              return card;
+            if (getAmount) {
+              return { ...card, amount: getAmount.amount };
+            } else {
+              return { ...card, amount: 0 };
+            }
           });
           const sortedCards = allCards.sort((a: any, b: any) => a.name.localeCompare(b.name))
             .sort((a: any, b: any) => {
@@ -287,6 +342,8 @@ export class CollectiblesComponent implements OnInit {
 
   calcUserCards(cards: any) {
     for (let index = 0; index < cards.length; index++) {
+      console.log(cards.length);
+      this.userCardsDetail.cardsCollected = cards.length;
       const c = cards[index];
       this.userCardsDetail.total += c.amount;
       if (c.edition == 1) {
@@ -311,9 +368,9 @@ export class CollectiblesComponent implements OnInit {
         (!this.isChecked || (this.isChecked && card.amount && card.amount > 0)) &&
         (this.filter.edition.value === 'All' || card.edition == this.filter.edition.value) &&
         (this.filter.set.value === 'All' || card.set === this.filter.set.value) &&
-        (this.filter.clan.value === 'All' || card.clan === this.filter.clan.value) &&
+        (this.filter.faction.value === 'All' || card.faction === this.filter.faction.value) &&
         (this.filter.rarity.value === 'All' || card.rarity === this.filter.rarity.value) &&
-        (this.filter.level.value === 'All' || this.filterLevel(card.level, this.filter.level.value)) &&
+        (this.filter.bracket.value === 'All' || this.filterBracket(card.bracket, this.filter.bracket.value)) &&
         (this.filter.artist.value === 'All' || card.artist === this.filter.artist.value) &&
         (!searchText || card.name.toLowerCase().includes(searchText.toLowerCase()))
       ) {
@@ -325,11 +382,11 @@ export class CollectiblesComponent implements OnInit {
     this.cardsPages = Math.ceil(this.filtedCards.length / this.perPage) || 1;
   }
 
-  filterLevel(value: number, levelName: string) {
-    switch (levelName) {
+  filterBracket(value: number, bracketName: string) {
+    switch (bracketName) {
       case "Lower":
         return value >= 2 && value <= 4;
-      case "Mid":
+      case "Middle":
         return value >= 5 && value <= 8;
       case "Upper":
         return value >= 9 && value <= 10;
@@ -413,9 +470,9 @@ export class CollectiblesComponent implements OnInit {
     this.toggleMenu(1);
   }
 
-  selectClan(value: string, name: string): void {
-    this.filter.clan.value = value;
-    this.filter.clan.name = name;
+  selectfaction(value: string, name: string): void {
+    this.filter.faction.value = value;
+    this.filter.faction.name = name;
     this.applyFilter();
     this.toggleMenu(2);
   }
@@ -427,9 +484,9 @@ export class CollectiblesComponent implements OnInit {
     this.toggleMenu(3);
   }
 
-  selectLevel(value: string, name: string): void {
-    this.filter.level.value = value;
-    this.filter.level.name = name;
+  selectBracket(value: string, name: string): void {
+    this.filter.bracket.value = value;
+    this.filter.bracket.name = name;
     this.applyFilter();
     this.toggleMenu(4);
   }

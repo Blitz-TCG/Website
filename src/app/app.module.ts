@@ -35,9 +35,10 @@ import { UseComponent } from './use/use.component';
 import { WhitepaperComponent } from './whitepaper/whitepaper.component';
 import { CollectiblesComponent } from './collectibles/collectibles.component';
 import { ModalComponent } from './modal/modal.component';
-import { MarketComponent } from './market/market.component';
 import { BuyPacksComponent } from './buy-packs/buy-packs.component';
 import { OpenPacksComponent } from './open-packs/open-packs.component';
+//import { MarketComponent } from './market/market.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,10 +62,10 @@ import { OpenPacksComponent } from './open-packs/open-packs.component';
     UseComponent,
     WhitepaperComponent,
     CollectiblesComponent,
-    MarketComponent,
-    ModalComponent,
     BuyPacksComponent,
     OpenPacksComponent
+    //MarketComponent,
+    ModalComponent
   ],
   imports: [
     FormsModule,

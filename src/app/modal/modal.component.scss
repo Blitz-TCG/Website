@@ -107,6 +107,13 @@
     padding: 0px 10px 20px 10px;
 }
 
+.amount-owned-collectibles {
+  text-align: center;
+  font-size: 24px;
+  margin-top: 40px;
+  color: #ffffff;
+}
+
 .amount-owned {
     text-align: center;
     margin-top: 15px;
@@ -224,7 +231,7 @@
     padding-top: 0px;
     padding-bottom: 5px;
     margin-bottom: 10px;
-    margin-right: 15px;
+    margin-right: 20px;
     color: #A8A8A8;
     font-size: 18px;
     display: flex;
@@ -244,11 +251,11 @@
     }
 }
 
-.clan::before {
+.faction::before {
     background-image: url("/assets/Clan_icon.png");
 }
 
-.level::before {
+.bracket::before {
     background-image: url("/assets/Lvl_icon.png");
 }
 
@@ -298,16 +305,19 @@
 }
 
 .detail-value {
-    background-image: url(/assets/card-details-value-bg.png);
-    background-repeat: no-repeat;
-    background-size: contain;
-    font-size: 17px;
-    color: #FFF;
-    margin-left: 10px;
-    padding-left: 10px;
-    height: 35px;
-    flex: 1px;
-    padding-top: 4px;
+  background-image: url(/assets/card-details-value-bg.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  font-size: 14px; /* Adjust as needed, or remove if using JavaScript to set font-size */
+  color: #FFF;
+  margin-left: 10px;
+  padding-left: 10px;
+  height: 35px;
+  flex: 1;
+  padding-top: 4px;
+  white-space: nowrap; /* Prevent wrapping */
+  overflow: hidden; /* Hide overflow */
+  text-overflow: ellipsis; /* Add an ellipsis at the end if text is too long */
 }
 
 .message {
@@ -353,7 +363,22 @@
         }
 
         &.buy,
-        &.market,
+        &.market
+        {
+          background-image: url(/assets/card-container-sell-btn-bg-standard.png);
+          &:hover {
+              background-image: url(/assets/card-container-sell-btn-bg-highlighted.png);
+          }
+
+          &:focus {
+              background-image: url(/assets/card-container-sell-btn-bg-highlighted.png);
+          }
+
+          &:active {
+              background-image: url(/assets/card-container-sell-btn-bg-off.png);
+              top: 1px;
+          }
+      }
         &.cancel,
         &.confirm {
             background-image: url(/assets/card-container-buy-btn-bg.png);

@@ -54,7 +54,7 @@
               <button class="selected-option" (click)="toggleMenu(0)">{{filter.edition.name}}</button>
               <div class="options" *ngIf="activeIndex === 0" (mouseleave)="activeIndex = -1">
                 <span [class.active]="filter.edition.value === 'All'" (click)="selectEdition('All','All')">All</span>
-                <span [class.active]="filter.edition.value === '1'" (click)="selectEdition('1','First')">First</span>
+                <span [class.active]="filter.edition.value === '1'" (click)="selectEdition('1','First')">1st</span>
                 <span [class.active]="filter.edition.value === '2'"
                   (click)="selectEdition('2','Unlimited')">Unlimited</span>
               </div>
@@ -68,22 +68,22 @@
               </div>
             </div>
             <div class="select-container" style="min-width: 170px;">
-              <span class="select-label">Clan</span>
-              <button class="selected-option" (click)="toggleMenu(2)">{{filter.clan.name}}</button>
+              <span class="select-label">Faction</span>
+              <button class="selected-option" (click)="toggleMenu(2)">{{filter.faction.name}}</button>
               <div class="options" (mouseleave)="activeIndex = -1" *ngIf="activeIndex === 2">
-                <span [class.active]="filter.clan.value === 'All'" (click)="selectClan('All','All')">All</span>
-                <span [class.active]="filter.clan.value === 'Masquerades'"
-                  (click)="selectClan('Masquerades','Masquerades')">Masquerades</span>
-                <span [class.active]="filter.clan.value === 'The Old Kingdom'"
-                  (click)="selectClan('The Old Kingdom','The Old Kingdom')">The Old Kingdom</span>
-                <span [class.active]="filter.clan.value === 'Fairytales'"
-                  (click)="selectClan('Fairytales','Fairytales')">Fairytales</span>
-                <span [class.active]="filter.clan.value === 'Dark Matter'"
-                  (click)="selectClan('Dark Matter','Dark Matter')">Dark Matter</span>
-                <span [class.active]="filter.clan.value === 'Tinkerers'"
-                  (click)="selectClan('Tinkerers','Tinkerers')">Tinkerers</span>
-                <span [class.active]="filter.clan.value === 'Factionless'"
-                  (click)="selectClan('Factionless','Factionless')">Factionless</span>
+                <span [class.active]="filter.faction.value === 'All'" (click)="selectfaction('All','All')">All</span>
+                <span [class.active]="filter.faction.value === 'Masquerades'"
+                  (click)="selectfaction('Masquerades','Masquerades')">Masquerades</span>
+                <span [class.active]="filter.faction.value === 'The Old Kingdom'"
+                  (click)="selectfaction('The Old Kingdom','The Old Kingdom')">The Old Kingdom</span>
+                <span [class.active]="filter.faction.value === 'Fairytales'"
+                  (click)="selectfaction('Fairytales','Fairytales')">Fairytales</span>
+                <span [class.active]="filter.faction.value === 'Dark Matter'"
+                  (click)="selectfaction('Dark Matter','Dark Matter')">Dark Matter</span>
+                <span [class.active]="filter.faction.value === 'Tinkerers'"
+                  (click)="selectfaction('Tinkerers','Tinkerers')">Tinkerers</span>
+                <span [class.active]="filter.faction.value === 'Factionless'"
+                  (click)="selectfaction('Factionless','Factionless')">Factionless</span>
               </div>
             </div>
             <div class="select-container">
@@ -101,15 +101,15 @@
               </div>
             </div>
             <div class="select-container">
-              <span class="select-label">Level</span>
-              <button class="selected-option" (click)="toggleMenu(4)">{{filter.level.name}}</button>
+              <span class="select-label">Bracket</span>
+              <button class="selected-option" (click)="toggleMenu(4)">{{filter.bracket.name}}</button>
               <div class="options" (mouseleave)="activeIndex = -1" *ngIf="activeIndex === 4">
-                <span [class.active]="filter.level.value === 'All'" (click)="selectLevel('All','All')">All</span>
-                <span [class.active]="filter.level.value === '1'"
-                  (click)="selectLevel('Starter','Starter')">Starter</span>
-                <span [class.active]="filter.level.value === '2-4'" (click)="selectLevel('Lower','Lower')">Lower</span>
-                <span [class.active]="filter.level.value === '5-8'" (click)="selectLevel('Mid','Mid')">Mid</span>
-                <span [class.active]="filter.level.value === '9-10'" (click)="selectLevel('Upper','Upper')">Upper</span>
+                <span [class.active]="filter.bracket.value === 'All'" (click)="selectBracket('All','All')">All</span>
+                <span [class.active]="filter.bracket.value === '1'"
+                  (click)="selectBracket('Starter','Starter')">Starter</span>
+                <span [class.active]="filter.bracket.value === '2-4'" (click)="selectBracket('Lower','Lower')">Lower</span>
+                <span [class.active]="filter.bracket.value === '5-8'" (click)="selectBracket('Middle','Middle')">Middle</span>
+                <span [class.active]="filter.bracket.value === '9-10'" (click)="selectBracket('Upper','Upper')">Upper</span>
               </div>
             </div>
             <div class="select-container">
@@ -117,19 +117,19 @@
               <button class="selected-option" (click)="toggleMenu(5)">{{filter.artist.name}}</button>
               <div class="options" (mouseleave)="activeIndex = -1" *ngIf="activeIndex === 5">
                 <span [class.active]="filter.artist.value === 'All'" (click)="selectArtist('All','All')">All</span>
-                <span [class.active]="filter.artist.value === 'Nilson'"
-                  (click)="selectArtist('Nilson','Nilson')">Nilson</span>
+                <span [class.active]="filter.artist.value === 'Noslin'"
+                  (click)="selectArtist('Noslin','Noslin')">Noslin</span>
                 <span [class.active]="filter.artist.value === 'Jef'" (click)="selectArtist('Jef','Jef')">Jef</span>
-                <span [class.active]="filter.artist.value === 'Benj'" (click)="selectArtist('Benj','Benj')">Benj</span>
+                <span [class.active]="filter.artist.value === 'Cartunista'" (click)="selectArtist('Cartunista','Cartunista')">Cartunista</span>
                 <span [class.active]="filter.artist.value === 'Abner'"
                   (click)="selectArtist('Abner','Abner')">Abner</span>
                 <span [class.active]="filter.artist.value === 'Levi'" (click)="selectArtist('Levi','Levi')">Levi</span>
                 <span [class.active]="filter.artist.value === 'Dogzy'"
                   (click)="selectArtist('Dogzy','Dogzy')">Dogzy</span>
-                <span [class.active]="filter.artist.value === 'Joestrela'"
-                  (click)="selectArtist('3','Joestrela')">Joestrela</span>
+                <span [class.active]="filter.artist.value === 'Joe'"
+                  (click)="selectArtist('Joe','Joe')">Joe</span>
                 <span [class.active]="filter.artist.value === 'Satoshi'"
-                  (click)="selectArtist('3','Satoshi')">Satoshi</span>
+                  (click)="selectArtist('Satoshi','Satoshi')">Satoshi</span>
                 <span [class.active]="filter.artist.value === 'Lara'" (click)="selectArtist('Lara','Lara')">Lara</span>
                 <span [class.active]="filter.artist.value === 'Ed'" (click)="selectArtist('Ed','Ed')">Ed</span>
                 <span [class.active]="filter.artist.value === 'Foe'" (click)="selectArtist('Foe','Foe')">Foe</span>

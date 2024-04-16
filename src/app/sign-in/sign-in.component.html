@@ -40,6 +40,7 @@
                 type="submit" tabindex="5" />
               <button type="button" class="btn back-btn" routerLink="/register-user" tabindex="5">Register</button>
             </div>
+            <button *ngIf="showResetPasswordButton" type="button" class="btn reset-password-btn" routerLink="/forgot-password" tabindex="6">Reset Password</button>
             <div *ngIf="!signinForm.valid && myForm.submitted" class="form-error-message">
               Please resolve the errors
             </div>

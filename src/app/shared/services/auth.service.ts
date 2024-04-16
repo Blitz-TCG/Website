@@ -5,7 +5,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Router } from '@angular/router';
 import { getAuth } from 'firebase/auth';
-import { first, map, take } from 'rxjs';
+import { BehaviorSubject, first, map, take } from 'rxjs';
 import { User } from './user';
 @Injectable({
   providedIn: 'root',
@@ -13,6 +13,11 @@ import { User } from './user';
 export class AuthService {
   userData: any; // Save logged in user data
   userProfile: any; // Save logged in user data
+  currentUserXP: number = 0; // To store current user XP
+    // Add BehaviorSubject for userLevel
+    private userLevelSubject = new BehaviorSubject<string>('1');
+    // Expose as observable
+    public userLevel$ = this.userLevelSubject.asObservable();
   constructor(
     public adb: AngularFireDatabase, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
@@ -32,10 +37,19 @@ export class AuthService {
             this.userData = user;
             localStorage.setItem('user', JSON.stringify(this.userData));
             localStorage.setItem('profile', JSON.stringify(this.userProfile));
+            console.log(`User ID: ${JSON.stringify(this.userData)}`);
+
+            this.loadUserXP(user.uid).then((userLevel) => {
+              // Now that we have the level, let's store it in localStorage
+              localStorage.setItem('level', userLevel.toString());
+              this.userLevelSubject.next(userLevel.toString()); // Update BehaviorSubject
+            });
           });
         } else {
           localStorage.setItem('user', 'null');
           localStorage.setItem('profile', 'null');
+          localStorage.removeItem('level');
+          this.userLevelSubject.next('1'); // Reset level in BehaviorSubject
           this.userData = null;
           this.userProfile = null;
         }
@@ -152,7 +166,34 @@ export class AuthService {
         usersRef.update(user?.uid, { wallet: 'none' });
       }
     });
+
   }
+
+// Fetch the XP amount from Firebase and store it
+async loadUserXP(userID: string): Promise<number> {
+  try {
+    const xp = await this.adb.object(`open/${userID}/xpOpen`).valueChanges().pipe(first()).toPromise() as number;
+    if (xp) {
+      this.currentUserXP = +xp;
+      const userLevel = this.calculateLevelFromXp(this.currentUserXP);
+      console.log(`User XP: ${this.currentUserXP}`);
+      console.log(`User Level: ${userLevel}`);
+      return userLevel; // Return the calculated user level
+    } else {
+      console.log(`XP for user ID ${userID} not found.`);
+      return 1; // Or some default level if XP is not found
+    }
+  } catch (error) {
+    console.error("Error fetching user's experience:", error);
+    return 0; // Return a default level in case of an error
+  }
+}
+
+private calculateLevelFromXp(xp: number): number {
+  if (xp < 25) return 1;
+  let level = Math.floor((Math.sqrt(xp) + 5) / 5);
+  return level;
+}
 
   //controls what happens when a user signs out while a wallet is associated
   NautilusDisconnect() {
