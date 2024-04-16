@@ -15,7 +15,7 @@
       </button>
       <div class="collapse navbar-collapse" [ngClass]="{'show': navbarCollapsed}" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
-         <!--  <li class="nav-item" *ngFor="let item of items$ | async; let i = index"
+          <!--  <li class="nav-item" *ngFor="let item of items$ | async; let i = index"
             [ngClass]="{'show-sub-items': activeIndex === i, 'active': activeIndex === i, 'disabled': item.disabled}">
             <span class="tooltip-message" *ngIf="item['disabled']">Coming soon!</span>
             <a class="nav-link" *ngIf="item.url && item.url!== '#'" [href]="item.url">
@@ -23,14 +23,16 @@
                 <span class="nav-link-name">{{item.name}}</span>
               </span>
             </a>-->
-            <li class="nav-item" *ngFor="let item of items$ | async; let i = index"
-            [ngClass]="{'show-sub-items': activeIndex === i, 'active': activeIndex === i, 'disabled': item.disabled}">
-               <span class="tooltip-message" *ngIf="item['disabled']">Coming soon!</span>
-            <a class="nav-link" *ngIf="item.url && item.url!== '#'" [href]="item.url" [attr.target]="item.name === 'Market' ? '_blank' : null">
-             <span class="nav-link-text">
-                  <span class="nav-link-name">{{ item.name }}</span>
-                   </span>
-                         </a>
+          <li class="nav-item" *ngFor="let item of items$ | async; let i = index"
+            [ngClass]="{'show-sub-items': activeIndex === i, 'active': activeIndex === i, 'disabled': item.disabled}"
+            [style.display]="item.name === 'Buy Packs' || item.name === 'Open Packs' ? 'none' : ''">
+            <span class="tooltip-message" *ngIf="item['disabled']">Coming soon!</span>
+            <a class="nav-link" *ngIf="item.url && item.url!== '#'" [href]="item.url"
+              [attr.target]="item.name === 'Market' ? '_blank' : null">
+              <span class="nav-link-text">
+                <span class="nav-link-name">{{ item.name }}</span>
+              </span>
+            </a>
             <a class="nav-link" *ngIf="!item.url || item.url === '#'"
               (click)="clickOnMenu(i,item.disabled, item['sub-menu']?.length )">
               <span class="nav-link-text">
@@ -48,6 +50,21 @@
                   (click)="clickOnMenu(i,subItem.disabled)">{{subItem.name}}</a>
               </li>
             </ul>
+          </li>
+          <!-- hard-coded for testing -->
+          <li class="nav-item">
+            <a class="nav-link" href="/buy-packs">
+              <span class="nav-link-text">
+                <span class="nav-link-name">Buy Packs</span>
+              </span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/open-packs">
+              <span class="nav-link-text">
+                <span class="nav-link-name">Open Packs</span>
+              </span>
+            </a>
           </li>
         </ul>
         <ul class="navbar-nav profile-info ms-auto">
