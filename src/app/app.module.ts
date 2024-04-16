@@ -24,19 +24,19 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
+import { BuyPacksComponent } from './buy-packs/buy-packs.component';
+import { CollectiblesComponent } from './collectibles/collectibles.component';
 import { ConnectorComponent } from './connector/connector.component';
-import { LoreComponent } from './lore/lore.component';
-import { PrivacyComponent } from './privacy/privacy.component';
 import { CookiepolicyComponent } from './cookiepolicy/cookiepolicy.component';
-import { TermsComponent } from './terms/terms.component';
-import { EulaComponent } from './eula/eula.component';
 import { DisclaimerComponent } from './disclaimer/disclaimer.component';
+import { EulaComponent } from './eula/eula.component';
+import { LoreComponent } from './lore/lore.component';
+import { ModalComponent } from './modal/modal.component';
+import { OpenPacksComponent } from './open-packs/open-packs.component';
+import { PrivacyComponent } from './privacy/privacy.component';
+import { TermsComponent } from './terms/terms.component';
 import { UseComponent } from './use/use.component';
 import { WhitepaperComponent } from './whitepaper/whitepaper.component';
-import { CollectiblesComponent } from './collectibles/collectibles.component';
-import { ModalComponent } from './modal/modal.component';
-import { BuyPacksComponent } from './buy-packs/buy-packs.component';
-import { OpenPacksComponent } from './open-packs/open-packs.component';
 //import { MarketComponent } from './market/market.component';
 
 @NgModule({
@@ -63,7 +63,7 @@ import { OpenPacksComponent } from './open-packs/open-packs.component';
     WhitepaperComponent,
     CollectiblesComponent,
     BuyPacksComponent,
-    OpenPacksComponent
+    OpenPacksComponent,
     //MarketComponent,
     ModalComponent
   ],
