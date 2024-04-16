@@ -115,9 +115,11 @@
               'url(/assets/Header_User_Image_Placeholder.png)'}">
               </div>
               <a routerLink="/sign-in" class="pfp-image" *ngIf="!authService.userData"></a>
-              <a routerLink="/sign-in" class="user-level" *ngIf="!authService.userData">LVL #</a>
+              <a routerLink="/sign-in" class="user-level" *ngIf="!authService.userData">
+                LVL {{ authService.userLevel$ | async }}
+              </a>
               <div *ngIf="authService.userData" class="user-level">
-                LVL #
+                LVL {{ authService.userLevel$ | async }}
               </div>
             </span>
             <button class="signin-btn" *ngIf="!authService.userData" routerLink="/sign-in">

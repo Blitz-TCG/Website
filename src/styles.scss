@@ -110,7 +110,8 @@ body {
   border-radius: 5px;
   text-decoration: none;
   background-color: rgb(7 10 14 / 70%);
-  padding: 50px;
+  padding: 30px;
+  //used to be 50px
   color: #fff;
 
   &::before {
@@ -203,6 +204,65 @@ body {
     box-shadow: none !important;
     color: #fff !important;
     transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-image: url(/assets/BTN_clear_selected.png);
+    }
+
+    &:focus {
+      background-image: url(/assets/BTN_clear_selected.png);
+    }
+
+    &:active {
+      background-image: url(/assets/BTN_clear_pressed.png);
+      top: 1px;
+    }
+  }
+
+  .reset-password-btn {
+    background-image: url(/assets/BTN_clear_normal_red.png);
+    width: 125px;
+    background-size: cover;
+    background-position: center;
+    height: 41px;
+    padding-bottom: 10px;
+    box-shadow: none !important;
+    color: #fff !important;
+    transition: all 0.2s ease-in-out;
+    margin-top: 20px; // Adjusted space above the reset button
+    margin-left: auto; // Centers the button within its container
+    margin-right: auto; // Centers the button within its container
+    display: block; // Ensures the button is a block-level eslement which respects margin: auto
+    font-size: 12px; // Adjust this as needed to avoid text wrapping
+
+    &:hover {
+      background-image: url(/assets/BTN_clear_selected.png);
+    }
+
+    &:focus {
+      background-image: url(/assets/BTN_clear_selected.png);
+    }
+
+    &:active {
+      background-image: url(/assets/BTN_clear_pressed.png);
+      top: 1px;
+    }
+  }
+
+  .submit-reset-password-btn {
+    background-image: url(/assets/BTN_clear_normal.png);
+    width: 125px;
+    background-size: cover;
+    background-position: center;
+    height: 41px;
+    padding-bottom: 10px;
+    box-shadow: none !important;
+    color: #fff !important;
+    transition: all 0.2s ease-in-out;
+    margin-top: 20px; // Adjusted space above the reset button
+    margin-left: auto; // Centers the button within its container
+    margin-right: auto; // Centers the button within its container
+    display: block; // Ensures the button is a block-level eslement which respects margin: auto
 
     &:hover {
       background-image: url(/assets/BTN_clear_selected.png);

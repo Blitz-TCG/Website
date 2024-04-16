@@ -10,6 +10,7 @@ import { AuthService } from '../shared/services/auth.service';
 export class SignInComponent implements OnInit {
   @ViewChild('stickyElem', { static: false }) menuElement?: ElementRef;
   sticky: boolean = false;
+  public showResetPasswordButton = false;
   constructor(public authService: AuthService, @Inject(PLATFORM_ID) private platformId: any) { }
   signinForm!: FormGroup;
   errorMessage!: string;
@@ -69,9 +70,7 @@ export class SignInComponent implements OnInit {
             break;
           case 'auth/wrong-password':
             this.errorMessage = 'Wrong Password';
-            break;
-          case 'auth/wrong-password':
-            this.errorMessage = 'Wrong Password';
+            this.showResetPasswordButton = true;
             break;
           default:
             this.errorMessage = error.message;
