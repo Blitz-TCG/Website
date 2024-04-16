@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --host 0.0.0.0 --disable-host-check",
     "build": "ng build",
     "deploy:preview": "firebase hosting:channel:deploy preview_collections_page ",
     "deploy": "ng run blitz-tcg:prerender && firebase deploy --only hosting:blitz-tcg",

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { BuyPacksComponent } from './buy-packs/buy-packs.component';
 import { CollectiblesComponent } from './collectibles/collectibles.component';
 import { CookiepolicyComponent } from './cookiepolicy/cookiepolicy.component';
 import { DisclaimerComponent } from './disclaimer/disclaimer.component';
@@ -9,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { LoreComponent } from './lore/lore.component';
 import { MarketComponent } from './market/market.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { OpenPacksComponent } from './open-packs/open-packs.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { RoadmapComponent } from './roadmap/roadmap.component';
 import { AuthGuard } from './shared/guard/auth.guard';
@@ -57,8 +59,10 @@ const routes: Routes = [
   { path: 'whitepaper', component: WhitepaperComponent },
   { path: 'collectibles', component: CollectiblesComponent },
   { path: 'market', component: MarketComponent },
+  { path: 'buy-packs', component: BuyPacksComponent },
+  { path: 'open-packs', component: OpenPacksComponent },
   { path: '404', component: NotFoundComponent },
-  { path: '**', component: NotFoundComponent },
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({

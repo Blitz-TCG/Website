@@ -13,6 +13,7 @@ export const environment = {
     messagingSenderId: '126732788512',
     appId: '1:126732788512:web:beccb3f95c4fee24192d45',
   },
+  allowedOrigin: 'https://pratir-frontend.vercel.app'
 };
 
 /*
