@@ -1,3 +1,36 @@
+.countdown-timer-container {
+  padding: 0px 0px;
+  top: -10px;
+  text-align: center;
+  position: relative;
+  z-index: 9999; // To ensure it is above other content, if needed
+}
+
+.countdown-timer {
+  display: inline-block;
+  font-size: 3rem; // Matching the size of the header title
+  //padding: 5px 10px;
+  border-radius: 5px; // Rounded corners similar to other elements
+  font-family: "OPTIEdwallianExtraBold"; // Custom font style
+  background: linear-gradient(to bottom,
+    #ffc107 10%,
+    #ffcb30 20%,
+    #e77517 25%,
+    #f3bc19 30%,
+    #ffce3c 40%,
+    #ffc107 50%,
+    #e1771f 70%,
+    #ff8c2c 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 2rem; // Spacing from the next content
+
+  // Adjusting for smaller screens
+  @media screen and (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+}
+
 .first-container {
   padding: 50px 0px;
   display: block;

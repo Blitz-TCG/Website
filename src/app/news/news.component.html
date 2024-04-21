@@ -1,4 +1,10 @@
 <div class="first-container">
+  <div class="countdown-timer-container">
+    <p class="countdown-timer">
+      Pack Token Sale Countdown: {{ countdown.days }}d {{ countdown.hours }}h
+      {{ countdown.minutes }}m {{ countdown.seconds }}s
+    </p>
+  </div>
   <div class="container" *ngIf="homeBoxes$ | async as boxes">
     <div class="row">
       <div class="col-lg-6 col-12">
