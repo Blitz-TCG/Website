@@ -23,7 +23,6 @@ import { AuthService } from './shared/services/auth.service';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
-
 import { BuyPacksComponent } from './buy-packs/buy-packs.component';
 import { CollectiblesComponent } from './collectibles/collectibles.component';
 import { ConnectorComponent } from './connector/connector.component';
