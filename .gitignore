@@ -24,6 +24,8 @@ yarn-error.log*
 **/storage.rules
 **/crashlytics-build.properties
 **/google-services.json
+/.firebase/
+
 
 # Ignoring local .env files that can contain sensitive environment variables
 **/.env
