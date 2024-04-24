@@ -36,7 +36,7 @@ We welcome contributions from the community. To contribute:
 5. Create a new Pull Request.
 
 # License
-See the [Game Client Repo] (https://github.com/Blitz-TCG/Game-Client) for information about licensing.
+See the [Game Client Repo](https://github.com/Blitz-TCG/Game-Client) for information about licensing.
 
 # Authors & Acknowledgments
 Blitz TCG® is managed by 16-Bit Hero, LLC. We express our heartfelt thanks to everyone who has contributed to the growth and development of this innovative game.
