@@ -1,15 +1,48 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+# Dependency directories
+/node_modules/
+/yarn-error.log
+
+# Production build files
+/dist/
+/build/
 
 # Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+/out-tsc/
+/bazel-out/
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
+# Debug log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Firebase files that should not be included in public repos
+# Ignoring sensitive Firebase and environment configuration files
+**/firebase.json
+**/firestore.indexes.json
+**/firestore.rules
+**/storage.rules
+**/crashlytics-build.properties
+**/google-services.json
+
+# Ignoring local .env files that can contain sensitive environment variables
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+
+# Local Environment files - typically you should replace these with .example files
+# that developers can copy and configure for their environments
+**/src/environments/environment.prod.ts
+**/src/environments/environment.ts
+
+# Ignore service files if they contain sensitive logic or API keys
+# You may provide example files for reference
+**/src/app/data.service.ts
+**/src/app/wallet.service.ts
+
+# Server-side code that may contain sensitive information
+**/server.ts
 
 # IDEs and editors
 .idea/
@@ -21,32 +54,32 @@ yarn-error.log
 *.sublime-workspace
 
 # Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
+# Include settings files if they do not contain sensitive information, otherwise ignore
+.vscode/
+# !.vscode/settings.json
+# !.vscode/tasks.json
+# !.vscode/launch.json
+# !.vscode/extensions.json
 
-# Miscellaneous
+# History of local files
+.history
+
+# Miscellaneous caches and lock files that should not be committed
 /.angular/cache
 .sass-cache/
 /connect.lock
-/coverage
+/coverage/
 /libpeerconnection.log
-testem.log
-/typings
-package-lock.json
+/testem.log
+/typings/
 
 # System files
 .DS_Store
 Thumbs.db
 
-.vscode
+# If using yarn, uncomment this to ignore the yarn lock file
+# yarn.lock
 
-.firebase
-build
-
-.yarn
-.angular
-/.yarn
+# If using npm and there are specific reasons to exclude package-lock.json,
+# uncomment this to ignore the npm lock file
+# package-lock.json
