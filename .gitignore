@@ -20,7 +20,7 @@ yarn-error.log*
 **/firebase.json
 **/firestore.indexes.json
 **/firestore.rules
-**/firebaserc
+**/.firebaserc
 **/storage.rules
 **/crashlytics-build.properties
 **/google-services.json
