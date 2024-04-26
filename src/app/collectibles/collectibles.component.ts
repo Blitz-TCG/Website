@@ -183,15 +183,6 @@ this.walletService.walletUpdated$.subscribe(walletID => {
           console.log('Error querying cards:', error);
         }
       );
-
-    // this.duplicateFirstCard().pipe(take(1)).subscribe(
-    //   () => {
-    //     console.log('First card duplicated successfully.');
-    //   },
-    //   (error) => {
-    //     console.log('Error duplicating first card:', error);
-    //   }
-    // );
   }
 
 
@@ -309,9 +300,14 @@ this.walletService.walletUpdated$.subscribe(walletID => {
         .then((querySnapshot) => {
           const allCards = querySnapshot.docs.map((doc) => {
             const card: any = doc.data();
-            const getAmount = this.tokenIds.find((token: any) => token.tokenId === card.tokenId)
+            const getAmount = this.tokenIds.find((token: any) => token.tokenId === card.tokenId);
             if (getAmount) {
-              return { ...card, amount: getAmount.amount };
+              // Check for the specific token ID and set the amount to 1
+              if (getAmount.tokenId === "6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189") {
+                return { ...card, amount: 1 };
+              } else {
+                return { ...card, amount: getAmount.amount };
+              }
             } else {
               return { ...card, amount: 0 };
             }
