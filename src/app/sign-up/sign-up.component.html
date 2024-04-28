@@ -44,23 +44,26 @@
             <div class="input-container">
               <input type="text" id="password" autocomplete="off" class="password form-control" placeholder="Password"
                 formControlName="password" required tabindex="3" />
-              <div *ngIf="password?.invalid && submitted" class="input-error-container">
-                <div class="text-danger" *ngIf="password?.errors?.['required']">
-                  Password is required.
+                <div *ngIf="password?.invalid && submitted" class="input-error-container">
+                  <div class="text-danger" *ngIf="password?.errors?.['required']">
+                    Password is required.
+                  </div>
+                  <div class="text-danger" *ngIf="password?.errors?.['minlength']">
+                    Password must contain 8 characters.
+                  </div>
+                  <div class="text-danger" *ngIf="password?.errors?.['hasNumber']">
+                    Password must contain at least one number.
+                  </div>
+                  <div class="text-danger" *ngIf="password?.errors?.['hasLetter']">
+                    Password must contain at least one letter.
+                  </div>
+                  <div class="text-danger" *ngIf="password?.errors?.['hasCapitalCase']">
+                    Password must contain at least one uppercase letter.
+                  </div>
+                  <div class="text-danger" *ngIf="password?.errors?.['hasSpecialCharacters']">
+                    Password must contain at least one symbol.
+                  </div>
                 </div>
-                <div class="text-danger" *ngIf="password?.errors?.['minlength']">
-                  Password must contain 8 characters.
-                </div>
-                <div class="text-danger" *ngIf="password?.errors?.['hasNumber']">
-                  Password must contain at least one number.
-                </div>
-                <div class="text-danger" *ngIf="password?.errors?.['hasLetter']">
-                  Password must contain at least one letter.
-                </div>
-                <div class="text-danger" *ngIf="password?.errors?.['hasSpecialCharacters']">
-                  Password must contain at least one symbol.
-                </div>
-              </div>
             </div>
             <div class="input-container">
               <input type="text" id="confirmPassword" autocomplete="off" class="confirmPassword form-control"

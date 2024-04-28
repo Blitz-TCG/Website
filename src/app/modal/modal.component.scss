@@ -331,29 +331,37 @@
 }
 
 .card-buttons {
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%; /* Set the width of the button container to full width */
+  padding: 0; /* Reset any padding if needed */
+
     .card-btn.loading {
         cursor: not-allowed;
     }
 
     .card-btn {
-        width: 90%;
-        height: 50px;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
+    flex-grow: 1; /* Grow to take available space, if this causes the button to be too wide, use flex-basis */
+    background-size: contain; /* Adjust this as needed */
+    background-position: center;
+    background-repeat: no-repeat;
         font-size: 18px;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 5px 0px;
+        padding: 0px 0px;
         color: #FFF;
         border: none;
         background-color: transparent;
         position: relative;
         margin: 0 auto;
-        margin-top: 3px;
+        margin-top: 0px;
         margin-bottom: 10px;
-        cursor: url('/assets/Cursor_02-2_select.svg'), url('/assets/Cursor_02-2_select.svg'), auto !important;
+        cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
         text-decoration: none;
         opacity: 1;
         transition: all 0.2s ease-in-out;
@@ -631,7 +639,7 @@
         margin: 0 auto;
         margin-top: 3px;
         margin-bottom: 10px;
-        cursor: url('/assets/Cursor_02-2_select.svg'), url('/assets/Cursor_02-2_select.svg'), auto !important;
+        cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
         text-decoration: none;
         opacity: .8;
         transition: all 0.2s ease-in-out;

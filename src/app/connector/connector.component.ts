@@ -39,23 +39,34 @@ export class ConnectorComponent implements OnInit, OnDestroy {
     return localStorage.getItem('userIsConnected');
   }
 
-  popupNautilus= () => {
-    try {
-      ergoConnector.nautilus.connect().then((access_granted) => {
-        // I have a wallet connected
-        console.log(access_granted);
-        if (access_granted) {
-          this.getAddress();
-          console.log(`Nautilus confirmed`);
-        } else {
-          // Cancel Nautilus
-          console.log(`You don't connect the wallet to the website!`);
+  popupNautilus = () => {
+    // Check if Nautilus is installed by checking for ergoConnector object
+    if (typeof ergoConnector !== 'undefined' && ergoConnector.nautilus) {
+      try {
+        // Try to initiate connection to see if the wallet has been set up
+        ergoConnector.nautilus.connect().then((access_granted) => {
+          if (access_granted) {
+            this.getAddress();
+            console.log(`Nautilus confirmed`);
+          } else {
+            console.log(`Wallet connection not granted.`);
+            localStorage.setItem('userIsConnected', 'false');
+            this.walletService.setWalletConnected(false);
+          }
+        }).catch((error) => {
+          console.error(`There was an error attempting to connect to the wallet.`);
           localStorage.setItem('userIsConnected', 'false');
           this.walletService.setWalletConnected(false);
-        }
-      });
-    } catch (error) {
-      console.error(`Impossible to connect Nautilus, check your setup and internet connection.`);
+        });
+      } catch (error) {
+        console.error(`An error occurred: ${error}`);
+        localStorage.setItem('userIsConnected', 'false');
+        this.walletService.setWalletConnected(false);
+      }
+    } else {
+      // Nautilus wallet extension is not detected
+      console.log(`Nautilus wallet extension is not detected.`);
+      alert('Nautilus wallet is not detected. Please install the Nautilus wallet extension to proceed.');
       localStorage.setItem('userIsConnected', 'false');
       this.walletService.setWalletConnected(false);
     }
@@ -175,17 +186,23 @@ export class ConnectorComponent implements OnInit, OnDestroy {
   }
 }
 
- NautilusDisconnect= () => {
+NautilusDisconnect = () => {
   try {
+    // Attempt to disconnect using ergoConnector
     ergoConnector.nautilus.disconnect();
     console.log('Wallet disconnected successfully.');
-    localStorage.setItem('userIsConnected', 'false');
-    this.walletService.setWalletConnected(false);
-    this.verifyUserAndUpdateWallet('none'); // Indicate wallet is disconnected
+    // Nautilus was present, and disconnect was successful
   } catch (error) {
-    console.error(`Impossible to disconnect Nautilus!`);
+    console.error(`Error occurred while disconnecting Nautilus: ${error}`);
+    console.log('Wallet disconnected, but could not detect Nautilus.');
+    // Nautilus may not be present, or another error occurred, but still proceed with disconnection logic
   }
-}
+
+  // Update application state to reflect disconnected status
+  localStorage.setItem('userIsConnected', 'false');
+  this.walletService.setWalletConnected(false);
+  this.verifyUserAndUpdateWallet('none'); // Indicate wallet is disconnected
+};
 
 ngOnInit(): void {
 
