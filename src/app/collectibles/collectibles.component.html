@@ -149,11 +149,26 @@
               (keyup)="applyFilter($event)">
             <button class="clear-filter" (click)="clearFilters()">Clear Filters</button>
           </div>
-          <div class="owned-cards-filter">
-            <input type="checkbox" name="owned-cards-only" #ownedCardsOnlyCheckbox id="ownedCardsOnly" (change)="ownedCardsOnly($event)">
-            <label for="ownedCardsOnly">Owned Cards Only</label>
+          <div class="cards-checkboxes">
+            <div class="checkbox-container">
+              <input type="checkbox" name="owned-cards-only" id="ownedCardsOnly" #ownedCardsOnlyCheckbox (change)="ownedCardsOnly($event)">
+              <label for="ownedCardsOnly">Owned Cards Only</label>
+            </div>
+            <div class="checkbox-container">
+              <input type="checkbox" name="unique-cards-only" id="uniqueCardsOnly" #uniqueCardsOnlyCheckbox (change)="uniqueCardsOnly($event)">
+              <label for="uniqueCardsOnly">Unique Cards Only</label>
+            </div>
+            <div class="checkbox-container">
+              <input type="checkbox" name="non-unique-cards-only" id="nonUniqueCardsOnly" #nonUniqueCardsOnlyCheckbox (change)="nonUniqueCardsOnly($event)">
+              <label for="nonUniqueCardsOnly">Non-Unique Cards Only</label>
+            </div>
+            <!-- Export View Button -->
+            <div class="export-button">
+              <button (click)="exportCurrentView()" title="Export Cards" class="export-button">
+                <img src="/assets/export_cards.png" alt="Export">
+              </button>
+            </div>
           </div>
-        </div>
       </div>
       <div class="cards-carousel" *ngIf="showCards.length > 0">
         <div class="slider container">

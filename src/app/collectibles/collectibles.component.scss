@@ -9,9 +9,13 @@
 .next-arrow,
 .last-page,
 input[type="checkbox"],
-label[for="ownedCardsOnly"] {
-  cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
+label[for="ownedCardsOnly"],
+label[for="uniqueCardsOnly"],
+label[for="nonUniqueCardsOnly"] {
+  cursor: url('/assets/Cursor_02-2_select_2.png'), auto;
 }
+
+
 
 .sticky {
   margin-top: 300px;
@@ -512,24 +516,54 @@ label[for="ownedCardsOnly"] {
   filter: grayscale(0.8);
 }
 
-.owned-cards-filter {
-  width: 65%;
+.cards-checkboxes {
+  display: flex;
+  flex-direction: row; /* Align children in a row */
+  align-items: center; /* Align children vertically in the center */
+  justify-content: flex-start; /* Align children to the start of the container */
+  width: auto; /* Auto width to fit content */
   margin-top: 10px;
   margin-bottom: 30px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-  }
-
-  label {
-    color: #B7BEC5;
-  }
 }
+
+.checkbox-container {
+  display: flex;
+  align-items: center; /* Align checkbox and label in the center */
+  margin-right: 40px; /* Right margin for spacing between checkbox groups */
+  margin-left: 5px;
+}
+
+/* Target the input and label specifically for owned and unique checkboxes */
+.checkbox-container input[type="checkbox"],
+.checkbox-container label{ /* Adding button to the existing selectors */
+  cursor: url('/assets/Cursor_02-2_select_2.png'), pointer !important; /* Apply the custom cursor */
+}
+
+
+/* Styling for checkbox labels */
+.checkbox-container label {
+  color: #B7BEC5;
+  margin-left: 5px; /* Spacing between checkbox and label */
+}
+
+/* Remove margin for the last checkbox to avoid extra spacing */
+.checkbox-container:last-child {
+  margin-right: 0;
+}
+
+.export-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.export-button img {
+  cursor: url('/assets/Cursor_02-2_select_2.png'), pointer !important;
+  width: 30px; /* or whatever size you prefer */
+  height: auto;
+}
+
+
 
 @media screen and (max-width: 1140px) {
   .card-container {

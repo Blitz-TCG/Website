@@ -15,6 +15,7 @@ import { ModalService } from '../modal/modal.service';
 import { AuthService } from '../shared/services/auth.service';
 import { WalletService } from '../wallet.service';
 import { Subscription } from 'rxjs';
+import { saveAs } from 'file-saver';
 
 SwiperCore.use([Pagination]);
 
@@ -39,6 +40,8 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
   @ViewChild('stickyElem', { static: false }) menuElement?: ElementRef;
   @ViewChild('cardNameInput', { static: false }) cardNameInput!: ElementRef<HTMLInputElement>;
   @ViewChild('ownedCardsOnlyCheckbox') ownedCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
+  @ViewChild('uniqueCardsOnlyCheckbox') uniqueCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
+  @ViewChild('nonUniqueCardsOnlyCheckbox') nonUniqueCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
   sticky: boolean = false;
   activeIndex: any;
   userCardsDetail = {
@@ -78,6 +81,8 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
     }
   }
   isChecked = false;
+  isUniqueChecked = false;
+  isNonUniqueChecked = false;
   cardsPages = 7;
   perPage = 24;
   currentCardPage = 1;
@@ -359,24 +364,64 @@ this.walletService.walletUpdated$.subscribe(walletID => {
     this.applyedFilter = true;
     const searchText = event ? event.target.value : null;
     this.currentCardPage = 1;
+
+    // When neither is checked, we want to show all cards.
+    const showAll = !this.isUniqueChecked && !this.isNonUniqueChecked;
+
     this.filtedCards = this.cards.filter((card: any) => {
-      if (
-        (!this.isChecked || (this.isChecked && card.amount && card.amount > 0)) &&
-        (this.filter.edition.value === 'All' || card.edition == this.filter.edition.value) &&
-        (this.filter.set.value === 'All' || card.set === this.filter.set.value) &&
-        (this.filter.faction.value === 'All' || card.faction === this.filter.faction.value) &&
-        (this.filter.rarity.value === 'All' || card.rarity === this.filter.rarity.value) &&
-        (this.filter.bracket.value === 'All' || this.filterBracket(card.bracket, this.filter.bracket.value)) &&
-        (this.filter.artist.value === 'All' || card.artist === this.filter.artist.value) &&
-        (!searchText || card.name.toLowerCase().includes(searchText.toLowerCase()))
-      ) {
-        return true;
+      // If showing all, skip checking isUnique and isNonUnique conditions.
+      if (showAll) {
+        return this.filterCard(card, searchText);
       }
-      return false;
+
+      // Check the unique and non-unique conditions only if showAll is false.
+      const isUnique = this.isUniqueChecked && card.amount === 1;
+      const isNonUnique = this.isNonUniqueChecked && card.amount > 1;
+
+      return this.filterCard(card, searchText) && (isUnique || isNonUnique);
     });
+
     this.showCards = this.filtedCards.slice(0, this.perPage);
     this.cardsPages = Math.ceil(this.filtedCards.length / this.perPage) || 1;
   }
+
+  filterCard(card: any, searchText: string) {
+    return (
+      (!this.isChecked || (this.isChecked && card.amount && card.amount > 0)) &&
+      (this.filter.edition.value === 'All' || card.edition == this.filter.edition.value) &&
+      (this.filter.set.value === 'All' || card.set === this.filter.set.value) &&
+      (this.filter.faction.value === 'All' || card.faction === this.filter.faction.value) &&
+      (this.filter.rarity.value === 'All' || card.rarity === this.filter.rarity.value) &&
+      (this.filter.bracket.value === 'All' || this.filterBracket(card.bracket, this.filter.bracket.value)) &&
+      (this.filter.artist.value === 'All' || card.artist === this.filter.artist.value) &&
+      (!searchText || card.name.toLowerCase().includes(searchText.toLowerCase()))
+    );
+  }
+
+  exportCurrentView(): void {
+    let dataToExport = [];
+
+    // Check if a filter has been applied. If the `applyedFilter` is true, use the filtered data.
+    if (this.applyedFilter && this.filtedCards.length) {
+      dataToExport = this.filtedCards;
+    } else {
+      // If no filter is applied, use the complete dataset.
+      dataToExport = this.cards;
+    }
+
+    // Collect the card data into a string, with each card on a new line.
+    const data = dataToExport
+    .map((card: { name: any; amount: any; }) => `${card.name}: ${card.amount}`)
+      .join('\n');
+
+    // Create a blob with the data and the type of content.
+    const blob = new Blob([data], { type: 'text/plain;charset=utf-8' });
+
+    // Use FileSaver to save the file.
+    saveAs(blob, 'exported-cards-view.txt');
+  }
+
+
 
   filterBracket(value: number, bracketName: string) {
     switch (bracketName) {
@@ -459,6 +504,16 @@ this.walletService.walletUpdated$.subscribe(walletID => {
     this.isChecked = target.checked;
     this.applyFilter();
   }
+  uniqueCardsOnly(event: any) {
+    const target = event.target as HTMLInputElement;
+    this.isUniqueChecked = target.checked;
+    this.applyFilter();
+  }
+  nonUniqueCardsOnly(event: any) {
+    const target = event.target as HTMLInputElement;
+    this.isNonUniqueChecked = target.checked;
+    this.applyFilter();
+  }
   selectSet(value: string, name: string): void {
     this.filter.set.value = value;
     this.filter.set.name = name;
@@ -495,16 +550,37 @@ this.walletService.walletUpdated$.subscribe(walletID => {
   }
 
   clearFilters() {
-    Object.keys(this.filter).forEach((k: string) => {
-      this.filter[k as keyof typeof this.filter] = { value: "All", name: "All" };
+    // Reset all filter object values to 'All'
+    Object.keys(this.filter).forEach((key: string) => {
+        this.filter[key as keyof typeof this.filter] = { value: "All", name: "All" };
     });
+
+    // Reset checkbox states
+    this.isChecked = false;
+    this.isUniqueChecked = false;
+    this.isNonUniqueChecked = false;
+
+    // Explicitly uncheck checkboxes using ElementRef if ViewChild is correctly bound
     if (this.ownedCardsOnlyCheckbox) {
-      this.ownedCardsOnlyCheckbox.nativeElement.checked = false;
-      this.isChecked = false;
+        this.ownedCardsOnlyCheckbox.nativeElement.checked = false;
     }
-    this.cardNameInput.nativeElement.value = '';
+    if (this.uniqueCardsOnlyCheckbox) {
+        this.uniqueCardsOnlyCheckbox.nativeElement.checked = false;
+    }
+    if (this.nonUniqueCardsOnlyCheckbox) {
+        this.nonUniqueCardsOnlyCheckbox.nativeElement.checked = false;
+    }
+
+    // Clear search input
+    if (this.cardNameInput) {
+        this.cardNameInput.nativeElement.value = '';
+    }
+
+    // Reapply filters to update the display
     this.applyFilter();
-  }
+}
+
+
 
   @HostListener('window:scroll', ['$event'])
   handleScroll() {
