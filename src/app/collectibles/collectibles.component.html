@@ -150,17 +150,21 @@
             <button class="clear-filter" (click)="clearFilters()">Clear Filters</button>
           </div>
           <div class="cards-checkboxes">
-            <div class="checkbox-container">
+            <!-- <div class="checkbox-container">
               <input type="checkbox" name="owned-cards-only" id="ownedCardsOnly" #ownedCardsOnlyCheckbox (change)="ownedCardsOnly($event)">
-              <label for="ownedCardsOnly">Owned Cards Only</label>
-            </div>
+              <label for="ownedCardsOnly">Owned</label>
+            </div> -->
             <div class="checkbox-container">
               <input type="checkbox" name="unique-cards-only" id="uniqueCardsOnly" #uniqueCardsOnlyCheckbox (change)="uniqueCardsOnly($event)">
-              <label for="uniqueCardsOnly">Unique Cards Only</label>
+              <label for="uniqueCardsOnly">Owned Unique</label>
             </div>
             <div class="checkbox-container">
               <input type="checkbox" name="non-unique-cards-only" id="nonUniqueCardsOnly" #nonUniqueCardsOnlyCheckbox (change)="nonUniqueCardsOnly($event)">
-              <label for="nonUniqueCardsOnly">Non-Unique Cards Only</label>
+              <label for="nonUniqueCardsOnly">Owned Non-Unique</label>
+            </div>
+            <div class="checkbox-container">
+              <input type="checkbox" name="Unowned-cards-only" id="unownedCardsOnly" #unownedCardsOnlyCheckbox (change)="unownedCardsOnly($event)">
+              <label for="unownedCardsOnly">Unowned</label>
             </div>
             <!-- Export View Button -->
             <div class="export-button">

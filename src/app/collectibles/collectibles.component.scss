@@ -2,6 +2,8 @@
   z-index: 9999;
 }
 
+.checkbox-container input[type="checkbox"],
+.checkbox-container label,
 .options span,
 .card-container img,
 .first-page,
@@ -12,7 +14,7 @@ input[type="checkbox"],
 label[for="ownedCardsOnly"],
 label[for="uniqueCardsOnly"],
 label[for="nonUniqueCardsOnly"] {
-  cursor: url('/assets/Cursor_02-2_select_2.png'), auto;
+  cursor: url('/assets/Cursor_02-2_select_2.png'), auto !important;
 }
 
 
@@ -530,7 +532,7 @@ label[for="nonUniqueCardsOnly"] {
   display: flex;
   align-items: center; /* Align checkbox and label in the center */
   margin-right: 40px; /* Right margin for spacing between checkbox groups */
-  margin-left: 5px;
+  margin-left: 10px;
 }
 
 /* Target the input and label specifically for owned and unique checkboxes */

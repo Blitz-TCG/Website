@@ -39,7 +39,8 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
   @ViewChild('swiper', { static: false }) swiper?: SwiperComponent;
   @ViewChild('stickyElem', { static: false }) menuElement?: ElementRef;
   @ViewChild('cardNameInput', { static: false }) cardNameInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('ownedCardsOnlyCheckbox') ownedCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
+  //@ViewChild('ownedCardsOnlyCheckbox') ownedCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
+  @ViewChild('unownedCardsOnlyCheckbox') unownedCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
   @ViewChild('uniqueCardsOnlyCheckbox') uniqueCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
   @ViewChild('nonUniqueCardsOnlyCheckbox') nonUniqueCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
   sticky: boolean = false;
@@ -80,18 +81,19 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
       value: "All"
     }
   }
-  isChecked = false;
+  //isOwnedChecked = false;
   isUniqueChecked = false;
   isNonUniqueChecked = false;
+  isUnownedChecked = false;
   cardsPages = 7;
   perPage = 24;
   currentCardPage = 1;
   walletID: string | null = null;
   tokenIds: any = [];
   cards: any = [];
-  filtedCards: any = [];
+  filteredCards: any = [];
   showCards: any = [];
-  applyedFilter: boolean = false;
+  appliedFilter: boolean = false;
   selectedCard: any = null;
 
   constructor(private walletService: WalletService, private modalService: ModalService, public adb: AngularFireDatabase, private httpClient: HttpClient, public afAuth: AngularFireAuth, public authService: AuthService, @Inject(PLATFORM_ID) private platformId: any) { }
@@ -361,33 +363,35 @@ this.walletService.walletUpdated$.subscribe(walletID => {
   }
 
   applyFilter(event: any = null) {
-    this.applyedFilter = true;
+    this.appliedFilter = true;
     const searchText = event ? event.target.value : null;
     this.currentCardPage = 1;
 
     // When neither is checked, we want to show all cards.
-    const showAll = !this.isUniqueChecked && !this.isNonUniqueChecked;
+    const showAll = !this.isUniqueChecked && !this.isNonUniqueChecked && !this.isUnownedChecked;// && !this.isOwnedChecked;
 
-    this.filtedCards = this.cards.filter((card: any) => {
-      // If showing all, skip checking isUnique and isNonUnique conditions.
+    this.filteredCards = this.cards.filter((card: any) => {
+      // If showing all, skip checking isUnique, isNonUnique, and isUnknown conditions.
       if (showAll) {
         return this.filterCard(card, searchText);
       }
 
-      // Check the unique and non-unique conditions only if showAll is false.
+      // Check the unique, non-unique, and unknown conditions only if showAll is false.
       const isUnique = this.isUniqueChecked && card.amount === 1;
       const isNonUnique = this.isNonUniqueChecked && card.amount > 1;
+      //const isOwned = this.isOwnedChecked && card.amount > 0;
+      const isUnowned = this.isUnownedChecked && card.amount === 0;
 
-      return this.filterCard(card, searchText) && (isUnique || isNonUnique);
+      return this.filterCard(card, searchText) && (isUnique || isNonUnique || isUnowned)// || isOwned);
     });
 
-    this.showCards = this.filtedCards.slice(0, this.perPage);
-    this.cardsPages = Math.ceil(this.filtedCards.length / this.perPage) || 1;
+    this.showCards = this.filteredCards.slice(0, this.perPage);
+    this.cardsPages = Math.ceil(this.filteredCards.length / this.perPage) || 1;
   }
+
 
   filterCard(card: any, searchText: string) {
     return (
-      (!this.isChecked || (this.isChecked && card.amount && card.amount > 0)) &&
       (this.filter.edition.value === 'All' || card.edition == this.filter.edition.value) &&
       (this.filter.set.value === 'All' || card.set === this.filter.set.value) &&
       (this.filter.faction.value === 'All' || card.faction === this.filter.faction.value) &&
@@ -401,9 +405,9 @@ this.walletService.walletUpdated$.subscribe(walletID => {
   exportCurrentView(): void {
     let dataToExport = [];
 
-    // Check if a filter has been applied. If the `applyedFilter` is true, use the filtered data.
-    if (this.applyedFilter && this.filtedCards.length) {
-      dataToExport = this.filtedCards;
+    // Check if a filter has been applied. If the `appliedFilter` is true, use the filtered data.
+    if (this.appliedFilter && this.filteredCards.length) {
+      dataToExport = this.filteredCards;
     } else {
       // If no filter is applied, use the complete dataset.
       dataToExport = this.cards;
@@ -463,24 +467,24 @@ this.walletService.walletUpdated$.subscribe(walletID => {
   nextPage() {
     if (this.currentCardPage < this.cardsPages) {
       this.currentCardPage++;
-      this.showCards = (this.applyedFilter ? this.filtedCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
+      this.showCards = (this.appliedFilter ? this.filteredCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
     }
   }
 
   prevPage() {
     if (this.currentCardPage > 1)
       this.currentCardPage--;
-    this.showCards = (this.applyedFilter ? this.filtedCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
+    this.showCards = (this.appliedFilter ? this.filteredCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
 
   }
   firstPage() {
     this.currentCardPage = 1;
-    this.showCards = (this.applyedFilter ? this.filtedCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
+    this.showCards = (this.appliedFilter ? this.filteredCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
   }
 
   lastPage() {
     this.currentCardPage = this.cardsPages;
-    this.showCards = (this.applyedFilter ? this.filtedCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
+    this.showCards = (this.appliedFilter ? this.filteredCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
   }
 
   walletConnected(): any {
@@ -499,9 +503,14 @@ this.walletService.walletUpdated$.subscribe(walletID => {
     this.applyFilter();
     this.toggleMenu(0);
   }
-  ownedCardsOnly(event: any) {
+  // ownedCardsOnly(event: any) {
+  //   const target = event.target as HTMLInputElement;
+  //   this.isOwnedChecked = target.checked;
+  //   this.applyFilter();
+  // }
+  unownedCardsOnly(event: any) {
     const target = event.target as HTMLInputElement;
-    this.isChecked = target.checked;
+    this.isUnownedChecked = target.checked;
     this.applyFilter();
   }
   uniqueCardsOnly(event: any) {
@@ -556,14 +565,18 @@ this.walletService.walletUpdated$.subscribe(walletID => {
     });
 
     // Reset checkbox states
-    this.isChecked = false;
+    //this.isOwnedChecked = false;
+    this.isUnownedChecked = false;
     this.isUniqueChecked = false;
     this.isNonUniqueChecked = false;
 
     // Explicitly uncheck checkboxes using ElementRef if ViewChild is correctly bound
-    if (this.ownedCardsOnlyCheckbox) {
-        this.ownedCardsOnlyCheckbox.nativeElement.checked = false;
-    }
+    // if (this.ownedCardsOnlyCheckbox) {
+    //     this.ownedCardsOnlyCheckbox.nativeElement.checked = false;
+    // }
+    if (this.unownedCardsOnlyCheckbox) {
+      this.unownedCardsOnlyCheckbox.nativeElement.checked = false;
+  }
     if (this.uniqueCardsOnlyCheckbox) {
         this.uniqueCardsOnlyCheckbox.nativeElement.checked = false;
     }
