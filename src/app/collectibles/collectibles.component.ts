@@ -405,25 +405,52 @@ this.walletService.walletUpdated$.subscribe(walletID => {
   exportCurrentView(): void {
     let dataToExport = [];
 
-    // Check if a filter has been applied. If the `appliedFilter` is true, use the filtered data.
+    const rarityOrder: { [key: string]: number } = {
+      'Common': 1,
+      'Uncommon': 2,
+      'Rare': 3,
+      'Legendary': 4
+    };
+
     if (this.appliedFilter && this.filteredCards.length) {
       dataToExport = this.filteredCards;
     } else {
-      // If no filter is applied, use the complete dataset.
       dataToExport = this.cards;
     }
 
-    // Collect the card data into a string, with each card on a new line.
-    const data = dataToExport
-    .map((card: { name: any; amount: any; }) => `${card.name}: ${card.amount}`)
-      .join('\n');
+    // Function to format cards into a string
+    const formatCards = (cards: any[]) =>
+      cards.map(card => `:${card.rarity}: ${card.name} - ${card.amount}`).join('\n');
 
-    // Create a blob with the data and the type of content.
-    const blob = new Blob([data], { type: 'text/plain;charset=utf-8' });
+    // Split the cards into owned and unowned arrays
+    const ownedCards = dataToExport.filter((card: { amount: number; }) => card.amount > 0);
+    const unownedCards = dataToExport.filter((card: { amount: number; }) => card.amount === 0);
 
-    // Use FileSaver to save the file.
+    // Sort each array by rarity order
+    ownedCards.sort((a: { rarity: string | number; }, b: { rarity: string | number; }) => rarityOrder[a.rarity] - rarityOrder[b.rarity]);
+    unownedCards.sort((a: { rarity: string | number; }, b: { rarity: string | number; }) => rarityOrder[a.rarity] - rarityOrder[b.rarity]);
+
+    // Sections with headers
+    const ownedSection = ownedCards.length > 0 ? `Owned:\n${formatCards(ownedCards)}\n` : '';
+    const unownedSection = unownedCards.length > 0 ? `\nUnowned:\n${formatCards(unownedCards)}` : '';
+
+    // Rarity summary from userCardsDetail
+    const raritySummary = `Total Cards: ${this.userCardsDetail.total}
+  :Common: Total ${this.userCardsDetail.common}
+  :Uncommon: Total ${this.userCardsDetail.uncommon}
+  :Rare: Total ${this.userCardsDetail.rare}
+  :Legendary: Total ${this.userCardsDetail.legendary}\n`;
+
+    // Combine the sections
+    const data = `${raritySummary}\n${ownedSection}${unownedSection}`;
+
+    const blob = new Blob([data.trim()], { type: 'text/plain;charset=utf-8' }); // Trim to remove any leading/trailing newlines
     saveAs(blob, 'exported-cards-view.txt');
   }
+
+
+
+
 
 
 

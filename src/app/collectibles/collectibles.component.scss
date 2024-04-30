@@ -123,7 +123,6 @@ label[for="nonUniqueCardsOnly"] {
     content: " ";
     width: 0px;
     height: 0px;
-    //background-image: url(/assets/cards_collected.png);
     display: inline-block;
     background-size: cover;
     background-repeat: no-repeat;
@@ -339,6 +338,7 @@ label[for="nonUniqueCardsOnly"] {
   margin: auto;
 
   h2 {
+    cursor: url('/assets/Cursor_02_2.png'), auto !important;
     font-size: 30px;
     color: #fff;
     z-index: 99999;
