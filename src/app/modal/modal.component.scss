@@ -249,6 +249,13 @@
         top: 0px;
         z-index: 999999;
     }
+
+    @media (max-width: 825px) {
+      //flex-direction: column; /* Stack the items vertically */
+      align-items: center; /* Align items to the start of the container */
+      min-width: 0; /* Remove minimum width restriction */
+      font-size: 12px;
+  }
 }
 
 .faction::before {
@@ -318,6 +325,10 @@
   white-space: nowrap; /* Prevent wrapping */
   overflow: hidden; /* Hide overflow */
   text-overflow: ellipsis; /* Add an ellipsis at the end if text is too long */
+
+  @media (max-width: 825px) {
+    font-size: 12px;
+}
 }
 
 .message {
@@ -385,6 +396,10 @@
           &:active {
               background-image: url(/assets/card-container-sell-btn-bg-off.png);
               top: 1px;
+          }
+
+          @media (max-width: 825px) {
+            font-size: 12px;
           }
       }
         &.cancel,

@@ -536,9 +536,29 @@ label[for="nonUniqueCardsOnly"] {
 }
 
 @media (max-width: 720px) {
+
   .checkbox-container {
-    margin-right: 20px; /* Smaller margin on smaller screens */
-    margin-left: 5px;
+margin-top: 20px;
+  }
+
+  .cards-checkboxes {
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    justify-content: space-between; /* Distribute space evenly */
+  }
+
+  .checkbox-container {
+    margin-right: 5px; /* Adjusted margins for better spacing */
+    margin-bottom: 20px; /* Space between rows */
+  }
+
+  .export-button, .link-button {
+    flex: 1 0 50%; /* Each button takes up to 50% of the width */
+    text-align: center; /* Center align the content of buttons */
+  }
+
+  .export-button img, .link-button .link {
+    width: auto; /* Adjust width as necessary */
+    margin: 0 auto; /* Center the content */
   }
 }
 
