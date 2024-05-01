@@ -431,8 +431,8 @@ this.walletService.walletUpdated$.subscribe(walletID => {
     unownedCards.sort((a: { rarity: string | number; }, b: { rarity: string | number; }) => rarityOrder[a.rarity] - rarityOrder[b.rarity]);
 
     // Sections with headers
-    const ownedSection = ownedCards.length > 0 ? `Owned:\n${formatCards(ownedCards)}\n` : '';
-    const unownedSection = unownedCards.length > 0 ? `\nUnowned:\n${formatCards(unownedCards)}` : '';
+    const ownedSection = ownedCards.length > 0 ? `Have these:\n${formatCards(ownedCards)}\n` : '';
+    const unownedSection = unownedCards.length > 0 ? `\nMissing these:\n${formatCards(unownedCards)}` : '';
 
     // Rarity summary from userCardsDetail
     const raritySummary = `Total Cards: ${this.userCardsDetail.total}
@@ -447,12 +447,6 @@ this.walletService.walletUpdated$.subscribe(walletID => {
     const blob = new Blob([data.trim()], { type: 'text/plain;charset=utf-8' }); // Trim to remove any leading/trailing newlines
     saveAs(blob, 'exported-cards-view.txt');
   }
-
-
-
-
-
-
 
   filterBracket(value: number, bracketName: string) {
     switch (bracketName) {

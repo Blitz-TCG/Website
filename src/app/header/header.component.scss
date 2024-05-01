@@ -649,7 +649,7 @@ $nav-link-color-hover: #fff;
     }
 
     .show-sub-items & {
-      height: 152px;
+      height: 254px; //this is where to change the height of the drop down in mobile, statick right now - ideally it's dynamic at some point
     }
   }
 

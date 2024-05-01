@@ -535,6 +535,14 @@ label[for="nonUniqueCardsOnly"] {
   margin-left: 10px;
 }
 
+@media (max-width: 720px) {
+  .checkbox-container {
+    margin-right: 20px; /* Smaller margin on smaller screens */
+    margin-left: 5px;
+  }
+}
+
+
 /* Target the input and label specifically for owned and unique checkboxes */
 .checkbox-container input[type="checkbox"],
 .checkbox-container label{ /* Adding button to the existing selectors */
@@ -563,8 +571,22 @@ label[for="nonUniqueCardsOnly"] {
   cursor: url('/assets/Cursor_02-2_select_2.png'), pointer !important;
   width: 30px; /* or whatever size you prefer */
   height: auto;
+  margin-left: 5px;
 }
 
+.link-button .link {
+  margin-left: 40px;
+  color: #e39b33; /* Set color to orange */
+  font-size: 1rem; /* Match other text sizes or adjust as needed */
+  display: inline-block; /* Ensures proper spacing and alignment */
+  padding: 5px 0; /* Optional, for better clickability */
+}
+
+/* Ensure color does not change on hover or focus */
+.link-button .link:hover,
+.link-button .link:focus {
+  color: #e39b33; /* Keep it orange even when hovered or focused */
+}
 
 
 @media screen and (max-width: 1140px) {

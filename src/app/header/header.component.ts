@@ -91,25 +91,6 @@ export class HeaderComponent implements OnInit {
     this.networkStatus$.unsubscribe();
   }
 
-  // To check internet connection stability
-  // checkNetworkStatus() {
-  //   if (isPlatformBrowser(this.platformId)) {
-  //     this.networkStatus = navigator.onLine;
-  //     this.networkStatus$ = merge(
-  //       of(null),
-  //       fromEvent(window, 'online'),
-  //       fromEvent(window, 'offline')
-  //     )
-  //       .pipe(map(() => navigator.onLine))
-  //       .subscribe((status) => {
-  //         this.networkStatus = status;
-  //         const user = localStorage.getItem('user');
-  //         if (!status && user) {
-  //           this.signout();
-  //         }
-  //       });
-  //   }
-  // }
   signout() {
     this.authService.SignOut().then(() => {
       if (isPlatformBrowser(this.platformId)) {
