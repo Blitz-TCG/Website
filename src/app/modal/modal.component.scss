@@ -107,23 +107,51 @@
     padding: 0px 10px 20px 10px;
 }
 
-.amount-owned-collectibles {
-  text-align: center;
-  font-size: 24px;
-  margin-top: 40px;
-  color: #ffffff;
-}
-
 .amount-owned {
-    text-align: center;
-    margin-top: 15px;
-    color: #A8A8A7;
-
-    .amount {
-        color: #FFFFFF;
-        margin-left: 10px;
-    }
+  text-align: center;
+  margin-top: 24px;
 }
+
+.total-supply {
+  text-align: center;
+  margin-top: 5px;
+  visibility: hidden; /* Initially hide total supply but keep in layout */
+  opacity: 0; /* Make it transparent */
+  transition: opacity 0.3s, visibility 0s 0.3s; /* Smooth transition for opacity, delay hiding visibility */
+}
+
+.amount-owned:hover + .total-supply {
+  visibility: visible; /* Make total supply visible on hover */
+  opacity: 1; /* Fully opaque */
+  transition: opacity 0.3s; /* Smooth transition for opacity */
+}
+
+/* Specific styles for amount owned */
+.amount-owned .label,
+.amount-owned .value {
+  font-size: 24px; /* Larger font size for amount owned */
+  color: #A8A8A7; /* Grey color for the label */
+}
+
+.amount-owned .value {
+  color: #FFFFFF; /* White color for the value */
+  margin-left: 10px; /* Space between label and value */
+}
+
+/* Specific styles for total supply */
+.total-supply .label,
+.total-supply .value {
+  font-size: 16px; /* Smaller font size for total supply */
+  color: #A8A8A7; /* Grey color for the label */
+}
+
+.total-supply .value {
+  color: #FFFFFF; /* White color for the value */
+  margin-left: 10px; /* Space between label and value */
+}
+
+
+
 
 .card-info {
     color: #A8A8A9;

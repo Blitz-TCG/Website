@@ -7,7 +7,7 @@ import { getAuth } from 'firebase/auth';
 import { child, get, getDatabase, ref } from 'firebase/database';
 import { addDoc, collection, getDocs, getFirestore, query, where, writeBatch } from 'firebase/firestore';
 // import { getDownloadURL, ref as imgRef } from 'firebase/storage';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import SwiperCore, { Pagination, SwiperOptions } from 'swiper';
 import { SwiperComponent } from 'swiper/angular';
@@ -95,6 +95,9 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
   showCards: any = [];
   appliedFilter: boolean = false;
   selectedCard: any = null;
+  readonly SUPPLY_ADDRESS = "3n7SxSJCvFGp9xfumeQY8925QQpZifkpwAgnxoF3Hc3NWi9oraoXwNV1xcZpVP8A9LcXLef1krdvjoEKtiEUHDQy6AQ4suJsQyJ8EY2L36hErdvuindtN2dxTU8rLWTwMY18PH6g6XXyvrVQ25w57YSiDR1xF8ZN2sdqgQ9V9";
+  supplyIds: any = [];
+
 
   constructor(private walletService: WalletService, private modalService: ModalService, public adb: AngularFireDatabase, private httpClient: HttpClient, public afAuth: AngularFireAuth, public authService: AuthService, @Inject(PLATFORM_ID) private platformId: any) { }
 
@@ -143,17 +146,33 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
       this.subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
-  ngOnInit(): void {
-    console.log('ngOnInit triggered');
- // Check if the wallet is already connected and load tokens
- if (this.walletService.walletConnected()) {
-  this.loadErgoTokens().pipe(
-    switchMap(() => this.queryCards())
-  ).subscribe(
-    () => console.log('Tokens and cards loaded successfully.'),
-    error => console.error('Failed to load tokens and cards:', error)
-  );
-}
+    ngOnInit(): void {
+      console.log('ngOnInit triggered');
+
+      this.loadSupplyTokens().pipe(
+        switchMap(() => this.querySupplyCards()), // Load supply tokens and then query supply cards
+        catchError(error => {
+          console.error('Failed to load supply tokens:', error);
+          return throwError(() => new Error('Failed to load supply tokens'));
+        })
+      ).subscribe(
+        () => console.log('Supply tokens and supply cards loaded successfully.'),
+        error => console.error(error)
+      );
+
+      // Check if the wallet is already connected and load tokens
+      if (this.walletService.walletConnected()) {
+        this.loadErgoTokens().pipe(
+          switchMap(() => this.queryCards()), // Load user tokens and then query cards
+          catchError(error => {
+            console.error('Failed to load user tokens and cards:', error);
+            return throwError(() => new Error('Failed to load user tokens and cards'));
+          })
+        ).subscribe(
+          () => console.log('User tokens and cards loaded successfully.'),
+          error => console.error(error)
+        );
+      }
 
 this.walletService.walletUpdated$.subscribe(walletID => {
     console.log('Tracker: walletID trigger.');
@@ -297,10 +316,38 @@ this.walletService.walletUpdated$.subscribe(walletID => {
     }
   }
 
+  loadSupplyTokens(): Observable<void> {
+    return this.httpClient.get(`https://ergo-explorer.anetabtc.io/api/v1/addresses/${this.SUPPLY_ADDRESS}/balance/confirmed`)
+      .pipe(
+        catchError(error => {
+          console.error('Error loading supply tokens:', error);
+          return of(); // Return an empty observable in case of error
+        }),
+        tap((response: any) => {
+          if (response) {
+            const dataObjects: any = response;
+            for (const token of dataObjects.tokens) {
+              const tokenDecimals = Math.pow(10, token.decimals);
+              const normalizedAmount = token.amount / tokenDecimals;
+              const remainingSupply = 100000 - normalizedAmount;
+              // Assuming you have a separate state variable to store supply tokens
+              this.supplyIds.push({ tokenId: token.tokenId, amount:  remainingSupply});
+              //console.log(`Token ID: ${token.tokenId}, Remaining Supply: ${remainingSupply.toLocaleString()}`);
+            }
+          }
+          else {
+            // Log to console if the response is invalid or empty
+            console.log('No data returned for supply tokens. Check the API or the address.');
+          }
+        })
+      );
+  }
+
+
   queryCards(): Observable<any[]> {
     const db = getFirestore();
     const cardsCollection = collection(db, 'cards');
-    const tIds = this.tokenIds.map((token: any) => token.tokenId);
+    //const tIds = this.tokenIds.map((token: any) => token.tokenId);
 
     return new Observable<any[]>((observer) => {
       getDocs(cardsCollection)
@@ -308,15 +355,19 @@ this.walletService.walletUpdated$.subscribe(walletID => {
           const allCards = querySnapshot.docs.map((doc) => {
             const card: any = doc.data();
             const getAmount = this.tokenIds.find((token: any) => token.tokenId === card.tokenId);
+
+            const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
+            //console.log(supplyToken);
+
             if (getAmount) {
               // Check for the specific token ID and set the amount to 1
               if (getAmount.tokenId === "6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189") {
-                return { ...card, amount: 1 };
+                return { ...card, amount: 1, totalSupply: supplyToken ? supplyToken.amount : 'N/A' };
               } else {
-                return { ...card, amount: getAmount.amount };
+                return { ...card, amount: getAmount.amount, totalSupply: supplyToken ? supplyToken.amount : 'Not available' };
               }
             } else {
-              return { ...card, amount: 0 };
+              return { ...card, amount: 0, totalSupply: supplyToken ? supplyToken.amount : 'Not available' };
             }
           });
           const sortedCards = allCards.sort((a: any, b: any) => a.name.localeCompare(b.name))
@@ -342,6 +393,36 @@ this.walletService.walletUpdated$.subscribe(walletID => {
         });
     });
   }
+
+  querySupplyCards(): Observable<any[]> {
+    const db = getFirestore();
+    const cardsCollection = collection(db, 'cards');
+
+    return new Observable<any[]>((observer) => {
+      getDocs(cardsCollection).then((querySnapshot) => {
+        const supplyCards = querySnapshot.docs.map((doc) => {
+          const card: any = doc.data();
+          const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
+          const cardDetail = {
+            ...card,
+            totalSupply: supplyToken ? supplyToken.amount : 'Not available' // Total supply from the supply address
+          };
+
+          // Debug log for each card
+          //console.log(`Card Name: ${card.name}, Total Supply: ${cardDetail.totalSupply}`);
+
+          return cardDetail;
+        });
+
+        this.cards = supplyCards; // You might want to handle this differently if this.cards should not be overwritten
+        observer.next(supplyCards);
+        observer.complete();
+      }).catch((error) => {
+        observer.error(error);
+      });
+    });
+  }
+
 
   calcUserCards(cards: any) {
     for (let index = 0; index < cards.length; index++) {
@@ -436,10 +517,10 @@ this.walletService.walletUpdated$.subscribe(walletID => {
 
     // Rarity summary from userCardsDetail
     const raritySummary = `Total Cards: ${this.userCardsDetail.total}
-  :Common: Total ${this.userCardsDetail.common}
-  :Uncommon: Total ${this.userCardsDetail.uncommon}
-  :Rare: Total ${this.userCardsDetail.rare}
-  :Legendary: Total ${this.userCardsDetail.legendary}\n`;
+    :Common: Total ${this.userCardsDetail.common}
+    :Uncommon: Total ${this.userCardsDetail.uncommon}
+    :Rare: Total ${this.userCardsDetail.rare}
+     Legendary: Total ${this.userCardsDetail.legendary}\n`;
 
     // Combine the sections
     const data = `${raritySummary}\n${ownedSection}${unownedSection}`;

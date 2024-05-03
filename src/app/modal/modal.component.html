@@ -162,9 +162,14 @@
                                     [src]="selectedCard.imageLoaded ? selectedCard.image : '/assets/loading-nft.jpeg'"
                                     [alt]="selectedCard.name">
                             </ng-template>
-                            <div class="amount-owned-collectibles">
-                              <span class="amount-owned-collectibles">Amount Owned: {{ selectedCard?.amount || 0 }}</span>
-                            </div>
+                            <div class="amount-owned">
+                              <span class="label">Amount Owned:</span>
+                              <span class="value">{{ selectedCard?.amount || 0 }}</span>
+                          </div>
+                          <div class="total-supply">
+                              <span class="label">Total Supply:</span>
+                              <span class="value">{{ selectedCard?.totalSupply || 'Not available' }}</span>
+                          </div>
                             <div class="amount-owned"
                                 *ngIf="selectedCard?.modalType === 'Sell' && selectedCard?.sellActiveTab === 'For Sale'">
                                 Amount Owned: <span class="amount">{{selectedCard?.amount || 0}}</span>
