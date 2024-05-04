@@ -19,7 +19,8 @@
     <div class="tabs-container">
       <div [ngClass]="{'tab buy-tab': true, 'active': activeTab === 'Buy'}" (click)="selectTab('Buy')">Buy</div>
       <div [ngClass]="{'tab sell-tab': true, 'active': activeTab === 'Sell'}" (click)="selectTab('Sell')">Sell</div>
-      <div [ngClass]="{'tab burn-tab': true, 'active': activeTab === 'Burn'}">Burn</div>
+      <div [ngClass]="{'tab burn-tab': true, 'active': activeTab === 'Burn'}" (click)="selectTab('Burn')">Burn</div>
+      <!-- <div [ngClass]="{'tab burn-tab': true, 'active': activeTab === 'Burn'}">Burn</div> -->
     </div>
   </div>
   <div *ngIf="authService.isLoggedIn && walletConnected()">

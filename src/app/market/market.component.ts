@@ -8,7 +8,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 
 // RxJS imports
-import { Observable, of } from 'rxjs';
+import { Observable, Subscription, of, throwError } from 'rxjs';
 import { catchError, map, mapTo, switchMap, take, tap } from 'rxjs/operators';
 
 // Swiper imports
@@ -20,6 +20,9 @@ SwiperCore.use([Pagination]);
 import { ModalService } from '../modal/modal.service';
 import { AuthService } from '../shared/services/auth.service';
 import { WalletService } from '../wallet.service';
+import { collection, getDocs, getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { child, get, getDatabase, ref } from 'firebase/database';
 
 @Component({
   selector: 'app-market',
@@ -66,14 +69,28 @@ export class MarketComponent implements OnInit {
       value: "All"
     }
   }
+  userCardsDetail = {
+    total: 0,
+    cardsCollected: 0,
+    firstEdition: 0,
+    unlEdition: 0,
+    common: 0,
+    uncommon: 0,
+    rare: 0,
+    legendary: 0
+  }
   isChecked = false;
   cardsPages = 7;
   perPage = 24;
   currentCardPage = 1;
   walletID: any = null;
-  tokenIds: any = [];
+
+  myTokenIds: any = [];
+  storeTokenIds: any = [];
+
   cards: any = [];
   cardsByTab: any = [];
+
   filtedCards: any = [];
   showCards: any = [];
   applyedFilter: boolean = false;
@@ -82,11 +99,121 @@ export class MarketComponent implements OnInit {
   message: string | null = null;
   isSuccessful = false;
 
+  supplyIds: any = [];
+  readonly SUPPLY_ADDRESS = "3n7SxSJCvFGp9xfumeQY8925QQpZifkpwAgnxoF3Hc3NWi9oraoXwNV1xcZpVP8A9LcXLef1krdvjoEKtiEUHDQy6AQ4suJsQyJ8EY2L36hErdvuindtN2dxTU8rLWTwMY18PH6g6XXyvrVQ25w57YSiDR1xF8ZN2sdqgQ9V9";
+
   constructor(private walletService: WalletService, private http: HttpClient, private modalService: ModalService, public adb: AngularFireDatabase, private httpClient: HttpClient, public afAuth: AngularFireAuth, public authService: AuthService, @Inject(PLATFORM_ID) private platformId: any) { }
   private baseUrl = 'https://api.skyharbor.io/api/sales'
+
+
   ngOnInit(): void {
-    this.fetchWalletAndLoadErgoTokens();
+
+    // this.loadSupplyTokens().pipe(
+    //   switchMap(() => this.querySupplyCards()), // Load supply tokens and then query supply cards
+    //   catchError(error => {
+    //     console.error('Failed to load supply tokens:', error);
+    //     return throwError(() => new Error('Failed to load supply tokens'));
+    //   })
+    // ).subscribe(
+    //   () => console.log('Supply tokens and supply cards loaded successfully.'),
+    //   error => console.error(error)
+    // );
+
+    // Check if the wallet is already connected and load tokens
+    if (this.walletService.walletConnected()) {
+      this.loadErgoTokens().pipe(
+        switchMap(() => this.queryCards()),
+        switchMap(() => this.getNFTs()),
+        catchError(error => {
+          console.error('Failed to load user tokens and cards:', error);
+          return throwError(() => new Error('Failed to load user tokens and cards'));
+        })
+      ).subscribe(
+        () => console.log('User tokens and cards loaded successfully.'),
+        error => console.error(error)
+      );
+    }
+
+    this.walletService.walletUpdated$.subscribe(walletID => {
+      console.log('Tracker: walletID trigger.');
+      if (walletID) {
+        this.resetTokenState(); // Reset the state before loading new tokens
+        console.log('Tokens reset successfully.'),
+        this.walletID = walletID;
+        this.loadErgoTokens().pipe(
+        switchMap(() => this.queryCards()),
+        switchMap(() => this.getNFTs()),
+        ).subscribe(
+          () => console.log('Tokens and cards loaded successfully.'),
+          error => console.error('Failed to load tokens and cards:', error)
+        );
+      }
+  });
+  this.afAuth.authState
+  .pipe(
+    take(1),
+    switchMap(() => this.getWalletAddress()),
+    switchMap(() => {
+      return this.loadErgoTokens().pipe(
+        switchMap(() => this.queryCards()),
+        switchMap(() => this.getNFTs()),
+      );
+    })
+  )
+  .subscribe(
+    (cards) => { console.log('All data including NFTs queried successfully.'); },
+    (error) => { console.log('Error querying data including NFTs:', error); }
+  );
   }
+
+  sellAndBurnInit() {
+
+    if (this.walletService.walletConnected()) {
+      this.loadErgoTokens().pipe(
+        switchMap(() => this.queryCards()),
+        switchMap(() => this.getNFTs()),
+        catchError(error => {
+          console.error('Failed to load user tokens and cards:', error);
+          return throwError(() => new Error('Failed to load user tokens and cards'));
+        })
+      ).subscribe(
+        () => console.log('User tokens and cards loaded successfully.'),
+        error => console.error(error)
+      );
+    }
+
+    this.walletService.walletUpdated$.subscribe(walletID => {
+      console.log('Tracker: walletID trigger.');
+      if (walletID) {
+        this.resetTokenState(); // Reset the state before loading new tokens
+        console.log('Tokens reset successfully.'),
+        this.walletID = walletID;
+        this.loadErgoTokens().pipe(
+        switchMap(() => this.queryCards()),
+        switchMap(() => this.getNFTs()),
+        ).subscribe(
+          () => console.log('Tokens and cards loaded successfully.'),
+          error => console.error('Failed to load tokens and cards:', error)
+        );
+      }
+  });
+  this.afAuth.authState
+  .pipe(
+    take(1),
+    switchMap(() => this.getWalletAddress()),
+    switchMap(() => {
+      return this.loadErgoTokens().pipe(
+        switchMap(() => this.queryCards()),
+        switchMap(() => this.getNFTs()),
+      );
+    })
+  )
+  .subscribe(
+    (cards) => { console.log('All data including NFTs queried successfully.'); },
+    (error) => { console.log('Error querying data including NFTs:', error); }
+  );
+  }
+
 
   loadErgoTokens(): Observable<void> {
     if (this.walletID) {
@@ -101,9 +228,10 @@ export class MarketComponent implements OnInit {
               const dataObjects: any = response;
               for (const token of dataObjects.tokens) {
                 const tokenDecimals = Math.pow(10, token.decimals);
-                this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
+                this.myTokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
               }
             }
+            console.log("Loaded Ergo Tokens:", this.myTokenIds);
           })
         );
     } else {
@@ -111,38 +239,200 @@ export class MarketComponent implements OnInit {
       return of(); // Return an empty observable
     }
   }
-  private fetchWalletAndLoadErgoTokens(): void {
-    this.afAuth.authState
+
+  loadSupplyTokens(): Observable<void> {
+    return this.httpClient.get(`https://ergo-explorer.anetabtc.io/api/v1/addresses/${this.SUPPLY_ADDRESS}/balance/confirmed`)
       .pipe(
-        take(1),
-        switchMap(() => this.walletService.getWalletAddress()),
-        tap(() => {
-          this.walletID = this.walletService.getWalletId();
-          console.log('Wallet ID:', this.walletID);
+        catchError(error => {
+          console.error('Error loading supply tokens:', error);
+          return of(); // Return an empty observable in case of error
         }),
-        switchMap(() => this.getNFTs()),
-        switchMap(() => this.loadErgoTokens()),
-      )
-      .subscribe(
-        error => console.log('Error querying cards:', error)
+        tap((response: any) => {
+          if (response) {
+            const dataObjects: any = response;
+            for (const token of dataObjects.tokens) {
+              const tokenDecimals = Math.pow(10, token.decimals);
+              const normalizedAmount = token.amount / tokenDecimals;
+              const remainingSupply = 100000 - normalizedAmount;
+              // Assuming you have a separate state variable to store supply tokens
+              this.supplyIds.push({ tokenId: token.tokenId, amount:  remainingSupply});
+              //console.log(`Token ID: ${token.tokenId}, Remaining Supply: ${remainingSupply.toLocaleString()}`);
+            }
+          }
+          else {
+            // Log to console if the response is invalid or empty
+            console.log('No data returned for supply tokens. Check the API or the address.');
+          }
+        })
       );
   }
+
+  getWalletAddress(): Observable<any> {
+    return new Observable((observer) => {
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        const database = getDatabase();
+        const dbRef = ref(database);
+        if (user) {
+          get(child(dbRef, `users/${user?.uid}/wallet`))
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                if (snapshot.val() === 'none') {
+                  if (isPlatformBrowser(this.platformId)) {
+                    localStorage.setItem('userIsConnected', 'false');
+                    this.walletID = null;
+                  }
+                } else {
+                  this.walletID = snapshot.val();
+                }
+              }
+              observer.next(); // Emit a value to indicate completion
+              observer.complete(); // Complete the observable
+            })
+            .catch((error) => {
+              observer.error(error); // Emit an error if there's an exception
+            });
+        } else {
+          observer.next(); // Emit a value to indicate completion
+          observer.complete(); // Complete the observable
+        }
+      } catch (error) {
+        observer.error(error); // Emit an error if there's an exception
+      }
+    });
+  }
+
+  private subscriptions: Subscription[] = [];
+
+  resetTokenState() {
+    this.myTokenIds = []; // Clear the tokenIds array
+    this.storeTokenIds = []; // Clear the tokenIds array
+    this.cards = []; // Clear the cards array
+    // Reset other related states if necessary
+    this.userCardsDetail = {
+      total: 0,
+      cardsCollected: 0,
+      firstEdition: 0,
+      unlEdition: 0,
+      common: 0,
+      uncommon: 0,
+      rare: 0,
+      legendary: 0
+    };
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  queryCards(): Observable<any[]> {
+    const db = getFirestore();
+    const cardsCollection = collection(db, 'cards');
+    //const tIds = this.tokenIds.map((token: any) => token.tokenId);
+
+    return new Observable<any[]>((observer) => {
+      getDocs(cardsCollection)
+        .then((querySnapshot) => {
+          const allCards = querySnapshot.docs.map((doc) => {
+            const card: any = doc.data();
+            const getAmount = this.myTokenIds.find((token: any) => token.tokenId === card.tokenId);
+            const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
+            //console.log(supplyToken);
+
+            if (getAmount) {
+              // Check for the specific token ID and set the amount to 1
+              if (getAmount.tokenId === "6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189") {
+                return { ...card, amount: 1, totalSupply: supplyToken ? supplyToken.amount : 'N/A' };
+              } else {
+                return { ...card, amount: getAmount.amount, totalSupply: supplyToken ? supplyToken.amount : 'Not available' };
+              }
+            } else {
+              return { ...card, amount: 0, totalSupply: supplyToken ? supplyToken.amount : 'Not available' };
+            }
+          });
+          const sortedCards = allCards.sort((a: any, b: any) => a.name.localeCompare(b.name))
+            .sort((a: any, b: any) => {
+              const aHasTokenId = this.myTokenIds.map((token: any) => token.tokenId).includes(a.tokenId);
+              const bHasTokenId = this.myTokenIds.map((token: any) => token.tokenId).includes(b.tokenId);
+
+              if (aHasTokenId && !bHasTokenId) {
+                return -1;
+              }
+              return 1;
+            });
+
+          //this.cards = sortedCards;
+          this.myTokenIds = sortedCards;
+          this.showCards = sortedCards.slice(0, this.perPage);
+          this.cardsPages = Math.ceil(sortedCards.length / this.perPage) || 1;
+          this.calcUserCards(sortedCards.filter((c: any) => c.amount))
+          observer.next(sortedCards);
+          observer.complete();
+        })
+        .catch((error) => {
+          observer.error(error);
+        });
+    });
+  }
+
+  // querySupplyCards(): Observable<any[]> {
+  //   const db = getFirestore();
+  //   const cardsCollection = collection(db, 'cards');
+
+  //   return new Observable<any[]>((observer) => {
+  //     getDocs(cardsCollection).then((querySnapshot) => {
+  //       const supplyCards = querySnapshot.docs.map((doc) => {
+  //         const card: any = doc.data();
+  //         const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
+  //         const cardDetail = {
+  //           ...card,
+  //           totalSupply: supplyToken ? supplyToken.amount : 'Not available' // Total supply from the supply address
+  //         };
+  //         return cardDetail;
+  //       });
+
+  //       this.cards = supplyCards; // You might want to handle this differently if this.cards should not be overwritten
+  //       observer.next(supplyCards);
+  //       observer.complete();
+  //     }).catch((error) => {
+  //       observer.error(error);
+  //     });
+  //   });
+  // }
+
+  calcUserCards(cards: any) {
+    for (let index = 0; index < cards.length; index++) {
+      console.log(cards.length);
+      this.userCardsDetail.cardsCollected = cards.length;
+      const c = cards[index];
+      this.userCardsDetail.total += c.amount;
+      if (c.edition == 1) {
+        this.userCardsDetail.firstEdition += c.amount;
+      } else {
+        this.userCardsDetail.unlEdition += c.amount;
+      }
+
+      if (c.rarity === 'Common') this.userCardsDetail.common += (c.amount);
+      if (c.rarity === 'Uncommon') this.userCardsDetail.uncommon += (c.amount);
+      if (c.rarity === 'Rare') this.userCardsDetail.rare += (c.amount);
+      if (c.rarity === 'Legendary') this.userCardsDetail.legendary += (c.amount);
+    }
+  }
+
+
   walletConnected(): any {
     if (isPlatformBrowser(this.platformId)) {
       return localStorage.getItem('userIsConnected') != 'false';
     }
   }
-  // Fetch and processind response
-  fetchNFTs(): Observable<any[]> {
-    const url = `${this.baseUrl}?collection=blitztcg`;
-    return this.http.get<any[]>(url);
-  }
+
+
   getNFTs(): Observable<void> {
     if (!this.walletID) {
       console.log('No wallet ID');
       return of();
     }
-
     return this.fetchNFTs().pipe(
       catchError(error => {
         console.log('Error loading Ergo tokens:', error);
@@ -155,10 +445,21 @@ export class MarketComponent implements OnInit {
       mapTo(void 0)  // ensures the return type is Observable<void>
     );
   }
+
+  // Fetch and processind response
+  fetchNFTs(): Observable<any[]> {
+    const url = `${this.baseUrl}?collection=blitztcg`;
+    return this.http.get<any[]>(url);
+  }
+
+
   private processResponse(response: any[]): void {
     if (!response) return;
     this.cards = response.sort(this.sortByListTime).map(this.mapNftToCard);
-    this.cardsByTab = this.cards.filter((nft: any) => (nft.status === "active" || nft.status === "inactive"));
+    //this.storeTokenIds = response.map((nft: any) => nft.token_Id);
+    this.cardsByTab = this.cards.filter((nft: any) => (nft.status === "active"));// || nft.status === "inactive");
+    console.log("Total Blitz Skyharbor Cards:", this.cardsByTab.length);
+    console.log("Token of the first card:", this.cardsByTab[0].token_Id);
     this.showCards = this.cardsByTab.slice(0, this.perPage);
     this.cardsPages = Math.ceil(this.cardsByTab.length / this.perPage) || 1;
   }
@@ -166,8 +467,10 @@ export class MarketComponent implements OnInit {
     return new Date(b.list_time).getTime() - new Date(a.list_time).getTime();
   }
   mapNftToCard = (nft: any) => {
+    //console.log(nft.token_id);
     return {
       ...nft,
+      token_Id: nft.token_id,
       image: `https://gateway.ipfs.io/ipfs/${nft.ipfs_art_hash}`,
       name: nft.nft_name,
       description: this.extractDescription(nft.nft_desc),
@@ -177,6 +480,7 @@ export class MarketComponent implements OnInit {
       price_usd: this.formatNumberWithDecimals(nft.nerg_service_value, 7),
     };
   }
+
   // Tabs actions
   selectTab(tab: string, tab2: string = 'Owned'): void {
     this.activeTab = tab;
@@ -200,6 +504,9 @@ export class MarketComponent implements OnInit {
       case 'Sell':
         this.filterSell(tab2);
         break;
+        case 'Burn':
+        this.filterBurn();
+        break;
     }
 
     this.currentCardPage = 1;
@@ -207,22 +514,39 @@ export class MarketComponent implements OnInit {
     this.cardsPages = Math.ceil(this.cardsByTab.length / this.perPage) || 1;
   }
   private filterBuy(): void {
-    this.cardsByTab = this.cards.filter((nft: any) => (nft.status === "active" || nft.status === "inactive"));
+    this.cardsByTab = this.cards.filter((nft: any) =>
+      nft.status === "active"
+    );
+    this.updateDisplayedCards();
   }
+
   private filterSell(tab2: string): void {
+    //console.log(nft["token_id"]);
     if (tab2 === 'Owned')
-      this.cardsByTab = this.cards.filter((nft: any) =>
-        nft.status === "complete" && this.tokenIds.some((token: any) => token.tokenId === nft["token_id"])
-      );
+      this.cardsByTab = this.myTokenIds;
+      console.log(this.cardsByTab.length)
+      // this.cardsByTab = this.cards.filter((nft: any) =>
+      //   nft.status === "inactive" && this.myTokenIds.some((token: any) => token.tokenId === nft["token_id"])) //nft["token_id"] vs. this.cards.token_Id nft.status === "inactive"
+
+      //this.cardsByTab = this.cards.filter((nft: any) => console.log(nft["token_id"]));
+
     if (tab2 === 'For Sale')
       this.cardsByTab = this.cards.filter((nft: any) =>
         (nft.status === "active") && nft["seller_address"] === this.walletID
       );
+
     if (tab2 === 'Sold')
       this.cardsByTab = this.cards.filter((nft: any) =>
-        nft.status === "complete" && nft["buyer_address"] === this.walletID
+        nft.status === "complete" && nft["seller_address"] === this.walletID
       );
   }
+
+  private filterBurn(): void {
+    this.cardsByTab = this.myTokenIds;
+  }
+
+
+
   // Modal actions
   openPopup(card: any, showDetails = true, modalType = this.activeTab, sellActiveTab = this.sellActiveTab) {
     if (this.authService.isLoggedIn && this.walletConnected()) {
@@ -235,7 +559,7 @@ export class MarketComponent implements OnInit {
   // Pagination functions
   updateDisplayedCards() {
     this.showCards = (this.applyedFilter ? this.filtedCards : this.cardsByTab)
-      .slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
+    .slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
   }
   nextPage() {
     if (this.currentCardPage < this.cardsPages) {
@@ -327,6 +651,7 @@ export class MarketComponent implements OnInit {
     this.applyFilter();
     this.toggleMenu(6);
   }
+
   setFilterAndToggleMenu(filterKey: keyof typeof this.filter, value: string, name: string, menuIndex: number): void {
     this.filter[filterKey].value = value;
     this.filter[filterKey].name = name;
@@ -351,6 +676,7 @@ export class MarketComponent implements OnInit {
   selectArtist(value: string, name: string): void {
     this.setFilterAndToggleMenu('artist', value, name, 5);
   }
+
   clearFilters(tab: string | null = null, tab2: string | null = null) {
     this.filter = {
       sort: {

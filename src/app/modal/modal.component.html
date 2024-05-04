@@ -218,13 +218,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-buttons" *ngIf="selectedCard?.modalType === 'Market'">
+                            <!-- <div class="card-buttons" *ngIf="selectedCard?.modalType === 'Market'">
                               <a href="https://www.skyharbor.io/collection/blitztcg" target="_blank" class="card-btn market">SkyHarbor Market</a>
                               <a href="https://ergoauctions.org/collection/822ed9428a71bef65e667a6e35313c221711680f893614471a3c133049f9abfd?tab=1" target="_blank" class="card-btn market">Auction House</a>
                           </div>
                             <div class="card-buttons" *ngIf="selectedCard?.modalType === 'Burn'">
                                 <div class="card-btn burn" (click)="showDetails = false; modalType = 'Burn'">Burn</div>
-                            </div>
+                            </div> -->
                             <div *ngIf="selectedCard?.modalType === 'Buy'">
                                 <div class="price-row">
                                     <div class="price-in-erg">{{selectedCard?.price_erg}} ERG</div>

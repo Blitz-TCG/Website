@@ -6,7 +6,6 @@ import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { getAuth } from 'firebase/auth';
 import { child, get, getDatabase, ref } from 'firebase/database';
 import { addDoc, collection, getDocs, getFirestore, query, where, writeBatch } from 'firebase/firestore';
-// import { getDownloadURL, ref as imgRef } from 'firebase/storage';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import SwiperCore, { Pagination, SwiperOptions } from 'swiper';
