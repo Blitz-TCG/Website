@@ -409,7 +409,7 @@ this.walletService.walletUpdated$.subscribe(walletID => {
           };
 
           // Debug log for each card
-          //console.log(`Card Name: ${card.name}, Total Supply: ${cardDetail.totalSupply}`);
+       // console.log(`Card Name: ${card.name}, Total Supply: ${cardDetail.totalSupply}, Rarity: ${cardDetail.rarity}, Bracket: ${cardDetail.bracket}`);
 
           return cardDetail;
         });
@@ -493,6 +493,21 @@ this.walletService.walletUpdated$.subscribe(walletID => {
       'Legendary': 4
     };
 
+    const bracketToLetter = (bracket: number): string => {
+      switch (bracket) {
+          case 1:
+              return "S";
+          case 3:
+              return "L";
+          case 6:
+              return "M";
+          case 10:
+              return "U";
+          default:
+              return "";
+      }
+  };
+
     if (this.appliedFilter && this.filteredCards.length) {
       dataToExport = this.filteredCards;
     } else {
@@ -501,8 +516,7 @@ this.walletService.walletUpdated$.subscribe(walletID => {
 
     // Function to format cards into a string
     const formatCards = (cards: any[]) =>
-      cards.map(card => `:${card.rarity}: ${card.name} - ${card.amount}`).join('\n');
-
+      cards.map(card => `:${card.rarity}:(${bracketToLetter(card.bracket)}): ${card.name} - ${card.amount}`).join('\n');
     // Split the cards into owned and unowned arrays
     const ownedCards = dataToExport.filter((card: { amount: number; }) => card.amount > 0);
     const unownedCards = dataToExport.filter((card: { amount: number; }) => card.amount === 0);

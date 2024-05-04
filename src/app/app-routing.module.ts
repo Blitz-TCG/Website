@@ -8,7 +8,7 @@ import { EulaComponent } from './eula/eula.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { HomeComponent } from './home/home.component';
 import { LoreComponent } from './lore/lore.component';
-//import { MarketComponent } from './market/market.component';
+import { MarketComponent } from './market/market.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { OpenPacksComponent } from './open-packs/open-packs.component';
 import { PrivacyComponent } from './privacy/privacy.component';
@@ -60,7 +60,7 @@ const routes: Routes = [
   { path: 'collectibles', component: CollectiblesComponent },
   { path: 'buy-packs', component: BuyPacksComponent },
   { path: 'open-packs', component: OpenPacksComponent },
-  //{ path: 'market', component: MarketComponent },
+  { path: 'market', component: MarketComponent },
   { path: '404', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent }
 ];

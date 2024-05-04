@@ -36,7 +36,7 @@ import { PrivacyComponent } from './privacy/privacy.component';
 import { TermsComponent } from './terms/terms.component';
 import { UseComponent } from './use/use.component';
 import { WhitepaperComponent } from './whitepaper/whitepaper.component';
-//import { MarketComponent } from './market/market.component';
+import { MarketComponent } from './market/market.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +63,7 @@ import { WhitepaperComponent } from './whitepaper/whitepaper.component';
     CollectiblesComponent,
     BuyPacksComponent,
     OpenPacksComponent,
-    //MarketComponent,
+    MarketComponent,
     ModalComponent
   ],
   imports: [
