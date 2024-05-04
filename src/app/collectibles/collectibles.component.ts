@@ -331,7 +331,7 @@ this.walletService.walletUpdated$.subscribe(walletID => {
               const remainingSupply = 100000 - normalizedAmount;
               // Assuming you have a separate state variable to store supply tokens
               this.supplyIds.push({ tokenId: token.tokenId, amount:  remainingSupply});
-              //console.log(`Token ID: ${token.tokenId}, Remaining Supply: ${remainingSupply.toLocaleString()}`);
+              //console.log(`Token Name: ${token.name}, Token ID: ${token.tokenId} ,Remaining Supply: ${remainingSupply.toLocaleString()}`);
             }
           }
           else {
@@ -346,7 +346,6 @@ this.walletService.walletUpdated$.subscribe(walletID => {
   queryCards(): Observable<any[]> {
     const db = getFirestore();
     const cardsCollection = collection(db, 'cards');
-    //const tIds = this.tokenIds.map((token: any) => token.tokenId);
 
     return new Observable<any[]>((observer) => {
       getDocs(cardsCollection)
@@ -354,9 +353,7 @@ this.walletService.walletUpdated$.subscribe(walletID => {
           const allCards = querySnapshot.docs.map((doc) => {
             const card: any = doc.data();
             const getAmount = this.tokenIds.find((token: any) => token.tokenId === card.tokenId);
-
             const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
-            //console.log(supplyToken);
 
             if (getAmount) {
               // Check for the specific token ID and set the amount to 1

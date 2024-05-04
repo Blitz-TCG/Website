@@ -37,7 +37,7 @@ export class AuthService {
             this.userData = user;
             localStorage.setItem('user', JSON.stringify(this.userData));
             localStorage.setItem('profile', JSON.stringify(this.userProfile));
-            console.log(`User ID: ${JSON.stringify(this.userData)}`);
+            //console.log(`User ID: ${JSON.stringify(this.userData)}`);
 
             this.loadUserXP(user.uid).then((userLevel) => {
               // Now that we have the level, let's store it in localStorage

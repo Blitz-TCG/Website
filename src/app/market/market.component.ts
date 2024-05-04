@@ -122,7 +122,7 @@ export class MarketComponent implements OnInit {
     // Check if the wallet is already connected and load tokens
     if (this.walletService.walletConnected()) {
       this.loadErgoTokens().pipe(
-        switchMap(() => this.queryCards()),
+        //switchMap(() => this.queryCards()),
         switchMap(() => this.getNFTs()),
         catchError(error => {
           console.error('Failed to load user tokens and cards:', error);
@@ -141,7 +141,7 @@ export class MarketComponent implements OnInit {
         console.log('Tokens reset successfully.'),
         this.walletID = walletID;
         this.loadErgoTokens().pipe(
-        switchMap(() => this.queryCards()),
+        //switchMap(() => this.queryCards()),
         switchMap(() => this.getNFTs()),
         ).subscribe(
           () => console.log('Tokens and cards loaded successfully.'),
@@ -155,7 +155,7 @@ export class MarketComponent implements OnInit {
     switchMap(() => this.getWalletAddress()),
     switchMap(() => {
       return this.loadErgoTokens().pipe(
-        switchMap(() => this.queryCards()),
+        //switchMap(() => this.queryCards()),
         switchMap(() => this.getNFTs()),
       );
     })
@@ -171,7 +171,7 @@ export class MarketComponent implements OnInit {
     if (this.walletService.walletConnected()) {
       this.loadErgoTokens().pipe(
         switchMap(() => this.queryCards()),
-        switchMap(() => this.getNFTs()),
+        //switchMap(() => this.getNFTs()),
         catchError(error => {
           console.error('Failed to load user tokens and cards:', error);
           return throwError(() => new Error('Failed to load user tokens and cards'));
@@ -190,7 +190,7 @@ export class MarketComponent implements OnInit {
         this.walletID = walletID;
         this.loadErgoTokens().pipe(
         switchMap(() => this.queryCards()),
-        switchMap(() => this.getNFTs()),
+        //switchMap(() => this.getNFTs()),
         ).subscribe(
           () => console.log('Tokens and cards loaded successfully.'),
           error => console.error('Failed to load tokens and cards:', error)
@@ -204,7 +204,7 @@ export class MarketComponent implements OnInit {
     switchMap(() => {
       return this.loadErgoTokens().pipe(
         switchMap(() => this.queryCards()),
-        switchMap(() => this.getNFTs()),
+       // switchMap(() => this.getNFTs()),
       );
     })
   )
@@ -240,32 +240,32 @@ export class MarketComponent implements OnInit {
     }
   }
 
-  loadSupplyTokens(): Observable<void> {
-    return this.httpClient.get(`https://ergo-explorer.anetabtc.io/api/v1/addresses/${this.SUPPLY_ADDRESS}/balance/confirmed`)
-      .pipe(
-        catchError(error => {
-          console.error('Error loading supply tokens:', error);
-          return of(); // Return an empty observable in case of error
-        }),
-        tap((response: any) => {
-          if (response) {
-            const dataObjects: any = response;
-            for (const token of dataObjects.tokens) {
-              const tokenDecimals = Math.pow(10, token.decimals);
-              const normalizedAmount = token.amount / tokenDecimals;
-              const remainingSupply = 100000 - normalizedAmount;
-              // Assuming you have a separate state variable to store supply tokens
-              this.supplyIds.push({ tokenId: token.tokenId, amount:  remainingSupply});
-              //console.log(`Token ID: ${token.tokenId}, Remaining Supply: ${remainingSupply.toLocaleString()}`);
-            }
-          }
-          else {
-            // Log to console if the response is invalid or empty
-            console.log('No data returned for supply tokens. Check the API or the address.');
-          }
-        })
-      );
-  }
+  // loadSupplyTokens(): Observable<void> {
+  //   return this.httpClient.get(`https://ergo-explorer.anetabtc.io/api/v1/addresses/${this.SUPPLY_ADDRESS}/balance/confirmed`)
+  //     .pipe(
+  //       catchError(error => {
+  //         console.error('Error loading supply tokens:', error);
+  //         return of(); // Return an empty observable in case of error
+  //       }),
+  //       tap((response: any) => {
+  //         if (response) {
+  //           const dataObjects: any = response;
+  //           for (const token of dataObjects.tokens) {
+  //             const tokenDecimals = Math.pow(10, token.decimals);
+  //             const normalizedAmount = token.amount / tokenDecimals;
+  //             const remainingSupply = 100000 - normalizedAmount;
+  //             // Assuming you have a separate state variable to store supply tokens
+  //             this.supplyIds.push({ tokenId: token.tokenId, amount:  remainingSupply});
+  //             //console.log(`Token ID: ${token.tokenId}, Remaining Supply: ${remainingSupply.toLocaleString()}`);
+  //           }
+  //         }
+  //         else {
+  //           // Log to console if the response is invalid or empty
+  //           console.log('No data returned for supply tokens. Check the API or the address.');
+  //         }
+  //       })
+  //     );
+  // }
 
   getWalletAddress(): Observable<any> {
     return new Observable((observer) => {
@@ -329,7 +329,6 @@ export class MarketComponent implements OnInit {
   queryCards(): Observable<any[]> {
     const db = getFirestore();
     const cardsCollection = collection(db, 'cards');
-    //const tIds = this.tokenIds.map((token: any) => token.tokenId);
 
     return new Observable<any[]>((observer) => {
       getDocs(cardsCollection)
@@ -338,7 +337,6 @@ export class MarketComponent implements OnInit {
             const card: any = doc.data();
             const getAmount = this.myTokenIds.find((token: any) => token.tokenId === card.tokenId);
             const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
-            //console.log(supplyToken);
 
             if (getAmount) {
               // Check for the specific token ID and set the amount to 1
@@ -366,7 +364,6 @@ export class MarketComponent implements OnInit {
           this.myTokenIds = sortedCards;
           this.showCards = sortedCards.slice(0, this.perPage);
           this.cardsPages = Math.ceil(sortedCards.length / this.perPage) || 1;
-          this.calcUserCards(sortedCards.filter((c: any) => c.amount))
           observer.next(sortedCards);
           observer.complete();
         })
@@ -376,57 +373,33 @@ export class MarketComponent implements OnInit {
     });
   }
 
-  // querySupplyCards(): Observable<any[]> {
-  //   const db = getFirestore();
-  //   const cardsCollection = collection(db, 'cards');
+  queryNFTCards(): Observable<any[]> {
+    const db = getFirestore();
+    const cardsCollection = collection(db, 'cards');
 
-  //   return new Observable<any[]>((observer) => {
-  //     getDocs(cardsCollection).then((querySnapshot) => {
-  //       const supplyCards = querySnapshot.docs.map((doc) => {
-  //         const card: any = doc.data();
-  //         const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
-  //         const cardDetail = {
-  //           ...card,
-  //           totalSupply: supplyToken ? supplyToken.amount : 'Not available' // Total supply from the supply address
-  //         };
-  //         return cardDetail;
-  //       });
+    return new Observable<any[]>((observer) => {
+      getDocs(cardsCollection)
+        .then((querySnapshot) => {
+            const allCards = querySnapshot.docs.map((doc) => {
+            const card: any = doc.data();
 
-  //       this.cards = supplyCards; // You might want to handle this differently if this.cards should not be overwritten
-  //       observer.next(supplyCards);
-  //       observer.complete();
-  //     }).catch((error) => {
-  //       observer.error(error);
-  //     });
-  //   });
-  // }
+            const getAmount = this.cardsByTab.find((tabCard: any) => tabCard.token_Id === card.tokenId);
+            const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
 
-  calcUserCards(cards: any) {
-    for (let index = 0; index < cards.length; index++) {
-      console.log(cards.length);
-      this.userCardsDetail.cardsCollected = cards.length;
-      const c = cards[index];
-      this.userCardsDetail.total += c.amount;
-      if (c.edition == 1) {
-        this.userCardsDetail.firstEdition += c.amount;
-      } else {
-        this.userCardsDetail.unlEdition += c.amount;
-      }
+            if (getAmount) {
+                return { ...card, amount: getAmount.amount, totalSupply: supplyToken ? supplyToken.amount : 'Not available' };
+            }
+          });
 
-      if (c.rarity === 'Common') this.userCardsDetail.common += (c.amount);
-      if (c.rarity === 'Uncommon') this.userCardsDetail.uncommon += (c.amount);
-      if (c.rarity === 'Rare') this.userCardsDetail.rare += (c.amount);
-      if (c.rarity === 'Legendary') this.userCardsDetail.legendary += (c.amount);
-    }
+          observer.next(allCards.filter(card => card));
+          observer.complete();
+        })
+        .catch((error) => {
+          console.error("Error fetching cards from Firestore:", error);
+          observer.error(error);
+        });
+    });
   }
-
-
-  walletConnected(): any {
-    if (isPlatformBrowser(this.platformId)) {
-      return localStorage.getItem('userIsConnected') != 'false';
-    }
-  }
-
 
   getNFTs(): Observable<void> {
     if (!this.walletID) {
@@ -456,18 +429,35 @@ export class MarketComponent implements OnInit {
   private processResponse(response: any[]): void {
     if (!response) return;
     this.cards = response.sort(this.sortByListTime).map(this.mapNftToCard);
-    //this.storeTokenIds = response.map((nft: any) => nft.token_Id);
+
     this.cardsByTab = this.cards.filter((nft: any) => (nft.status === "active"));// || nft.status === "inactive");
-    console.log("Total Blitz Skyharbor Cards:", this.cardsByTab.length);
-    console.log("Token of the first card:", this.cardsByTab[0].token_Id);
-    this.showCards = this.cardsByTab.slice(0, this.perPage);
-    this.cardsPages = Math.ceil(this.cardsByTab.length / this.perPage) || 1;
+
+    this.queryNFTCards().subscribe(
+      firebaseCards => {
+        // Merge Firebase data with active NFT cards and update UI elements after the merge.
+        this.cardsByTab = this.cardsByTab.map((nftCard: { token_Id: any; }) => {
+          const firebaseCard = firebaseCards.find(fc => fc.tokenId === nftCard.token_Id);
+          if (firebaseCard) {
+            return { ...nftCard, ...firebaseCard };
+          }
+          return nftCard;
+        });
+
+        // Only update display-related properties after the data merge is complete.
+        this.showCards = this.cardsByTab.slice(0, this.perPage);
+        this.cardsPages = Math.ceil(this.cardsByTab.length / this.perPage) || 1;
+
+        // Optionally, log the updated cards for debugging.
+        console.log('Cards loaded and merged:', this.cardsByTab);
+      },
+      error => console.error('Failed to load Firebase cards:', error)
+    );
   }
+
   private sortByListTime(a: any, b: any): number {
     return new Date(b.list_time).getTime() - new Date(a.list_time).getTime();
   }
   mapNftToCard = (nft: any) => {
-    //console.log(nft.token_id);
     return {
       ...nft,
       token_Id: nft.token_id,
@@ -480,6 +470,38 @@ export class MarketComponent implements OnInit {
       price_usd: this.formatNumberWithDecimals(nft.nerg_service_value, 7),
     };
   }
+
+    // querySupplyCards(): Observable<any[]> {
+  //   const db = getFirestore();
+  //   const cardsCollection = collection(db, 'cards');
+
+  //   return new Observable<any[]>((observer) => {
+  //     getDocs(cardsCollection).then((querySnapshot) => {
+  //       const supplyCards = querySnapshot.docs.map((doc) => {
+  //         const card: any = doc.data();
+  //         const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
+  //         const cardDetail = {
+  //           ...card,
+  //           totalSupply: supplyToken ? supplyToken.amount : 'Not available' // Total supply from the supply address
+  //         };
+  //         return cardDetail;
+  //       });
+
+  //       this.cards = supplyCards; // You might want to handle this differently if this.cards should not be overwritten
+  //       observer.next(supplyCards);
+  //       observer.complete();
+  //     }).catch((error) => {
+  //       observer.error(error);
+  //     });
+  //   });
+  // }
+
+  walletConnected(): any {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('userIsConnected') != 'false';
+    }
+  }
+
 
   // Tabs actions
   selectTab(tab: string, tab2: string = 'Owned'): void {
@@ -514,15 +536,23 @@ export class MarketComponent implements OnInit {
     this.cardsPages = Math.ceil(this.cardsByTab.length / this.perPage) || 1;
   }
   private filterBuy(): void {
-    this.cardsByTab = this.cards.filter((nft: any) =>
-      nft.status === "active"
+    // Trigger fetching and processing NFTs again.
+    this.loadErgoTokens().pipe(
+      switchMap(() => this.getNFTs()),
+      catchError(error => {
+        console.error('Failed to reload user tokens and cards:', error);
+        return throwError(() => new Error('Failed to reload user tokens and cards'));
+      })
+    ).subscribe(
+      () => console.log('User tokens and NFT cards reloaded and processed successfully.'),
+      error => console.error(error)
     );
-    this.updateDisplayedCards();
   }
 
   private filterSell(tab2: string): void {
     //console.log(nft["token_id"]);
     if (tab2 === 'Owned')
+      this.sellAndBurnInit();
       this.cardsByTab = this.myTokenIds;
       console.log(this.cardsByTab.length)
       // this.cardsByTab = this.cards.filter((nft: any) =>
@@ -542,6 +572,7 @@ export class MarketComponent implements OnInit {
   }
 
   private filterBurn(): void {
+    this.sellAndBurnInit();
     this.cardsByTab = this.myTokenIds;
   }
 
@@ -591,6 +622,7 @@ export class MarketComponent implements OnInit {
     if (this.activeIndex === itemIndex) this.activeIndex = null;
     else this.activeIndex = itemIndex;
   }
+
   applyFilter(event: any = null): void {
     this.applyedFilter = true;
     const searchText = event ? event.target.value : null;
@@ -599,11 +631,12 @@ export class MarketComponent implements OnInit {
     this.currentCardPage = 1;
     this.cardsPages = Math.ceil(this.filtedCards.length / this.perPage) || 1;
   }
+
   private isValidCard(card: any, searchText: string): boolean {
     return (!this.isChecked || (this.isChecked && card.amount && card.amount > 0)) &&
       (this.filter.edition.value === 'All' || card.edition == this.filter.edition.value) &&
       (this.filter.set.value === 'All' || card.set === this.filter.set.value) &&
-      (this.filter.faction.value === 'All' || card.faction === this.filter.faction.value) &&
+      (this.filter.faction.value === 'All' || card.faction === this.filter.faction.value) && // Ensure faction is properly compared
       (this.filter.rarity.value === 'All' || card.rarity === this.filter.rarity.value) &&
       (this.filter.bracket.value === 'All' || this.filterBracket(card.bracket, this.filter.bracket.value)) &&
       (this.filter.artist.value === 'All' || card.artist === this.filter.artist.value) &&
@@ -613,7 +646,7 @@ export class MarketComponent implements OnInit {
     switch (bracketName) {
       case "Lower":
         return value >= 2 && value <= 4;
-      case "Mid":
+      case "Middle":
         return value >= 5 && value <= 8;
       case "Upper":
         return value >= 9 && value <= 10;
