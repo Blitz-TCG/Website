@@ -11,7 +11,7 @@
         To display cards, please log in.
       </div>
       <div class="message-text" *ngIf="authService.isLoggedIn && !walletConnected()">
-        To display cards, please connect an Ergo wallet.
+        To display cards, please connect your Nautilus Ergo wallet.
       </div>
     </div>
   </div>
@@ -175,13 +175,11 @@
                   </span></div> -->
                 <div class="card-edition-price">
                   <!-- <div class="edition">Edition 1</div> -->
-                  <div class="price" *ngIf="activeTab === 'Buy'">{{card.price_erg}} {{card.currency}}</div>
-                  <div class="price" *ngIf="activeTab === 'Sell' && sellActiveTab === 'For Sale'"> {{card.price_erg}}
-                    {{card.currency}}</div>
-                  <div class="price sold-price " *ngIf="activeTab === 'Sell' && sellActiveTab === 'Sold'">
-                    {{card.price_erg}} {{card.currency}}</div>
+                  <div class="price" *ngIf="activeTab === 'Buy'">{{ card.price_erg }} {{ card.currency | uppercase }}</div>
+                  <div class="price" *ngIf="activeTab === 'Sell' && sellActiveTab === 'For Sale'"> {{ card.price_erg }} {{ card.currency | uppercase }}</div>
+                  <div class="price sold-price" *ngIf="activeTab === 'Sell' && sellActiveTab === 'Sold'"> {{ card.price_erg }} {{ card.currency | uppercase }}</div>
                 </div>
-                <div class="date sold-date" *ngIf="activeTab === 'Sell' && sellActiveTab === 'Sold'">Date {{card.date}}
+                <div class="date sold-date" *ngIf="activeTab === 'Sell' && sellActiveTab === 'Sold'">{{card.date}}
                 </div>
               </div>
               <div class="card-buttons">

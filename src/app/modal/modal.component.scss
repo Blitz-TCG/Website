@@ -150,9 +150,6 @@
   margin-left: 10px; /* Space between label and value */
 }
 
-
-
-
 .card-info {
     color: #A8A8A9;
     font-size: 1.35rem;
@@ -376,59 +373,95 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-  width: 100%; /* Set the width of the button container to full width */
-  padding: 0; /* Reset any padding if needed */
+  width: 100%;
+  padding: 0;
 
     .card-btn.loading {
         cursor: not-allowed;
     }
 
     .card-btn {
-    flex-grow: 1; /* Grow to take available space, if this causes the button to be too wide, use flex-basis */
-    background-size: contain; /* Adjust this as needed */
-    background-position: center;
-    background-repeat: no-repeat;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0px 0px;
-        color: #FFF;
-        border: none;
-        background-color: transparent;
-        position: relative;
-        margin: 0 auto;
-        margin-top: 0px;
-        margin-bottom: 10px;
-        cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
-        text-decoration: none;
-        opacity: 1;
-        transition: all 0.2s ease-in-out;
+      width: 100%;
+      height: 40px;
+      font-size: 1.25rem;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 0px;
+      color: #FFF;
+      border: none;
+      background-color: transparent;
+      position: relative;
+      margin: 0 auto;
+      margin-top: 10px;
+      cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
+      opacity: 1;
+      transition: all 0.2s ease-in-out;
 
-        &.confirm {
-            width: 60%;
-        }
+        &.buy{
+          background-size: 50% 100%;  // Adjust these percentages to stretch the image as needed
+          background-image: url('/assets/BTN_clear_normal_red.png');
 
-        &.buy,
-        &.market
-        {
-          background-image: url(/assets/card-container-sell-btn-bg-standard.png);
           &:hover {
-              background-image: url(/assets/card-container-sell-btn-bg-highlighted.png);
+            background-image: url('/assets/BTN_clear_selected_red.png');
           }
 
           &:focus {
-              background-image: url(/assets/card-container-sell-btn-bg-highlighted.png);
+            background-image: url('/assets/BTN_clear_selected_red.png');
           }
 
           &:active {
-              background-image: url(/assets/card-container-sell-btn-bg-off.png);
-              top: 1px;
+            background-image: url('/assets/BTN_clear_pressed_red.png');
+            top:1px
+          }
+        }
+        &.market
+        {
+          background-image: url('/assets/BTN_clear_normal.png');
+          background-size: 100% 100%;  // Adjust these percentages to stretch the image as needed
+          text-decoration: none;  // Explicitly removing any text decoration
+          &:hover {
+            background-image: url('/assets/BTN_clear_selected.png');
           }
 
-          @media (max-width: 825px) {
-            font-size: 12px;
+          &:focus {
+            background-image: url('/assets/BTN_clear_selected.png');
           }
+
+          &:active {
+            background-image: url('/assets/BTN_clear_pressed.png');
+            top:1px
+          }
+          @media (max-width: 825px) {
+            font-size: 14px;
+          }
+      }
+
+      &.edit-cancel{
+        background-image: url('/assets/BTN_clear_normal.png');
+        background-size: 100% 100%;  // Adjust these percentages to stretch the image as needed
+        text-decoration: none;  // Explicitly removing any text decoration
+        &:hover {
+          background-image: url('/assets/BTN_clear_selected.png');
+        }
+
+        &:focus {
+          background-image: url('/assets/BTN_clear_selected.png');
+        }
+
+        &:active {
+          background-image: url('/assets/BTN_clear_pressed.png');
+          top:1px
+        }
+        @media (max-width: 825px) {
+          font-size: 14px;
+        }
+      }
+
+      &.confirm {
+        width: 60%;
       }
         &.cancel,
         &.confirm {
@@ -436,61 +469,52 @@
         }
 
         &.sell {
-            background-image: url(/assets/card-container-sell-btn-bg.png);
+          background-size: 50% 100%;  // Adjust these percentages to stretch the image as needed
+          background-image: url('/assets/BTN_clear_normal_red.png');
+
+          &:hover {
+            background-image: url('/assets/BTN_clear_selected_red.png');
+          }
+
+          &:focus {
+            background-image: url('/assets/BTN_clear_selected_red.png');
+          }
+
+          &:active {
+            background-image: url('/assets/BTN_clear_pressed_red.png');
+            top:1px
+          }
         }
 
         &.burn {
-            background-image: url(/assets/card-container-burn-btn-bg.png);
-        }
+          background-size: 50% 100%;  // Adjust these percentages to stretch the image as needed
+          background-image: url('/assets/BTN_clear_normal_red.png');
 
-        &:hover {
-            opacity: 1;
+          &:hover {
+            background-image: url('/assets/BTN_clear_selected_red.png');
+          }
+
+          &:focus {
+            background-image: url('/assets/BTN_clear_selected_red.png');
+          }
+
+          &:active {
+            background-image: url('/assets/BTN_clear_pressed_red.png');
+            top:1px
+          }
         }
+      }
     }
 
     .row-cancel {
-        display: flex;
-        flex-direction: row;
-
-        .edit-cancel {
-            width: 40%;
-            position: relative;
-            background-image: url(/assets/card-container-buy-btn-bg.png);
-
-            &::after {
-                content: "";
-                position: absolute;
-                display: block;
-                background-size: contain;
-                background-position: right;
-                background-repeat: no-repeat;
-                right: -17px;
-                width: 30px;
-                height: 50px;
-            }
-
-            &::before {
-                content: "";
-                position: absolute;
-                display: block;
-                background-size: contain;
-                background-position: left;
-                background-repeat: no-repeat;
-                left: -17px;
-                width: 30px;
-                height: 50px;
-            }
-
-            &::after {
-                background-image: url(/assets/card-container-buy-btn-right-bg.png);
-            }
-
-            &::before {
-                background-image: url(/assets/card-container-buy-btn-left-bg.png);
-            }
-        }
-    }
-}
+      display: flex;
+      flex-direction: row; // Ensures items are placed horizontally
+      align-items: center; // Align items vertically in the center
+      justify-content: space-between; // Space the items evenly
+      width: 100%; // Take up full width of its parent to ensure there's room for both buttons
+      padding: 0; // Reset any padding
+      gap: 10px; // Add space between buttons
+     }
 
 
 

@@ -10,16 +10,16 @@
 .last-page,
 input[type="checkbox"],
 label[for="ownedCardsOnly"] {
-  cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
+        cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
 }
 
 .card-container .card-caption * {
-  cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
+        cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
 
 }
 
 .card-container .card-caption .card-btn {
-  cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
+        cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
 }
 
 .sticky {
@@ -83,7 +83,7 @@ label[for="ownedCardsOnly"] {
       justify-content: center;
       padding-top: 5px;
       color: #B7BEC5;
-      cursor: url('/assets/Cursor_02-2_select.svg'), url('/assets/Cursor_02-2_select.svg'), auto !important;
+      cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
 
       &.sell-tab {
         margin: 0 10px;
@@ -461,21 +461,41 @@ label[for="ownedCardsOnly"] {
   }
 
   .card-caption {
-    color: #b8bcc3;
+    margin-top:10px;
+    margin-bottom:-5px;
+    color: #FFFFFF;
     padding: 5px 6px;
-
-    .card-edition-price {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .price {
-        font-size: 20px;
-        color: #FFFFFF;
-      }
-    }
+    font-size: 30px;
+    font-weight: 800; /* Bold font weight */
+    text-align: center; /* Center-align text */
+    color: #ffaa4d; /* Basic color setting which is overridden by the gradient */
+    background: linear-gradient(to bottom,
+        #ffc107 10%,
+        #ffcb30 20%,
+        #e77517 25%,
+        #f3bc19 30%,
+        #ffce3c 40%,
+        #ffc107 50%,
+        #e1771f 70%,
+        #ff8c2c 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Makes the text color transparent, showing the background */
+    position: relative; /* To help with layering and positioning */
+    z-index: 999; /* Ensures it is on top if needed */
   }
 }
+
+.card-container .date.sold-date {
+  -webkit-text-fill-color: initial; // Reset the transparent fill color
+  -webkit-background-clip: initial; // Reset background clip
+  background: none;
+  padding: 5px 6px;
+  font-size: 18px;
+  color: #B7BEC5; // Ensure this is the color being applied
+  position: relative; // Ensure it's positioned independently
+  z-index: auto; // Reset z-index to auto or set a specific value higher than .card-caption if needed
+}
+
 
 .alert-container {
   width: 100%;
@@ -511,19 +531,18 @@ label[for="ownedCardsOnly"] {
 
 .close-alert {
   margin-left: 16px;
-  cursor: url('/assets/Cursor_02-2_select.svg'), url('/assets/Cursor_02-2_select.svg'), auto !important;
+  cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
 }
 
 
 
 .card-buttons {
   .card-btn {
-    width: 90%;
-    height: 37px;
-    background-size: cover;
+    width: 100%;
+    height: 40px;
+    font-size: 1.25rem;
     background-position: center;
     background-repeat: no-repeat;
-    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -534,74 +553,80 @@ label[for="ownedCardsOnly"] {
     position: relative;
     margin: 0 auto;
     margin-top: 10px;
-    cursor: url('/assets/Cursor_02-2_select.svg'), url('/assets/Cursor_02-2_select.svg'), auto !important;
+    cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
     opacity: 1;
     transition: all 0.2s ease-in-out;
 
-    &::after {
-      content: "";
-      position: absolute;
-      display: block;
-      background-size: contain;
-      background-position: right;
-      background-repeat: no-repeat;
-      right: -9px;
-      width: 30px;
-      height: 37px;
-    }
+    &.buy{
+      background-size: 80% 100%;  // Adjust these percentages to stretch the image as needed
+      background-image: url('/assets/BTN_clear_normal_red.png');
 
-    &::before {
-      content: "";
-      position: absolute;
-      display: block;
-      background-size: contain;
-      background-position: left;
-      background-repeat: no-repeat;
-      left: -9px;
-      width: 30px;
-      height: 37px;
-    }
-
-    &.buy,
-    &.cancel,
-    &.edit {
-      background-image: url(/assets/card-container-buy-btn-bg.png);
-
-      &::after {
-        background-image: url(/assets/card-container-buy-btn-right-bg.png);
+      &:hover {
+        background-image: url('/assets/BTN_clear_selected_red.png');
       }
 
-      &::before {
-        background-image: url(/assets/card-container-buy-btn-left-bg.png);
+      &:focus {
+        background-image: url('/assets/BTN_clear_selected_red.png');
+      }
+
+      &:active {
+        background-image: url('/assets/BTN_clear_pressed_red.png');
+        top:1px
+      }
+    }
+
+    &.cancel,
+    &.edit {
+      background-image: url('/assets/BTN_clear_normal.png');
+      background-size: 100% 100%;  // Adjust these percentages to stretch the image as needed
+      &:hover {
+        background-image: url('/assets/BTN_clear_selected.png');
+      }
+
+      &:focus {
+        background-image: url('/assets/BTN_clear_selected.png');
+      }
+
+      &:active {
+        background-image: url('/assets/BTN_clear_pressed.png');
+        top:1px
       }
     }
 
     &.sell {
-      background-image: url(/assets/card-container-sell-btn-bg.png);
+      background-size: 80% 100%;  // Adjust these percentages to stretch the image as needed
+      background-image: url('/assets/BTN_clear_normal_red.png');
 
-      &::after {
-        background-image: url(/assets/card-container-sell-btn-right-bg.png);
+      &:hover {
+        background-image: url('/assets/BTN_clear_selected_red.png');
       }
 
-      &::before {
-        background-image: url(/assets/card-container-sell-btn-left-bg.png);
+      &:focus {
+        background-image: url('/assets/BTN_clear_selected_red.png');
+      }
+
+      &:active {
+        background-image: url('/assets/BTN_clear_pressed_red.png');
+        top:1px
       }
     }
 
     &.burn {
-      background-image: url(/assets/card-container-burn-btn-bg.png);
+      background-size: 80% 100%;  // Adjust these percentages to stretch the image as needed
+      background-image: url('/assets/BTN_clear_normal_red.png');
 
-      &::after {
-        background-image: url(/assets/card-container-burn-btn-right-bg.png);
+      &:hover {
+        background-image: url('/assets/BTN_clear_selected_red.png');
       }
 
-      &::before {
-        background-image: url(/assets/card-container-burn-btn-left-bg.png);
+      &:focus {
+        background-image: url('/assets/BTN_clear_selected_red.png');
       }
-    }
 
-    &:hover {
-      opacity: 1;
+      &:active {
+        background-image: url('/assets/BTN_clear_pressed_red.png');
+        top:1px
+      }
     }
   }
 }
@@ -627,7 +652,7 @@ label[for="ownedCardsOnly"] {
     z-index: 99;
     position: relative;
     transition: all 0.2s ease-in-out;
-    cursor: url('/assets/Cursor_02-2_select.svg'), url('/assets/Cursor_02-2_select.svg'), auto !important;
+    cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
 
     &.for-sale-tab {
       margin: 0 10px;
@@ -673,11 +698,6 @@ label[for="ownedCardsOnly"] {
     font-size: 15px;
   }
 }
-
-.cards-tabs .tabs-container .tab.burn-tab {
-  //filter: grayscale(0.8);
-}
-
 
 @media screen and (max-width: 1400px) {
   .card-container {
