@@ -7,9 +7,8 @@
                 <div class="modal-body">
                     <div class="sell-modal-container" *ngIf="showDetails === false">
                         <div *ngIf="modalType === 'Cancel'">
-                            <p class="confirm-message">Are you sure you want to Cancel the NFT titled
-                                <b>{{selectedCard?.name}}</b> for
-                                <b>{{selectedCard?.price_erg}} ERG</b>? This action is irreversible.
+                            <p class="confirm-message">Are you sure you want to cancel <b>{{selectedCard?.name}}</b> for
+                                <b>{{selectedCard?.price_erg}} ERG</b>?
                             </p>
                             <div *ngIf="message" [ngClass]="{'message': true, 'success-message': isSuccessful}">
                                 {{message }}
@@ -50,8 +49,8 @@
                                                 (mouseleave)="activeIndex = -1">
                                                 <span [class.active]="currency === 'erg'"
                                                     (click)="selectCurrency('erg')">ERG</span>
-                                                <span [class.active]="currency === 'usd'"
-                                                    (click)="selectCurrency('usd')">USD</span>
+                                                <!-- <span [class.active]="currency === 'usd'"
+                                                    (click)="selectCurrency('usd')">SigUSD</span> -->
                                             </div>
                                         </div>
                                     </div>
@@ -62,14 +61,14 @@
                                         <div class="service-fee-value">{{calculateFee()}} {{currency}}</div>
                                     </div>
                                     <div class="sell-modal-content-row">
-                                        <div class="your-earning">Your Earnings</div>
-                                        <div class="your-earning-value">{{calculateYouEarn(selectedCard?.price_erg)}}
+                                        <div class="your-earning">Your Ea22rnings</div>
+                                        <div class="your-earning-value">{{calculateYouEarn()}}
                                             {{currency}}</div>
                                     </div>
                                     <div class="sell-modal-content-row">
-                                        <div class="description">The is also an immediate fee of 0.03 ERG, find out more
+                                        <!-- <div class="description">The is also an immediate fee of 0.03 ERG, find out more
                                             in
-                                            our <a [href]="'/faqs'">FAQ</a> </div>
+                                            our <a [href]="'/faqs'">FAQ</a> </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -91,8 +90,8 @@
                                                 (mouseleave)="activeIndex = -1">
                                                 <span [class.active]="currency === 'erg'"
                                                     (click)="selectCurrency('erg')">ERG</span>
-                                                <span [class.active]="currency === 'usd'"
-                                                    (click)="selectCurrency('usd')">USD</span>
+                                                <!-- <span [class.active]="currency === 'usd'"
+                                                    (click)="selectCurrency('usd')">SigUSD</span> -->
                                             </div>
                                         </div>
                                     </div>
@@ -103,9 +102,10 @@
                                         <div class="service-fee-value">{{calculateFee()}} {{currency}}</div>
                                     </div>
                                     <div class="sell-modal-content-row">
-                                        <div class="your-earning">Your Earnings</div>
-                                        <div class="your-earning-value">{{calculateYouEarn(selectedCard?.price_erg)}}
+                                        <div class="your-earning">Your Earn33ings</div>
+                                        <div class="your-earning-value">{{calculateYouEarn()}}
                                             {{currency}}</div>
+                                            <!-- div class="your-earning-value">{{calculateYouEarn(selectedCard?.price_erg)}} -->
                                     </div>
                                 </div>
                             </div>
@@ -126,9 +126,9 @@
                                         <div class="your-earning-value">95 BLTZ</div>
                                     </div>
                                     <div class="sell-modal-content-row">
-                                        <div class="description">The is also an immediate fee of 0.03 ERG, find out more
+                                        <!-- <div class="description">The is also an immediate fee of 0.03 ERG, find out more
                                             in
-                                            our <a [href]="'/faqs'">FAQ</a> </div>
+                                            our <a [href]="'/faqs'">FAQ</a> </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -255,11 +255,13 @@
                                             Edit</div>
                                     </div>
                                 </div>
-                                <div class="listed-date" *ngIf="selectedCard?.sellActiveTab === 'Sold'">
+                                <div class="price-row" *ngIf="selectedCard?.sellActiveTab === 'For Sale'">
+                                  <div class="price-in-erg">{{selectedCard?.price_erg}} ERG</div>
+                              </div>
+                                <div class="listed-date" *ngIf="selectedCard?.sellActiveTab === 'Sold' || 'For Sale'">
                                   <div class="price-in-erg">{{selectedCard?.time_ago}}</div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

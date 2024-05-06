@@ -20,7 +20,6 @@
       <div [ngClass]="{'tab buy-tab': true, 'active': activeTab === 'Buy'}" (click)="selectTab('Buy')">Buy</div>
       <div [ngClass]="{'tab sell-tab': true, 'active': activeTab === 'Sell'}" (click)="selectTab('Sell')">Sell</div>
       <div [ngClass]="{'tab burn-tab': true, 'active': activeTab === 'Burn'}" (click)="selectTab('Burn')">Burn</div>
-      <!-- <div [ngClass]="{'tab burn-tab': true, 'active': activeTab === 'Burn'}">Burn</div> -->
     </div>
   </div>
   <div *ngIf="authService.isLoggedIn && walletConnected()">
@@ -180,6 +179,10 @@
                   <div class="price sold-price" *ngIf="activeTab === 'Sell' && sellActiveTab === 'Sold'"> {{ card.price_erg }} {{ card.currency | uppercase }}</div>
                 </div>
                 <div class="date sold-date" *ngIf="activeTab === 'Sell' && sellActiveTab === 'Sold'">{{card.date}}
+                </div>
+                <div class="date sold-date" *ngIf="activeTab === 'Sell' && sellActiveTab === 'For Sale'">{{card.date}}
+                </div>
+                <div class="date sold-date" *ngIf="activeTab === 'Buy'">{{card.date}}
                 </div>
               </div>
               <div class="card-buttons">

@@ -252,8 +252,8 @@ export class ModalComponent implements OnInit {
     const fee = parseFloat(this.price || '0') * 0.02;
     return fee.toFixed(2);
   }
-  calculateYouEarn(cardPrice: string) {
-    const youEarn = parseFloat(this.price || '0') - parseFloat(cardPrice || '0') - parseFloat(this.calculateFee()) - this.IMMEDIATE_FEES;
+  calculateYouEarn() {//cardPrice: string) {
+    const youEarn = parseFloat(this.price || '0') - parseFloat(this.calculateFee()) - this.IMMEDIATE_FEES;
     return youEarn > 0 ? youEarn.toFixed(2) : 0;
   }
   onImageLoad(card: any) {

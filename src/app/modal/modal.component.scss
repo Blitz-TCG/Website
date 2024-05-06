@@ -460,12 +460,23 @@
         }
       }
 
-      &.confirm {
-        width: 60%;
-      }
         &.cancel,
         &.confirm {
-            background-image: url(/assets/card-container-buy-btn-bg.png);
+          background-size: 50% 100%;  // Adjust these percentages to stretch the image as needed
+          background-image: url('/assets/BTN_clear_normal_red.png');
+
+          &:hover {
+            background-image: url('/assets/BTN_clear_selected_red.png');
+          }
+
+          &:focus {
+            background-image: url('/assets/BTN_clear_selected_red.png');
+          }
+
+          &:active {
+            background-image: url('/assets/BTN_clear_pressed_red.png');
+            top:1px
+          }
         }
 
         &.sell {
@@ -689,28 +700,24 @@
     }
 
     .modal-button {
-        width: 90%;
-        height: 37px;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 5px 0px;
-        color: #B7BEC5;
-        border: none;
-        background-color: transparent;
-        position: relative;
-        margin: 0 auto;
-        margin-top: 3px;
-        margin-bottom: 10px;
-        cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
-        text-decoration: none;
-        opacity: .8;
-        transition: all 0.2s ease-in-out;
-        background-image: url(/assets/card-container-sell-btn-bg.png);
+      width: 100%;
+      height: 40px;
+      font-size: 1.25rem;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 0px;
+      color: #FFF;
+      border: none;
+      background-color: transparent;
+      position: relative;
+      margin: 0 auto;
+      margin-top: 10px;
+      cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
+      opacity: 1;
+      transition: all 0.2s ease-in-out;
 
         &:hover {
             opacity: 1;
@@ -720,10 +727,21 @@
 
 .sell-modal-buttons {
     .modal-button {
-        height: 60px;
-        font-size: 23px;
-        color: #FFFFFF;
-        background-size: contain;
+        background-size: 50% 100%;  // Adjust these percentages to stretch the image as needed
+        background-image: url('/assets/BTN_clear_normal_red.png');
+
+        &:hover {
+          background-image: url('/assets/BTN_clear_selected_red.png');
+        }
+
+        &:focus {
+          background-image: url('/assets/BTN_clear_selected_red.png');
+        }
+
+        &:active {
+          background-image: url('/assets/BTN_clear_pressed_red.png');
+          top:1px
+        }
     }
 }
 
