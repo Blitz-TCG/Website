@@ -5,7 +5,7 @@
       <span class="close-alert" (click)="message = null;">X</span>
     </div>
   </div>
-  <div *ngIf="!authService.isLoggedIn || !walletConnected()">
+  <!-- <div *ngIf="!authService.isLoggedIn || !walletConnected()">
     <div class="message-container">
       <div class="message-text" *ngIf="!authService.isLoggedIn">
         To display cards, please log in.
@@ -14,15 +14,15 @@
         To display cards, please connect your Nautilus Ergo wallet.
       </div>
     </div>
-  </div>
-  <div *ngIf="authService.isLoggedIn && walletConnected()" class="cards-tabs">
+  </div> -->
+  <div class="cards-tabs">
     <div class="tabs-container">
       <div [ngClass]="{'tab buy-tab': true, 'active': activeTab === 'Buy'}" (click)="selectTab('Buy')">Buy</div>
       <div [ngClass]="{'tab sell-tab': true, 'active': activeTab === 'Sell'}" (click)="selectTab('Sell')">Sell</div>
       <div [ngClass]="{'tab burn-tab': true, 'active': activeTab === 'Burn'}" (click)="selectTab('Burn')">Burn</div>
     </div>
   </div>
-  <div *ngIf="authService.isLoggedIn && walletConnected()">
+  <!-- <div *ngIf="authService.isLoggedIn && walletConnected()"> -->
     <div class="cards-list">
       <div class="container">
         <div class="cards-filter">
@@ -220,5 +220,5 @@
         </div>
       </div>
     </div>
-  </div>
+  <!--</div>-->
 </div>

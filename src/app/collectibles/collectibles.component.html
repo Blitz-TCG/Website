@@ -1,5 +1,5 @@
 <div class="container-with-bg" [class.sticky]="sticky">
-  <div *ngIf="!authService.isLoggedIn || !walletConnected()">
+  <!-- <div *ngIf="!authService.isLoggedIn || !walletConnected()">
     <div class="message-container">
       <div class="message-text" *ngIf="!authService.isLoggedIn">
         To display cards, please log in.
@@ -8,8 +8,8 @@
         To display cards, please connect your Nautilus Ergo wallet.
       </div>
     </div>
-  </div>
-  <div *ngIf="authService.isLoggedIn && walletConnected()">
+  </div> -->
+  <!-- <div *ngIf="authService.isLoggedIn && walletConnected()"> -->
     <div class="header-section">
       <div class="profile-img">
         <span class="user-pfp-container">
@@ -23,7 +23,7 @@
       </div>
       <div class="username-bar">
         <div class="username-text">
-          {{(authService?.userData?.displayName) ? authService?.userData?.displayName : 'UserName'}}
+          {{(authService?.userData?.displayName) ? authService?.userData?.displayName : 'Unknown User'}}
         </div>
       </div>
     </div>
@@ -205,4 +205,4 @@
       </div>
     </div>
   </div>
-</div>
+<!-- </div> -->

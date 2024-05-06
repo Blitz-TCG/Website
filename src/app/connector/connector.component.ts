@@ -192,6 +192,8 @@ NautilusDisconnect = () => {
     ergoConnector.nautilus.disconnect();
     console.log('Wallet disconnected successfully.');
     // Nautilus was present, and disconnect was successful
+    this.walletService.updateWalletID(null);
+    this.walletService.setWalletConnected(false);
   } catch (error) {
     console.error(`Error occurred while disconnecting Nautilus: ${error}`);
     console.log('Wallet disconnected, but could not detect Nautilus.');

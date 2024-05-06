@@ -128,7 +128,6 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
   resetTokenState() {
     this.tokenIds = []; // Clear the tokenIds array
     this.cards = []; // Clear the cards array
-    // Reset other related states if necessary
     this.userCardsDetail = {
       total: 0,
       cardsCollected: 0,
@@ -146,112 +145,74 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-      console.log('ngOnInit triggered');
+// Initialization of user actions based on wallet connection state
+if (this.walletService.walletConnected()) {
+  this.loadErgoTokens().pipe(
+    switchMap(() => this.queryCards()),
+    catchError(error => {
+      console.error('Failed to load user tokens and cards:', error);
+      return throwError(() => new Error('Failed to load user tokens and cards'));
+    })
+  ).subscribe(
+    () => console.log('User tokens and cards loaded successfully.'),
+    error => console.error(error)
+  );
+} else {
+  this.queryCards().subscribe({
+    next: (cards) => console.log('Cards queried successfully.', cards),
+    error: (error) => console.error('Error querying cards:', error),
+    complete: () => console.log('Query completed.')
+  });
+}
 
-      this.loadSupplyTokens().pipe(
-        switchMap(() => this.querySupplyCards()), // Load supply tokens and then query supply cards
-        catchError(error => {
-          console.error('Failed to load supply tokens:', error);
-          return throwError(() => new Error('Failed to load supply tokens'));
-        })
-      ).subscribe(
-        () => console.log('Supply tokens and supply cards loaded successfully.'),
-        error => console.error(error)
-      );
-
-      // Check if the wallet is already connected and load tokens
-      if (this.walletService.walletConnected()) {
-        this.loadErgoTokens().pipe(
-          switchMap(() => this.queryCards()), // Load user tokens and then query cards
-          catchError(error => {
-            console.error('Failed to load user tokens and cards:', error);
-            return throwError(() => new Error('Failed to load user tokens and cards'));
-          })
-        ).subscribe(
-          () => console.log('User tokens and cards loaded successfully.'),
-          error => console.error(error)
-        );
-      }
-
+// Respond to wallet update events
 this.walletService.walletUpdated$.subscribe(walletID => {
-    console.log('Tracker: walletID trigger.');
-    if (walletID) {
-      this.resetTokenState(); // Reset the state before loading new tokens
-      console.log('Tokens reset successfully.'),
-      this.walletID = walletID;
-      this.loadErgoTokens().pipe(
-        switchMap(() => this.queryCards())
-      ).subscribe(
-        () => console.log('Tokens and cards loaded successfully.'),
-        error => console.error('Failed to load tokens and cards:', error)
-      );
-    }
+  console.log('Wallet change detected: walletID =', walletID);
+  this.walletID = walletID; // Update local walletID state
+  this.resetTokenState(); // Reset token state
+
+  if (walletID) {
+    // When wallet is connected, load tokens and cards
+    console.log('Wallet connected, loading tokens and cards.');
+    this.loadErgoTokens().pipe(
+      switchMap(() => this.queryCards())
+    ).subscribe(
+      () => console.log('Tokens and cards loaded successfully.'),
+      error => console.error('Failed to load tokens and cards:', error)
+    );
+  } else {
+    // When wallet is disconnected, load default card data
+    console.log('Wallet disconnected, loading default card data.');
+    this.queryCards().subscribe({
+      next: (cards) => console.log('Cards queried successfully.', cards),
+      error: (error) => console.error('Error querying cards:', error),
+      complete: () => console.log('Query completed.')
+    });
+  }
 });
 
-    this.afAuth.authState
-      .pipe(
-        take(1),
-        switchMap(() => this.getWalletAddress()),
-        switchMap(() => {
-          // Load Ergo tokens first
-          return this.loadErgoTokens().pipe(
-            switchMap(() => {
-              // Once Ergo tokens are loaded, query the cards
-              return this.queryCards();
-            })
-          );
-        })
-      )
-      .subscribe(
-        (cards) => { },
-        (error) => {
-          console.log('Error querying cards:', error);
-        }
-      );
-  }
+// Handle single sign-on authentication state changes
+this.afAuth.authState.pipe(
+  take(1),
+  switchMap(() => this.getWalletAddress()),
+  switchMap(() => this.loadErgoTokens()),
+  switchMap(() => this.queryCards())
+).subscribe({
+  next: (cards) => console.log("Cards queried with auth state.", cards),
+  error: (error) => console.error('Error querying cards with auth state:', error)
+});
 
+this.loadSupplyTokens().pipe(
+  switchMap(() => this.querySupplyCards()), // Load supply tokens and then query supply cards
+  catchError(error => {
+    console.error('Failed to load supply tokens:', error);
+    return throwError(() => new Error('Failed to load supply tokens'));
+  })
+).subscribe(
+  () => console.log('Supply tokens loaded successfully.'),
+  error => console.error(error)
+);
 
-
-  generateRandomString(length: number) {
-    let result = '';
-    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    return result;
-  }
-
-  duplicateFirstCard(): Observable<void> {
-    const db = getFirestore();
-    const cardsCollection = collection(db, 'cards');
-
-    // Define the query to retrieve the first card
-    const queryRef = query(cardsCollection);
-
-    return new Observable<void>((observer) => {
-      getDocs(queryRef)
-        .then((querySnapshot) => {
-          const firstCard = querySnapshot.docs[0];
-          const cardData = firstCard.data();
-
-          // Duplicate the first card six times
-          for (let i = 0; i < 139; i++) {
-            addDoc(collection(db, 'cards'), { ...cardData, tokenId: this.generateRandomString(10) })
-              .then(() => {
-                console.log('Card duplicated successfully');
-              })
-              .catch((error) => {
-                console.log('Error duplicating card:', error);
-              });
-          }
-        })
-        .catch((error) => {
-          console.log('Error retrieving first card:', error);
-        });
-    });
   }
 
   getWalletAddress(): Observable<any> {
@@ -291,7 +252,7 @@ this.walletService.walletUpdated$.subscribe(walletID => {
   }
 
   loadErgoTokens(): Observable<void> {
-    console.log(this.walletID)
+    console.log('This walletID:' + this.walletID)
     if (this.walletID) {
       return this.httpClient.get('https://ergo-explorer.anetabtc.io/api/v1/addresses/' + this.walletID + '/balance/confirmed')
         .pipe(
@@ -311,7 +272,22 @@ this.walletService.walletUpdated$.subscribe(walletID => {
         );
     } else {
       console.log('No wallet ID');
-      return of(); // Return an empty observable
+      return this.httpClient.get('https://ergo-explorer.anetabtc.io/api/v1/addresses/' + "9gZzo1X96Nv7ggNkTX5giCXrcQZ6YZwJzGHzfBrzn9Wi5Zz2K5G" + '/balance/confirmed')
+      .pipe(
+        catchError(error => {
+          console.log('Error loading Ergo tokens:', error);
+          return of(); // Return an empty observable
+        }),
+        tap((response: any) => {
+          if (response) {
+            const dataObjects: any = response;
+            for (const token of dataObjects.tokens) {
+              const tokenDecimals = Math.pow(10, token.decimals);
+              this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
+            }
+          }
+        })
+      );
     }
   }
 
@@ -346,6 +322,7 @@ this.walletService.walletUpdated$.subscribe(walletID => {
   queryCards(): Observable<any[]> {
     const db = getFirestore();
     const cardsCollection = collection(db, 'cards');
+    console.log('Queried cards.');
 
     return new Observable<any[]>((observer) => {
       getDocs(cardsCollection)
@@ -422,7 +399,6 @@ this.walletService.walletUpdated$.subscribe(walletID => {
 
   calcUserCards(cards: any) {
     for (let index = 0; index < cards.length; index++) {
-      console.log(cards.length);
       this.userCardsDetail.cardsCollected = cards.length;
       const c = cards[index];
       this.userCardsDetail.total += c.amount;
@@ -559,9 +535,10 @@ this.walletService.walletUpdated$.subscribe(walletID => {
   }
 
   openPopup(card: any) {
-    if (this.authService.isLoggedIn && this.walletConnected()) {
+    // if (this.authService.isLoggedIn && this.walletConnected()) {
+    //   this.modalService.openModal({ ...card, modalType: "Market", showDetails: true });
+    // }
       this.modalService.openModal({ ...card, modalType: "Market", showDetails: true });
-    }
   }
 
   closeModal() {

@@ -108,17 +108,6 @@ export class MarketComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.loadSupplyTokens().pipe(
-      switchMap(() => this.querySupplyCards()), // Load supply tokens and then query supply cards
-      catchError(error => {
-        console.error('Failed to load supply tokens:', error);
-        return throwError(() => new Error('Failed to load supply tokens'));
-      })
-    ).subscribe(
-      () => console.log('Supply tokens and supply cards loaded successfully.'),
-      error => console.error(error)
-    );
-
     // Check if the wallet is already connected and load tokens
     if (this.walletService.walletConnected()) {
       this.loadErgoTokens().pipe(
@@ -132,19 +121,39 @@ export class MarketComponent implements OnInit {
         error => console.error(error)
       );
     }
+    else{
+      this.getNFTs().subscribe({
+        next: (cards) => console.log('Cards queried successfully.', cards),
+        error: (error) => console.error('Error querying cards:', error),
+        complete: () => console.log('Query completed.')
+      });
+    }
 
     this.walletService.walletUpdated$.subscribe(walletID => {
       console.log('Tracker: walletID trigger.');
+      this.resetTokenState();
+      this.walletID = walletID;
       if (walletID) {
-        this.resetTokenState(); // Reset the state before loading new tokens
-        console.log('Tokens reset successfully.'),
-        this.walletID = walletID;
-        this.loadErgoTokens().pipe(
-        switchMap(() => this.getNFTs()),
-        ).subscribe(
-          () => console.log('Tokens and cards loaded successfully.'),
-          error => console.error('Failed to load tokens and cards:', error)
-        );
+        if (this.activeTab == "Buy"){
+          this.filterBuy();
+          }
+        if (this.activeTab == "Sell"){
+        this.filterSell(this.sellActiveTab);
+        }
+        if (this.activeTab == "Burn"){
+          this.filterBurn();
+      }
+    }
+      else {
+        if (this.activeTab == "Buy"){
+          this.filterBuy();
+          }
+        if (this.activeTab == "Sell"){
+        this.filterSell(this.sellActiveTab);
+        }
+        if (this.activeTab == "Burn"){
+          this.filterBurn();
+          }
       }
   });
 
@@ -162,6 +171,18 @@ export class MarketComponent implements OnInit {
     (cards) => { console.log('All data including NFTs queried successfully.'); },
     (error) => { console.log('Error querying data including NFTs:', error); }
   );
+
+  this.loadSupplyTokens().pipe(
+    switchMap(() => this.querySupplyCards()), // Load supply tokens and then query supply cards
+    catchError(error => {
+      console.error('Failed to load supply tokens:', error);
+      return throwError(() => new Error('Failed to load supply tokens'));
+    })
+  ).subscribe(
+    () => console.log('Supply tokens and supply cards loaded successfully.'),
+    error => console.error(error)
+  );
+
   }
 
   loadErgoTokens(): Observable<void> {
@@ -185,7 +206,22 @@ export class MarketComponent implements OnInit {
         );
     } else {
       console.log('No wallet ID');
-      return of(); // Return an empty observable
+      return this.httpClient.get('https://ergo-explorer.anetabtc.io/api/v1/addresses/' + "9gZzo1X96Nv7ggNkTX5giCXrcQZ6YZwJzGHzfBrzn9Wi5Zz2K5G" + '/balance/confirmed')
+      .pipe(
+        catchError(error => {
+          console.log('Error loading Ergo tokens:', error);
+          return of(); // Return an empty observable
+        }),
+        tap((response: any) => {
+          if (response) {
+            const dataObjects: any = response;
+            for (const token of dataObjects.tokens) {
+              const tokenDecimals = Math.pow(10, token.decimals);
+              this.myTokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
+            }
+          }
+        })
+      );
     }
   }
 
@@ -356,10 +392,6 @@ export class MarketComponent implements OnInit {
   }
 
   getNFTs(): Observable<void> {
-    if (!this.walletID) {
-      console.log('No wallet ID');
-      return of();
-    }
     return this.fetchNFTs().pipe(
       catchError(error => {
         console.log('Error loading Ergo tokens:', error);
@@ -586,9 +618,9 @@ export class MarketComponent implements OnInit {
 
   // Modal actions
   openPopup(card: any, showDetails = true, modalType = this.activeTab, sellActiveTab = this.sellActiveTab) {
-    if (this.authService.isLoggedIn && this.walletConnected()) {
+    //if (this.authService.isLoggedIn && this.walletConnected()) {
       this.modalService.openModal({ ...card, showDetails, modalType, sellActiveTab });
-    }
+    //}
   }
 
 
