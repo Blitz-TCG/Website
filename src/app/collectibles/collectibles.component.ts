@@ -43,6 +43,7 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
   @ViewChild('uniqueCardsOnlyCheckbox') uniqueCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
   @ViewChild('nonUniqueCardsOnlyCheckbox') nonUniqueCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
   sticky: boolean = false;
+  isCalculatingCards: boolean = false;
   activeIndex: any;
   userCardsDetail = {
     total: 0,
@@ -145,61 +146,36 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-// Initialization of user actions based on wallet connection state
-if (this.walletService.walletConnected()) {
-  this.loadErgoTokens().pipe(
-    switchMap(() => this.queryCards()),
-    catchError(error => {
-      console.error('Failed to load user tokens and cards:', error);
-      return throwError(() => new Error('Failed to load user tokens and cards'));
-    })
-  ).subscribe(
-    () => console.log('User tokens and cards loaded successfully.'),
-    error => console.error(error)
-  );
-} else {
-  this.queryCards().subscribe({
-    next: (cards) => console.log('Cards queried successfully.', cards),
-    error: (error) => console.error('Error querying cards:', error),
-    complete: () => console.log('Query completed.')
-  });
-}
 
-// Respond to wallet update events
-this.walletService.walletUpdated$.subscribe(walletID => {
-  console.log('Wallet change detected: walletID =', walletID);
-  this.walletID = walletID; // Update local walletID state
-  this.resetTokenState(); // Reset token state
-
-  if (walletID) {
-    // When wallet is connected, load tokens and cards
-    console.log('Wallet connected, loading tokens and cards.');
-    this.loadErgoTokens().pipe(
-      switchMap(() => this.queryCards())
-    ).subscribe(
-      () => console.log('Tokens and cards loaded successfully.'),
-      error => console.error('Failed to load tokens and cards:', error)
-    );
-  } else {
-    // When wallet is disconnected, load default card data
-    console.log('Wallet disconnected, loading default card data.');
-    this.queryCards().subscribe({
-      next: (cards) => console.log('Cards queried successfully.', cards),
-      error: (error) => console.error('Error querying cards:', error),
-      complete: () => console.log('Query completed.')
+      this.walletService.walletUpdated$.subscribe(walletID => {
+        this.walletID = walletID; // Update local walletID state
+        this.resetTokenState(); // Reset token state
+        if (walletID) {
+          this.loadErgoTokens().pipe(
+            switchMap(() => this.queryCards())
+          ).subscribe(
+            () => console.log('Wallet Service loaded.'),
+            error => console.error('Failed to load tokens and cards:', error)
+          );
+        } else {
+          console.log('Walled DC loaded.');
+          this.queryCards().subscribe({
+            next: (cards) => {},
+            error: (error) => {},
+            complete: () => {}
+          });
+        }
     });
-  }
-});
 
-// Handle single sign-on authentication state changes
 this.afAuth.authState.pipe(
   take(1),
   switchMap(() => this.getWalletAddress()),
   switchMap(() => this.loadErgoTokens()),
+  tap(() => console.log('Auth state loaded')), // Log the loaded Ergo tokens
   switchMap(() => this.queryCards())
 ).subscribe({
-  next: (cards) => console.log("Cards queried with auth state.", cards),
-  error: (error) => console.error('Error querying cards with auth state:', error)
+  next: (cards) => {},
+  error: (error) => {}
 });
 
 this.loadSupplyTokens().pipe(
@@ -250,6 +226,7 @@ this.loadSupplyTokens().pipe(
       }
     });
   }
+
 
   loadErgoTokens(): Observable<void> {
     console.log('This walletID:' + this.walletID)
@@ -327,7 +304,7 @@ this.loadSupplyTokens().pipe(
     return new Observable<any[]>((observer) => {
       getDocs(cardsCollection)
         .then((querySnapshot) => {
-          const allCards = querySnapshot.docs.map((doc) => {
+            const allCards = querySnapshot.docs.map((doc) => {
             const card: any = doc.data();
             const getAmount = this.tokenIds.find((token: any) => token.tokenId === card.tokenId);
             const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
@@ -357,7 +334,11 @@ this.loadSupplyTokens().pipe(
           this.cards = sortedCards;
           this.showCards = sortedCards.slice(0, this.perPage);
           this.cardsPages = Math.ceil(sortedCards.length / this.perPage) || 1;
-          this.calcUserCards(sortedCards.filter((c: any) => c.amount))
+          if (!this.isCalculatingCards) {
+            this.isCalculatingCards = true;
+            this.calcUserCards(allCards.filter((c: any) => c.amount));
+            this.isCalculatingCards = false;
+          }
           observer.next(sortedCards);
           observer.complete();
         })
@@ -398,6 +379,15 @@ this.loadSupplyTokens().pipe(
 
 
   calcUserCards(cards: any) {
+    this.userCardsDetail.cardsCollected = 0;
+    this.userCardsDetail.total = 0;
+    this.userCardsDetail.firstEdition = 0;
+    this.userCardsDetail.unlEdition = 0;
+    this.userCardsDetail.common = 0;
+    this.userCardsDetail.uncommon = 0;
+    this.userCardsDetail.rare = 0;
+    this.userCardsDetail.legendary = 0;
+
     for (let index = 0; index < cards.length; index++) {
       this.userCardsDetail.cardsCollected = cards.length;
       const c = cards[index];
@@ -413,6 +403,7 @@ this.loadSupplyTokens().pipe(
       if (c.rarity === 'Rare') this.userCardsDetail.rare += (c.amount);
       if (c.rarity === 'Legendary') this.userCardsDetail.legendary += (c.amount);
     }
+    console.log("Calculating Total Cards Triggered");
   }
 
   applyFilter(event: any = null) {

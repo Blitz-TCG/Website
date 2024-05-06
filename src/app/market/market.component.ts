@@ -108,31 +108,9 @@ export class MarketComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // Check if the wallet is already connected and load tokens
-    if (this.walletService.walletConnected()) {
-      this.loadErgoTokens().pipe(
-        switchMap(() => this.getNFTs()),
-        catchError(error => {
-          console.error('Failed to load user tokens and cards:', error);
-          return throwError(() => new Error('Failed to load user tokens and cards'));
-        })
-      ).subscribe(
-        () => console.log('User tokens and cards loaded successfully.'),
-        error => console.error(error)
-      );
-    }
-    else{
-      this.getNFTs().subscribe({
-        next: (cards) => console.log('Cards queried successfully.', cards),
-        error: (error) => console.error('Error querying cards:', error),
-        complete: () => console.log('Query completed.')
-      });
-    }
-
     this.walletService.walletUpdated$.subscribe(walletID => {
-      console.log('Tracker: walletID trigger.');
-      this.resetTokenState();
-      this.walletID = walletID;
+      this.walletID = walletID; // Update local walletID state
+      this.resetTokenState(); // Reset token state
       if (walletID) {
         if (this.activeTab == "Buy"){
           this.filterBuy();
@@ -157,20 +135,16 @@ export class MarketComponent implements OnInit {
       }
   });
 
-  this.afAuth.authState
-  .pipe(
+  this.afAuth.authState.pipe(
     take(1),
     switchMap(() => this.getWalletAddress()),
-    switchMap(() => {
-      return this.loadErgoTokens().pipe(
-       switchMap(() => this.getNFTs()),
-      );
-    })
-  )
-  .subscribe(
-    (cards) => { console.log('All data including NFTs queried successfully.'); },
-    (error) => { console.log('Error querying data including NFTs:', error); }
-  );
+    switchMap(() => this.loadErgoTokens()),
+    tap(() => console.log('Auth state loaded')), // Log the loaded Ergo tokens
+    switchMap(() => this.getNFTs())
+  ).subscribe({
+    next: (cards) => {},
+    error: (error) => {}
+  });
 
   this.loadSupplyTokens().pipe(
     switchMap(() => this.querySupplyCards()), // Load supply tokens and then query supply cards
@@ -787,10 +761,10 @@ export class MarketComponent implements OnInit {
         value: "All"
       }
     }
-    if (this.ownedCardsOnlyCheckbox) {
-      this.ownedCardsOnlyCheckbox.nativeElement.checked = false;
-      this.isChecked = false;
-    }
+    // if (this.ownedCardsOnlyCheckbox) {
+    //   this.ownedCardsOnlyCheckbox.nativeElement.checked = false;
+    //   this.isChecked = false;
+    // }
     this.cardNameInput.nativeElement.value = '';
     this.appliedFilter = false;
   }
