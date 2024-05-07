@@ -829,6 +829,60 @@ export class MarketComponent implements OnInit {
       }
     );
   }
+
+
+//   buyNFT(boxId: string, tokenId: string, recipientAddress: string, amountToSend: number, ergAmount: number) {
+//     // First, check if the ergoConnector and its Nautilus instance are available
+//     if (typeof ergoConnector !== 'undefined' && ergoConnector.nautilus) {
+//         ergoConnector.nautilus.connect().then(access_granted => {
+//             if (!access_granted) {
+//                 console.error("Wallet connection not granted.");
+//                 this.message = "Wallet connection was not granted. Please ensure your wallet is connected.";
+//                 this.isSuccessful = false;
+//                 return;
+//             }
+
+//             // Define the transaction object
+//             const transactionObject = {
+//                 requests: [
+//                     {
+//                         address: recipientAddress,
+//                         value: ergAmount, // This is the ERG amount to be sent
+//                     },
+//                     {
+//                         address: recipientAddress,
+//                         value: 0, // No additional ERG is sent with the NFT
+//                         tokenId: tokenId, // Specify the NFT token ID
+//                         amount: 1 // Typically, the amount for NFTs is 1
+//                     }
+//                 ],
+//                 fee: 1000000 // Specify the necessary transaction fee
+//             };
+
+//             // Now send the transaction using ergo
+//             window.ergo.requestTransaction(transactionObject).then((response: any) => {
+//                 console.log('Transaction response:', response);
+//                 this.isSuccessful = true;
+//                 this.message = `Transaction successful with Box ID: ${boxId}`;
+//             }).catch((error: { toString: () => string | null; }) => {
+//                 console.error('Transaction error:', error);
+//                 this.isSuccessful = false;
+//                 this.message = error.toString();
+//             });
+
+//         }).catch(error => {
+//             console.error(`Error connecting to the wallet: ${error}`);
+//             this.isSuccessful = false;
+//             this.message = "Error connecting to the wallet. Please try again.";
+//         });
+//     } else {
+//         console.log("Nautilus wallet extension is not detected.");
+//         alert("Nautilus wallet is not detected. Please install the Nautilus wallet extension to proceed.");
+//         this.isSuccessful = false;
+//         this.message = "Nautilus wallet extension is not detected.";
+//     }
+// }
+
   onImageLoad(card: any) {
     card.isLoaded = true;
     card.imageLoaded = true;

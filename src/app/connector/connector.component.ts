@@ -12,6 +12,12 @@ declare global {
   interface Window {
     ergo: Ergo;
   }
+
+  // interface Window {
+  //   ergo?: any; // Using any to avoid type errors, adjust as needed based on actual API
+  //   ergoConnector?: any; // Assuming ergoConnector is an object with specific properties
+  // }
+
 }
 
 @Component({

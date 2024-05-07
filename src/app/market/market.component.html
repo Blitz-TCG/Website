@@ -184,8 +184,11 @@
               <div class="card-buttons">
                 <div class="card-btn buy" *ngIf="activeTab === 'Buy'" [class.loading]="isLoading === card?.box_id"
                   [attr.disabled]="isLoading === card?.box_id ? true : null"
+
                   (click)="isLoading === '' && buyNFT(card?.box_id)">
+                  <!-- (click)="isLoading === '' && buyNFT(card?.box_id, card?.tokenId, '1',1, 1)"> -->
                   {{ isLoading === card?.box_id ? 'Loading...' : 'Buy' }}</div>
+
                 <div class="card-btn sell" *ngIf="activeTab === 'Sell' && sellActiveTab === 'Owned'"
                   (click)="openPopup(card, false)">Sell</div>
                 <div class="card-btn burn" *ngIf="activeTab === 'Burn'" (click)="openPopup(card, false)">Burn</div>
