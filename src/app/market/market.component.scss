@@ -403,7 +403,9 @@ label[for="ownedCardsOnly"] {
 
 .pagination {
   background-image: url(/assets/pagination-bg.png);
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   width: 100%;
   height: 70px;
   margin-bottom: 50px;
@@ -424,6 +426,24 @@ label[for="ownedCardsOnly"] {
   color: #B1D5DC;
 }
 
+@media (max-width: 960px) {
+  .pagination {
+    background-image: url(/assets/pagination-bg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 70px;
+    margin-bottom: 50px;
+  }
+
+  .pagination-items {
+    margin: 0 auto;
+    padding-top: 20px;
+    color: #FFF;
+  }
+}
+
 .arrow {
   background-size: contain;
   width: 20px;
@@ -434,6 +454,7 @@ label[for="ownedCardsOnly"] {
   top: 4px;
   margin: 0px 15px;
 }
+
 
 .prev-arrow {
   background-image: url(/assets/pagination-arrow-left.png);

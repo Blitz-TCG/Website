@@ -1,24 +1,19 @@
 <div class="container-with-bg" [class.sticky]="sticky">
-  <!-- <div *ngIf="!authService.isLoggedIn || !walletConnected()">
-    <div class="message-container">
-      <div class="message-text" *ngIf="!authService.isLoggedIn">
-        To display cards, please log in.
-      </div>
-      <div class="message-text" *ngIf="authService.isLoggedIn && !walletConnected()">
-        To display cards, please connect your Nautilus Ergo wallet.
-      </div>
-    </div>
-  </div> -->
-  <!-- <div *ngIf="authService.isLoggedIn && walletConnected()"> -->
     <div class="header-section">
       <div class="profile-img">
         <span class="user-pfp-container">
-          <div class="pfp-image" *ngIf="authService.userProfile as profile" [ngStyle]="{'background-image': profile.pfp === 'Abyss' ? 'url(/assets/abyss.png)' :
-          profile.pfp === 'Margo' ? 'url(/assets/margo.png)' :
-          profile.pfp === 'Mios' ? 'url(/assets/mios.png)' :
-          profile.pfp === 'Nasse' ? 'url(/assets/nasse.png)' :
-          'url(/assets/Header_User_Image_Placeholder.png)'}">
+          <div class="pfp-image" *ngIf="authService.userProfile as profile; else defaultImage"
+               [ngStyle]="{'background-image':
+                   profile.pfp === 'Abyss' ? 'url(/assets/abyss.png)' :
+                   profile.pfp === 'Margo' ? 'url(/assets/margo.png)' :
+                   profile.pfp === 'Mios' ? 'url(/assets/mios.png)' :
+                   profile.pfp === 'Nasse' ? 'url(/assets/nasse.png)' :
+                 'url(/assets/Header_User_Image_Placeholder.png)'}">
           </div>
+          <ng-template #defaultImage>
+            <div class="pfp-image" style="background-image: url('/assets/Header_User_Image_Placeholder.png')">
+            </div>
+          </ng-template>
         </span>
       </div>
       <div class="username-bar">
