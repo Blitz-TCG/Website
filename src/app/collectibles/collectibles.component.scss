@@ -421,6 +421,7 @@ label[for="nonUniqueCardsOnly"] {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: center;
 
   &::before {
     content: " ";
