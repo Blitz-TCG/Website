@@ -455,6 +455,7 @@ label[for="ownedCardsOnly"] {
   border-radius: 5px;
   transition: background-color 0.3s ease;
   justify-content: space-between;
+    cursor: url('/assets/Cursor_02-2_select_2.png'), pointer !important; /* Apply the custom cursor */
 
   &:hover {
     background-color: rgb(64 79 106 / 35%);
@@ -469,6 +470,7 @@ label[for="ownedCardsOnly"] {
     font-weight: 800; /* Bold font weight */
     text-align: center; /* Center-align text */
     color: #ffaa4d; /* Basic color setting which is overridden by the gradient */
+    cursor: url('/assets/Cursor_02-2_select_2.png'), pointer !important; /* Apply the custom cursor */
     background: linear-gradient(to bottom,
         #ffc107 10%,
         #ffcb30 20%,
@@ -494,6 +496,7 @@ label[for="ownedCardsOnly"] {
   color: #B7BEC5; // Ensure this is the color being applied
   position: relative; // Ensure it's positioned independently
   z-index: auto; // Reset z-index to auto or set a specific value higher than .card-caption if needed
+  cursor: url('/assets/Cursor_02-2_select_2.png'), pointer !important; /* Apply the custom cursor */
 }
 
 

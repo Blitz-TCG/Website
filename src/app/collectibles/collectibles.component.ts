@@ -56,6 +56,10 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
     legendary: 0
   }
   filter = {
+    sort: {
+      name: "Alphabetical: A to Z",
+      value: "1"
+    },
     edition: {
       name: "All",
       value: "All"
@@ -95,8 +99,11 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
   showCards: any = [];
   appliedFilter: boolean = false;
   selectedCard: any = null;
+
   readonly SUPPLY_ADDRESS = "3n7SxSJCvFGp9xfumeQY8925QQpZifkpwAgnxoF3Hc3NWi9oraoXwNV1xcZpVP8A9LcXLef1krdvjoEKtiEUHDQy6AQ4suJsQyJ8EY2L36hErdvuindtN2dxTU8rLWTwMY18PH6g6XXyvrVQ25w57YSiDR1xF8ZN2sdqgQ9V9";
   supplyIds: any = [];
+
+  allowDcLoad = false;
 
 
   constructor(private walletService: WalletService, private modalService: ModalService, public adb: AngularFireDatabase, private httpClient: HttpClient, public afAuth: AngularFireAuth, public authService: AuthService, @Inject(PLATFORM_ID) private platformId: any) { }
@@ -147,18 +154,23 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
 
+      this.allowDcLoad = false;
+
       this.walletService.walletUpdated$.subscribe(walletID => {
         this.walletID = walletID; // Update local walletID state
         this.resetTokenState(); // Reset token state
         if (walletID) {
+          console.log(this.allowDcLoad);
           this.loadErgoTokens().pipe(
             switchMap(() => this.queryCards())
           ).subscribe(
             () => console.log('Wallet Service loaded.'),
             error => console.error('Failed to load tokens and cards:', error)
           );
-        } else {
+        }
+        else if (this.allowDcLoad == true) {
           console.log('Walled DC loaded.');
+          console.log(this.allowDcLoad);
           this.queryCards().subscribe({
             next: (cards) => {},
             error: (error) => {},
@@ -299,7 +311,6 @@ this.loadSupplyTokens().pipe(
   queryCards(): Observable<any[]> {
     const db = getFirestore();
     const cardsCollection = collection(db, 'cards');
-    console.log('Queried cards.');
 
     return new Observable<any[]>((observer) => {
       getDocs(cardsCollection)
@@ -341,9 +352,11 @@ this.loadSupplyTokens().pipe(
           }
           observer.next(sortedCards);
           observer.complete();
+          this.allowDcLoad = true;
         })
         .catch((error) => {
           observer.error(error);
+          this.allowDcLoad = true;
         });
     });
   }
@@ -446,6 +459,42 @@ this.loadSupplyTokens().pipe(
     );
   }
 
+  selectSort(value: string, name: string): void {
+    this.filter.sort.value = value;
+    this.filter.sort.name = name;
+    this.sortCardsByTab();
+    this.applyFilter();
+    this.toggleMenu(6);
+  }
+
+  sortCardsByTab(): void {
+    this.cards.sort((a: any, b: any) => {
+      // First sort by ownership (assuming owned cards have amount > 0)
+      if ((a.amount > 0 && b.amount === 0) || (a.amount === 0 && b.amount > 0)) {
+          return b.amount - a.amount; // Owned cards come before unowned
+      }
+
+      // Proceed with other sorting conditions based on the updated options
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+
+      switch (this.filter.sort.value) {
+          case '1':
+              return nameA.localeCompare(nameB); // Alphabetical A to Z
+          case '2':
+              return nameB.localeCompare(nameA); // Alphabetical Z to A
+          case '3':
+              return b.amount - a.amount; // Count: Most to Least
+          case '4':
+              return a.amount - b.amount; // Count: Least to Most
+          default:
+              return 0;
+      }
+    });
+  }
+
+
+
   exportCurrentView(): void {
     let dataToExport = [];
 
@@ -499,8 +548,12 @@ this.loadSupplyTokens().pipe(
     :Rare: Total ${this.userCardsDetail.rare}
      Legendary: Total ${this.userCardsDetail.legendary}\n`;
 
+    // Adding current sort description
+    const sortDescription = `Current Sort: ${this.filter.sort.name}`;
+
+
     // Combine the sections
-    const data = `${raritySummary}\n${ownedSection}${unownedSection}`;
+    const data = `${sortDescription}\n${raritySummary}\n${ownedSection}${unownedSection}`;
 
     const blob = new Blob([data.trim()], { type: 'text/plain;charset=utf-8' }); // Trim to remove any leading/trailing newlines
     saveAs(blob, 'exported-cards-view.txt');
@@ -529,6 +582,7 @@ this.loadSupplyTokens().pipe(
     // if (this.authService.isLoggedIn && this.walletConnected()) {
     //   this.modalService.openModal({ ...card, modalType: "Market", showDetails: true });
     // }
+    console.log("card opened");
       this.modalService.openModal({ ...card, modalType: "Market", showDetails: true });
   }
 
@@ -639,21 +693,42 @@ this.loadSupplyTokens().pipe(
   }
 
   clearFilters() {
-    // Reset all filter object values to 'All'
-    Object.keys(this.filter).forEach((key: string) => {
-        this.filter[key as keyof typeof this.filter] = { value: "All", name: "All" };
-    });
+  // Reset all filter object values to their defaults
+  this.filter = {
+    sort: {
+      name: "Alphabetical: A to Z",
+      value: "1"
+    },
+    edition: {
+      name: "All",
+      value: "All"
+    },
+    set: {
+      name: "All",
+      value: "All"
+    },
+    faction: {
+      name: "All",
+      value: "All"
+    },
+    rarity: {
+      name: "All",
+      value: "All"
+    },
+    bracket: {
+      name: "All",
+      value: "All"
+    },
+    artist: {
+      name: "All",
+      value: "All"
+    }
+  };
 
-    // Reset checkbox states
-    //this.isOwnedChecked = false;
     this.isUnownedChecked = false;
     this.isUniqueChecked = false;
     this.isNonUniqueChecked = false;
 
-    // Explicitly uncheck checkboxes using ElementRef if ViewChild is correctly bound
-    // if (this.ownedCardsOnlyCheckbox) {
-    //     this.ownedCardsOnlyCheckbox.nativeElement.checked = false;
-    // }
     if (this.unownedCardsOnlyCheckbox) {
       this.unownedCardsOnlyCheckbox.nativeElement.checked = false;
   }
@@ -670,6 +745,7 @@ this.loadSupplyTokens().pipe(
     }
 
     // Reapply filters to update the display
+    this.sortCardsByTab();
     this.applyFilter();
 }
 

@@ -55,6 +55,16 @@
           <h2><span class="cards-collected">{{ userCardsDetail.cardsCollected }}/152 Cards Collected</span></h2>
           <div class="filter-inputs">
             <div class="select-container">
+            <span class="select-label">Sort</span>
+            <button class="selected-option" (click)="toggleMenu(6)">{{ filter.sort.name }}</button>
+            <div class="options" *ngIf="activeIndex === 6" (mouseleave)="activeIndex = -1">
+              <span [class.active]="filter.sort.value === '1'" (click)="selectSort('1','Alphabetical: A to Z')">Alphabetical: A to Z</span>
+              <span [class.active]="filter.sort.value === '2'" (click)="selectSort('2','Alphabetical: Z to A')">Alphabetical: Z to A</span>
+              <span [class.active]="filter.sort.value === '3'" (click)="selectSort('3','Count: Most to Least')">Count: Most to Least</span>
+              <span [class.active]="filter.sort.value === '4'" (click)="selectSort('4','Count: Least to Most')">Count: Least to Most</span>
+            </div>
+          </div>
+            <div class="select-container">
               <span class="select-label">Edition</span>
               <button class="selected-option" (click)="toggleMenu(0)">{{filter.edition.name}}</button>
               <div class="options" *ngIf="activeIndex === 0" (mouseleave)="activeIndex = -1">
@@ -184,6 +194,9 @@
           <div *ngFor="let card of showCards" [ngClass]="{'card-container': true, 'grayscale-card': !card.amount}"
             (click)="openPopup(card)">
             <img [src]="card.image" alt="">
+            <div class="card-caption">
+              <div class="amount caption-amount">{{'Count: '+ card.amount}}</div>
+            </div>
           </div>
         </div>
       </div>

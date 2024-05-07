@@ -99,6 +99,8 @@ export class MarketComponent implements OnInit {
   message: string | null = null;
   isSuccessful = false;
 
+  allowDcLoad = false;
+
   supplyIds: any = [];
   readonly SUPPLY_ADDRESS = "3n7SxSJCvFGp9xfumeQY8925QQpZifkpwAgnxoF3Hc3NWi9oraoXwNV1xcZpVP8A9LcXLef1krdvjoEKtiEUHDQy6AQ4suJsQyJ8EY2L36hErdvuindtN2dxTU8rLWTwMY18PH6g6XXyvrVQ25w57YSiDR1xF8ZN2sdqgQ9V9";
 
@@ -108,10 +110,13 @@ export class MarketComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.allowDcLoad = false;
+
     this.walletService.walletUpdated$.subscribe(walletID => {
       this.walletID = walletID; // Update local walletID state
       this.resetTokenState(); // Reset token state
       if (walletID) {
+        console.log('Wallet loaded')
         if (this.activeTab == "Buy"){
           this.filterBuy();
           }
@@ -122,7 +127,8 @@ export class MarketComponent implements OnInit {
           this.filterBurn();
       }
     }
-      else {
+      else if (this.allowDcLoad == true) {
+        console.log('DC wallet loaded')
         if (this.activeTab == "Buy"){
           this.filterBuy();
           }
@@ -139,7 +145,7 @@ export class MarketComponent implements OnInit {
     take(1),
     switchMap(() => this.getWalletAddress()),
     switchMap(() => this.loadErgoTokens()),
-    tap(() => console.log('Auth state loaded')), // Log the loaded Ergo tokens
+    tap(() => console.log('Auth state loaded')),
     switchMap(() => this.getNFTs())
   ).subscribe({
     next: (cards) => {},
@@ -369,6 +375,7 @@ export class MarketComponent implements OnInit {
     return this.fetchNFTs().pipe(
       catchError(error => {
         console.log('Error loading Ergo tokens:', error);
+        this.allowDcLoad = true;
         return of();
       }),
       tap(response => {
@@ -408,9 +415,8 @@ export class MarketComponent implements OnInit {
         // Only update display-related properties after the data merge is complete.
         this.showCards = this.cardsByTab.slice(0, this.perPage);
         this.cardsPages = Math.ceil(this.cardsByTab.length / this.perPage) || 1;
+        this.allowDcLoad = true;
 
-        // Optionally, log the updated cards for debugging.
-        //console.log('Cards loaded and merged:', this.cardsByTab);
       },
       error => console.error('Failed to load Firebase cards:', error)
     );
@@ -471,12 +477,13 @@ export class MarketComponent implements OnInit {
     this.activeTab = tab;
     this.sellActiveTab = tab2;
     this.clearFilters(tab, tab2)
-    if (tab === 'Sell' && (tab2 === 'Owned' || tab2 === 'Sold')) {
+    if (tab === 'Sell' && (tab2 === 'Owned') || tab === 'Burn') {
       this.filter.sort = {
         name: 'Alphabetical: A to Z',
         value: '1'
       }
-    } else {
+    }
+    else {
       this.filter.sort = {
         name: 'Recently Listed',
         value: '0'
@@ -691,6 +698,10 @@ export class MarketComponent implements OnInit {
           return priceA - priceB;
         case '4':
           return priceB - priceA;
+        case '5':
+           return b.amount - a.amount;  // Count: Most to Least
+        case '6':
+          return a.amount - b.amount;  // Count: Least to Most
         default:
           return 0;
       }
@@ -728,7 +739,7 @@ export class MarketComponent implements OnInit {
   clearFilters(tab: string | null = null, tab2: string | null = null) {
     this.filter = {
       sort: {
-        ... (tab === 'Sell' && (tab2 === 'Owned' || tab2 === 'Sold')) ? {
+        ... ((tab === 'Sell' && tab2 === 'Owned') || (tab2 === 'Burn')) ? {
           name: 'Alphabetical: A to Z',
           value: '1'
         } : {
@@ -761,12 +772,17 @@ export class MarketComponent implements OnInit {
         value: "All"
       }
     }
-    // if (this.ownedCardsOnlyCheckbox) {
-    //   this.ownedCardsOnlyCheckbox.nativeElement.checked = false;
-    //   this.isChecked = false;
-    // }
+
     this.cardNameInput.nativeElement.value = '';
     this.appliedFilter = false;
+
+    if((tab === 'Sell' && tab2 === 'Owned') || (tab === 'Burn')){
+      this.selectSort('1','Alphabetical: A to Z');
+    }
+    else{
+      this.selectSort('0', 'Recently Listed');
+    }
+    this.activeIndex = -1; //closes dropdowns
   }
   // Formating functions
   formatNumberWithDecimals(numberStr: string, decimals: number) {

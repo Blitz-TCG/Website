@@ -259,8 +259,8 @@ label[for="nonUniqueCardsOnly"] {
     position: relative;
     display: flex;
     flex-direction: column;
-    width: calc(16.6666666667% - 10px);
-    min-width: 145px;
+    width: calc(15% - 10px);
+    min-width: 185px;
     margin-bottom: 10px;
   }
 
@@ -334,7 +334,7 @@ label[for="nonUniqueCardsOnly"] {
 }
 
 .cards-filter {
-  max-width: 900px;
+  //max-width: 900px;
   margin: auto;
 
   h2 {
@@ -512,7 +512,57 @@ label[for="nonUniqueCardsOnly"] {
   margin: 0px 5px;
   margin-bottom: 10px;
   z-index: 999;
+  flex-direction: column;
+  border: 3px double #404f6a;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  justify-content: space-between;
+  cursor: url('/assets/Cursor_02-2_select_2.png'), pointer !important; /* Apply the custom cursor */
+
+  &:hover {
+    background-color: rgb(64 79 106 / 35%);
+  }
+
+  .card-caption {
+    margin-top:10px;
+    margin-bottom:-5px;
+    color: #FFFFFF;
+    padding: 5px 6px;
+    font-size: 30px;
+    font-weight: 800; /* Bold font weight */
+    text-align: center; /* Center-align text */
+    color: #ffaa4d; /* Basic color setting which is overridden by the gradient */
+    cursor: url('/assets/Cursor_02-2_select_2.png'), pointer !important; /* Apply the custom cursor */
+    background: linear-gradient(to bottom,
+        #ffc107 10%,
+        #ffcb30 20%,
+        #e77517 25%,
+        #f3bc19 30%,
+        #ffce3c 40%,
+        #ffc107 50%,
+        #e1771f 70%,
+        #ff8c2c 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Makes the text color transparent, showing the background */
+    position: relative; /* To help with layering and positioning */
+    z-index: 999; /* Ensures it is on top if needed */
+  }
 }
+
+.card-container .amount.caption-amount {
+  -webkit-text-fill-color: initial; // Reset the transparent fill color
+  -webkit-background-clip: initial; // Reset background clip
+  background: none;
+  padding: 5px 6px;
+  font-size: 18px;
+  color: #B7BEC5; // Ensure this is the color being applied
+  position: relative; // Ensure it's positioned independently
+  z-index: auto; // Reset z-index to auto or set a specific value higher than .card-caption if needed
+  margin-top: -10px;
+  cursor: url('/assets/Cursor_02-2_select_2.png'), pointer !important; /* Apply the custom cursor */
+}
+
 
 .grayscale-card {
   filter: grayscale(0.8);

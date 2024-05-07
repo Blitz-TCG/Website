@@ -26,27 +26,19 @@
     <div class="cards-list">
       <div class="container">
         <div class="cards-filter">
-          <h2>Cards</h2>
+          <h2>Card Market</h2>
           <div class="filter-inputs">
-            <div class="select-container" *ngIf="activeTab !== 'Burn'">
+            <div class="select-container">
               <span class="select-label">Sort</span>
               <button class="selected-option" (click)="toggleMenu(6)">{{filter.sort.name}}</button>
               <div class="options" *ngIf="activeIndex === 6" (mouseleave)="activeIndex = -1">
-                <span [class.active]="filter.sort.value === '0'" (click)="selectSort('0','Recently
-                Listed')" *ngIf="activeTab === 'Buy' || sellActiveTab === 'For Sale'">Recently
-                  Listed</span>
-                <span [class.active]="filter.sort.value === '1'" (click)="selectSort('1','Alphabetical: A
-                  to Z')">Alphabetical: A
-                  to Z</span>
-                <span [class.active]="filter.sort.value === '2'" (click)="selectSort('2','Alphabetical: Z
-                  to A')">Alphabetical: Z
-                  to A</span>
-                <span [class.active]="filter.sort.value === '3'" (click)="selectSort('3','Price: Low to
-                High')" *ngIf="activeTab === 'Buy' || sellActiveTab !== 'Owned'">Price: Low to
-                  High</span>
-                <span [class.active]="filter.sort.value === '4'" (click)="selectSort('4','Price: High to
-                Low')" *ngIf="activeTab === 'Buy' || sellActiveTab !== 'Owned'">Price: High to
-                  Low</span>
+                <span [class.active]="filter.sort.value === '0'" (click)="selectSort('0','Recently Listed')" *ngIf="activeTab === 'Buy' || sellActiveTab === 'For Sale' || 'Sold' && sellActiveTab !== 'Owned'">Recently Listed</span>
+                <span [class.active]="filter.sort.value === '1'" (click)="selectSort('1','Alphabetical: A to Z')">Alphabetical: A to Z</span>
+                <span [class.active]="filter.sort.value === '2'" (click)="selectSort('2','Alphabetical: Z to A')">Alphabetical: Z to A</span>
+                <span [class.active]="filter.sort.value === '3'" (click)="selectSort('3','Price: Low to High')" *ngIf="activeTab === 'Buy' || sellActiveTab !== 'Owned'">Price: Low to High</span>
+                <span [class.active]="filter.sort.value === '4'" (click)="selectSort('4','Price: High to Low')" *ngIf="activeTab === 'Buy' || sellActiveTab !== 'Owned'">Price: High to Low</span>
+                <span [class.active]="filter.sort.value === '5'" (click)="selectSort('5','Count: Most to Least')"*ngIf="activeTab === 'Sell' && sellActiveTab == 'Owned' || activeTab === 'Burn'">Count: Most to Least</span>
+                <span [class.active]="filter.sort.value === '6'" (click)="selectSort('6','Count: Least to Most')"*ngIf="activeTab === 'Sell' && sellActiveTab == 'Owned' || activeTab === 'Burn'">Count: Least to Most</span>
               </div>
             </div>
             <div class="select-container">
@@ -183,6 +175,10 @@
                 <div class="date sold-date" *ngIf="activeTab === 'Sell' && sellActiveTab === 'For Sale'">{{card.date}}
                 </div>
                 <div class="date sold-date" *ngIf="activeTab === 'Buy'">{{card.date}}
+                </div>
+                <div class="date sold-date"*ngIf="activeTab === 'Sell' && sellActiveTab === 'Owned'">{{'Count: '+ card.amount}}
+                </div>
+                <div class="date sold-date"*ngIf="activeTab === 'Burn'">{{'Count: '+ card.amount}}
                 </div>
               </div>
               <div class="card-buttons">
