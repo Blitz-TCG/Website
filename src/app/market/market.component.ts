@@ -24,6 +24,12 @@ import { collection, getDocs, getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { child, get, getDatabase, ref } from 'firebase/database';
 
+const skyHarborApi = "https://testapi.skyharbor.io"
+
+interface TransactionResponse {
+  error: boolean; transaction_to_sign: any
+}
+
 @Component({
   selector: 'app-market',
   templateUrl: './market.component.html',
@@ -805,17 +811,36 @@ export class MarketComponent implements OnInit {
   }
   buyNFT(boxId: string) {
     this.isLoading = boxId;
-    const testURL = `https://skyharbor.io/api/transactions/buy`;
+    const testURL = `${skyHarborApi}/api/transactions/buy`;
     const data = {
+      // DO NOT USE this.walletID - USE NAUTILUS CHANGE ADDRESS INSTEAD
       "userAddresses": [this.walletID],
       "buyBox": {
         box_id: boxId
       }
     };
     this.http.post(testURL, data).subscribe(
-      response => {
+      (response: Partial<TransactionResponse>) => {
         this.isLoading = '';
         this.isSuccessful = true;
+        if(!response?.transaction_to_sign) {
+          throw Error
+        }
+
+        // Sign the returned tx
+        ergo.sign_tx(response?.transaction_to_sign).then((txResponse: any) => {
+            // Submit the tx
+            ergo.submit_tx(txResponse).then((submitRes) => {
+              this.isSuccessful = true;
+              this.message = `Transaction successful with Box ID: ${boxId}`;  
+            })
+        }).catch((error: { toString: () => string | null; }) => {
+            console.error('Transaction error:', error);
+            this.isSuccessful = false;
+            this.message = error.toString();
+        });
+        
+
         console.log(response);
         this.message = 'Purchase successful!';
       },
