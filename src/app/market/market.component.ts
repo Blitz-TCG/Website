@@ -598,10 +598,18 @@ export class MarketComponent implements OnInit {
 
   // Modal actions
   openPopup(card: any, showDetails = true, modalType = this.activeTab, sellActiveTab = this.sellActiveTab) {
-    //if (this.authService.isLoggedIn && this.walletConnected()) {
-      this.modalService.openModal({ ...card, showDetails, modalType, sellActiveTab });
-    //}
-  }
+    // Determine which cards array to send based on the contents of filteredCards
+    this.filterCardsCheck();
+    // Open the modal with the appropriate data
+    this.modalService.openModal({
+        card: card,
+        cards: this.filteredCards, // Pass the appropriate array of cards
+        showDetails: showDetails,
+        modalType: modalType,
+        sellActiveTab: sellActiveTab
+    });
+}
+
 
   closeModal() {
     this.modalService.close();

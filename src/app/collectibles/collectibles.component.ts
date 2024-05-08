@@ -579,12 +579,18 @@ this.loadSupplyTokens().pipe(
   }
 
   openPopup(card: any) {
-    // if (this.authService.isLoggedIn && this.walletConnected()) {
-    //   this.modalService.openModal({ ...card, modalType: "Market", showDetails: true });
-    // }
-    console.log("card opened");
-      this.modalService.openModal({ ...card, modalType: "Market", showDetails: true });
-  }
+    console.log("Opening modal for card:", card);
+
+    const cardsToSend = this.filteredCards.length > 0 ? this.filteredCards : this.cards;
+
+    this.modalService.openModal({
+      card: card,
+      cards: cardsToSend, // Send either filteredCards or this.cards based on the condition
+      modalType: "Market",
+      showDetails: true
+    });
+}
+
 
   closeModal() {
     this.modalService.close();
@@ -637,11 +643,7 @@ this.loadSupplyTokens().pipe(
     this.applyFilter();
     this.toggleMenu(0);
   }
-  // ownedCardsOnly(event: any) {
-  //   const target = event.target as HTMLInputElement;
-  //   this.isOwnedChecked = target.checked;
-  //   this.applyFilter();
-  // }
+
   unownedCardsOnly(event: any) {
     const target = event.target as HTMLInputElement;
     this.isUnownedChecked = target.checked;
