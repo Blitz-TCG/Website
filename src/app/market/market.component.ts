@@ -387,7 +387,8 @@ export class MarketComponent implements OnInit {
 
   // Fetch and processind response
   fetchNFTs(): Observable<any[]> {
-    const url = `${this.baseUrl}?collection=blitztcg`;
+        //eventually refine this
+    const url = `${this.baseUrl}?collection=blitztcg&orderCol=list_time&order=desc`;
     return this.http.get<any[]>(url);
   }
 
@@ -595,8 +596,6 @@ export class MarketComponent implements OnInit {
       );
   }
 
-
-
   // Modal actions
   openPopup(card: any, showDetails = true, modalType = this.activeTab, sellActiveTab = this.sellActiveTab) {
     //if (this.authService.isLoggedIn && this.walletConnected()) {
@@ -604,10 +603,11 @@ export class MarketComponent implements OnInit {
     //}
   }
 
-
   closeModal() {
     this.modalService.close();
   }
+
+
   // Pagination functions
   updateDisplayedCards() {
     this.showCards = (this.appliedFilter ? this.filteredCards : this.cardsByTab)
@@ -615,25 +615,31 @@ export class MarketComponent implements OnInit {
   }
 
   nextPage() {
+    this.filteredCards = this.cardsByTab;
     if (this.currentCardPage < this.cardsPages) {
       this.currentCardPage++;
       this.showCards = (this.appliedFilter ? this.filteredCards : this.cardsByTab).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
     }
+    this.updateDisplayedCards();
   }
   prevPage() {
+    this.filteredCards = this.cardsByTab;
     if (this.currentCardPage > 1) {
       this.currentCardPage--;
       this.updateDisplayedCards();
     }
   }
   firstPage() {
+    this.filteredCards = this.cardsByTab;
     this.currentCardPage = 1;
     this.updateDisplayedCards();
   }
   lastPage() {
+    this.filteredCards = this.cardsByTab;
     this.currentCardPage = this.cardsPages;
     this.updateDisplayedCards();
   }
+
   // Filters and sort actions
   toggleMenu(index: number): void {
     this.activeIndex = this.activeIndex === index ? -1 : index;
