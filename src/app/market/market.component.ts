@@ -614,8 +614,14 @@ export class MarketComponent implements OnInit {
     .slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
   }
 
+  filterCardsCheck(){
+    if (this.filteredCards != this.cardsByTab){
+      this.filteredCards = this.cardsByTab;
+    }
+  }
+
   nextPage() {
-    this.filteredCards = this.cardsByTab;
+    this.filterCardsCheck();
     if (this.currentCardPage < this.cardsPages) {
       this.currentCardPage++;
       this.showCards = (this.appliedFilter ? this.filteredCards : this.cardsByTab).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
@@ -623,19 +629,19 @@ export class MarketComponent implements OnInit {
     this.updateDisplayedCards();
   }
   prevPage() {
-    this.filteredCards = this.cardsByTab;
+    this.filterCardsCheck();
     if (this.currentCardPage > 1) {
       this.currentCardPage--;
       this.updateDisplayedCards();
     }
   }
   firstPage() {
-    this.filteredCards = this.cardsByTab;
+    this.filterCardsCheck();
     this.currentCardPage = 1;
     this.updateDisplayedCards();
   }
   lastPage() {
-    this.filteredCards = this.cardsByTab;
+    this.filterCardsCheck();
     this.currentCardPage = this.cardsPages;
     this.updateDisplayedCards();
   }
