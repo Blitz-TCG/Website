@@ -255,7 +255,7 @@ this.loadSupplyTokens().pipe(
               for (const token of dataObjects.tokens) {
                 const tokenDecimals = Math.pow(10, token.decimals);
                 this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
-                console.log(token.tokenId, token.amount / tokenDecimals);
+                //console.log(token.tokenId, token.amount / tokenDecimals);
               }
             }
           })
@@ -620,13 +620,11 @@ this.loadSupplyTokens().pipe(
   }
 
   openPopup(card: any) {
-    console.log("Opening modal for card:", card);
-
     const cardsToSend = this.showCards.length > 0 ? this.showCards : this.cards;
 
     this.modalService.openModal({
       card: card,
-      cards: cardsToSend, // Send either filteredCards or this.cards based on the condition
+      cards: cardsToSend,
       modalType: "Market",
       showDetails: true
     });

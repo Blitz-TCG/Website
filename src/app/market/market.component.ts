@@ -596,7 +596,7 @@ export class MarketComponent implements OnInit {
       );
   }
 
-  // Modal actions
+ // Modal actions
   openPopup(card: any, showDetails = true, modalType = this.activeTab, sellActiveTab = this.sellActiveTab) {
     // Determine which cards array to send based on the contents of filteredCards
     this.filterCardsCheck();
@@ -610,7 +610,6 @@ export class MarketComponent implements OnInit {
         sellActiveTab: sellActiveTab
     });
 }
-
 
   closeModal() {
     this.modalService.close();

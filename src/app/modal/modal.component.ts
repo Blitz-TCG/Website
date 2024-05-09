@@ -17,6 +17,7 @@ export class ModalComponent implements OnInit {
   displayStyle = "none";
   currency = 'erg';
   modalType: any = null;
+  sellActiveTab: any = null;
   showDetails = true;
   price: string = "";
   isValid: boolean = true;
@@ -38,7 +39,7 @@ export class ModalComponent implements OnInit {
       this.displayStyle = "block";
       this.showDetails = data.showDetails;
       this.modalType = data.modalType;
-      // Perform any additional logic with the data
+      this.sellActiveTab = data.sellActiveTab;
     });
     console.log(this.walletID)
   }
