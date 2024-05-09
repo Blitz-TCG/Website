@@ -38,7 +38,6 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
   @ViewChild('swiper', { static: false }) swiper?: SwiperComponent;
   @ViewChild('stickyElem', { static: false }) menuElement?: ElementRef;
   @ViewChild('cardNameInput', { static: false }) cardNameInput!: ElementRef<HTMLInputElement>;
-  //@ViewChild('ownedCardsOnlyCheckbox') ownedCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
   @ViewChild('unownedCardsOnlyCheckbox') unownedCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
   @ViewChild('uniqueCardsOnlyCheckbox') uniqueCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
   @ViewChild('nonUniqueCardsOnlyCheckbox') nonUniqueCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
@@ -252,9 +251,11 @@ this.loadSupplyTokens().pipe(
           tap((response: any) => {
             if (response) {
               const dataObjects: any = response;
+              console.log(response);
               for (const token of dataObjects.tokens) {
                 const tokenDecimals = Math.pow(10, token.decimals);
                 this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
+                console.log(token.tokenId, token.amount / tokenDecimals);
               }
             }
           })
@@ -279,6 +280,47 @@ this.loadSupplyTokens().pipe(
       );
     }
   }
+
+  // //Auction House
+  // loadStakedTokens(): Observable<void> {
+  //   if (this.walletID) {
+  //     return this.httpClient.get('https://ergoauctions.org/api/stake/stakeByAddress?address=' + this.walletID)
+  //       .pipe(
+  //         catchError(error => {
+  //           console.log('Error loading Staked tokens:', error);
+  //           return of(); // Return an empty observable
+  //         }),
+  //         tap((response: any) => {
+  //           if (response) {
+  //             const dataObjects: any = response;
+  //             for (const token of dataObjects.tokens) {
+  //               const tokenDecimals = Math.pow(10, token.decimals);
+  //               this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
+  //             }
+  //           }
+  //         })
+  //       );
+  //   } else {
+  //     console.log('No wallet ID');
+  //     return this.httpClient.get('https://ergo-explorer.anetabtc.io/api/v1/addresses/' + "9gZzo1X96Nv7ggNkTX5giCXrcQZ6YZwJzGHzfBrzn9Wi5Zz2K5G" + '/balance/confirmed')
+  //     .pipe(
+  //       catchError(error => {
+  //         console.log('Error loading Ergo tokens:', error);
+  //         return of(); // Return an empty observable
+  //       }),
+  //       tap((response: any) => {
+  //         if (response) {
+  //           const dataObjects: any = response;
+  //           for (const token of dataObjects.tokens) {
+  //             const tokenDecimals = Math.pow(10, token.decimals);
+  //             this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
+  //           }
+  //         }
+  //       })
+  //     );
+  //   }
+  // }
+
 
   loadSupplyTokens(): Observable<void> {
     return this.httpClient.get(`https://ergo-explorer.anetabtc.io/api/v1/addresses/${this.SUPPLY_ADDRESS}/balance/confirmed`)
@@ -436,7 +478,6 @@ this.loadSupplyTokens().pipe(
       // Check the unique, non-unique, and unknown conditions only if showAll is false.
       const isUnique = this.isUniqueChecked && card.amount === 1;
       const isNonUnique = this.isNonUniqueChecked && card.amount > 1;
-      //const isOwned = this.isOwnedChecked && card.amount > 0;
       const isUnowned = this.isUnownedChecked && card.amount === 0;
 
       return this.filterCard(card, searchText) && (isUnique || isNonUnique || isUnowned)// || isOwned);
@@ -581,7 +622,7 @@ this.loadSupplyTokens().pipe(
   openPopup(card: any) {
     console.log("Opening modal for card:", card);
 
-    const cardsToSend = this.filteredCards.length > 0 ? this.filteredCards : this.cards;
+    const cardsToSend = this.showCards.length > 0 ? this.showCards : this.cards;
 
     this.modalService.openModal({
       card: card,

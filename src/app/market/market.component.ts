@@ -600,10 +600,11 @@ export class MarketComponent implements OnInit {
   openPopup(card: any, showDetails = true, modalType = this.activeTab, sellActiveTab = this.sellActiveTab) {
     // Determine which cards array to send based on the contents of filteredCards
     this.filterCardsCheck();
+
     // Open the modal with the appropriate data
     this.modalService.openModal({
         card: card,
-        cards: this.filteredCards, // Pass the appropriate array of cards
+        cards: this.showCards, // Pass the appropriate array of cards
         showDetails: showDetails,
         modalType: modalType,
         sellActiveTab: sellActiveTab
