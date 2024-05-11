@@ -161,6 +161,7 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
         if (walletID) {
           console.log(this.allowDcLoad);
           this.loadErgoTokens().pipe(
+            switchMap(() => this.loadStakedTokens()),
             switchMap(() => this.queryCards())
           ).subscribe(
             () => console.log('Wallet Service loaded.'),
@@ -182,6 +183,7 @@ this.afAuth.authState.pipe(
   take(1),
   switchMap(() => this.getWalletAddress()),
   switchMap(() => this.loadErgoTokens()),
+  switchMap(() => this.loadStakedTokens()),
   tap(() => console.log('Auth state loaded')), // Log the loaded Ergo tokens
   switchMap(() => this.queryCards())
 ).subscribe({
@@ -251,11 +253,16 @@ this.loadSupplyTokens().pipe(
           tap((response: any) => {
             if (response) {
               const dataObjects: any = response;
-              console.log(response);
+              console.log("Ergo tokens loaded successfully");
               for (const token of dataObjects.tokens) {
                 const tokenDecimals = Math.pow(10, token.decimals);
+                  if (token.tokenId === "18c938e1924fc3eadc266e75ec02d81fe73b56e4e9f4e268dffffcb30387c42d") {
+                    continue;} // for Staked Tokens, skip them here
+                  if (token.tokenId === "6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189" && (token.amount / tokenDecimals) > 1) {
+                    this.tokenIds.push({ tokenId: token.tokenId, amount: 1 });
+                    console.log(token.tokenId)
+                    continue;} // only include hosky if amount is greater than 1
                 this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
-                //console.log(token.tokenId, token.amount / tokenDecimals);
               }
             }
           })
@@ -281,45 +288,51 @@ this.loadSupplyTokens().pipe(
     }
   }
 
-  // //Auction House
-  // loadStakedTokens(): Observable<void> {
-  //   if (this.walletID) {
-  //     return this.httpClient.get('https://ergoauctions.org/api/stake/stakeByAddress?address=' + this.walletID)
-  //       .pipe(
-  //         catchError(error => {
-  //           console.log('Error loading Staked tokens:', error);
-  //           return of(); // Return an empty observable
-  //         }),
-  //         tap((response: any) => {
-  //           if (response) {
-  //             const dataObjects: any = response;
-  //             for (const token of dataObjects.tokens) {
-  //               const tokenDecimals = Math.pow(10, token.decimals);
-  //               this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
-  //             }
-  //           }
-  //         })
-  //       );
-  //   } else {
-  //     console.log('No wallet ID');
-  //     return this.httpClient.get('https://ergo-explorer.anetabtc.io/api/v1/addresses/' + "9gZzo1X96Nv7ggNkTX5giCXrcQZ6YZwJzGHzfBrzn9Wi5Zz2K5G" + '/balance/confirmed')
-  //     .pipe(
-  //       catchError(error => {
-  //         console.log('Error loading Ergo tokens:', error);
-  //         return of(); // Return an empty observable
-  //       }),
-  //       tap((response: any) => {
-  //         if (response) {
-  //           const dataObjects: any = response;
-  //           for (const token of dataObjects.tokens) {
-  //             const tokenDecimals = Math.pow(10, token.decimals);
-  //             this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
-  //           }
-  //         }
-  //       })
-  //     );
-  //   }
-  // }
+
+  loadStakedTokens(): Observable<void> {
+    if (this.walletID) {
+      //for Auction House staked tokens
+      return this.httpClient.get('https://ergoauctions.org/api/stake/stakeByAddress?address=' + this.walletID)
+        .pipe(
+          catchError(error => {
+            console.log('Error loading Staked tokens:', error);
+            return of(); // Return an empty observable
+          }),
+          tap((response: any) => {
+            if (response) {
+              console.log(response);
+              const dataObjects: any = response;
+              for (const token of dataObjects.tokens) {
+                //const tokenDecimals = Math.pow(10, token.decimals);
+                if (token.amount >= 15000){
+                  //only include auction house if amount is greater than 15000
+                  this.tokenIds.push({tokenId: token.tokenId, amount: 1});// / tokenDecimals});
+                }
+                console.log (token.tokenId,token.amount )
+              }
+            }
+          })
+        );
+    } else {
+      console.log('No wallet ID');
+      return this.httpClient.get('https://ergo-explorer.anetabtc.io/api/v1/addresses/' + "9gZzo1X96Nv7ggNkTX5giCXrcQZ6YZwJzGHzfBrzn9Wi5Zz2K5G" + '/balance/confirmed')
+      .pipe(
+        catchError(error => {
+          console.log('Error loading Ergo tokens:', error);
+          return of(); // Return an empty observable
+        }),
+        tap((response: any) => {
+          if (response) {
+            const dataObjects: any = response;
+            for (const token of dataObjects.tokens) {
+              //const tokenDecimals = Math.pow(10, token.decimals);
+              this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount});// / tokenDecimals });
+            }
+          }
+        })
+      );
+    }
+  }
 
 
   loadSupplyTokens(): Observable<void> {
@@ -336,9 +349,7 @@ this.loadSupplyTokens().pipe(
               const tokenDecimals = Math.pow(10, token.decimals);
               const normalizedAmount = token.amount / tokenDecimals;
               const remainingSupply = 100000 - normalizedAmount;
-              // Assuming you have a separate state variable to store supply tokens
               this.supplyIds.push({ tokenId: token.tokenId, amount:  remainingSupply});
-              //console.log(`Token Name: ${token.name}, Token ID: ${token.tokenId} ,Remaining Supply: ${remainingSupply.toLocaleString()}`);
             }
           }
           else {
@@ -363,14 +374,19 @@ this.loadSupplyTokens().pipe(
             const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
 
             if (getAmount) {
-              // Check for the specific token ID and set the amount to 1
-              if (getAmount.tokenId === "6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189") {
-                return { ...card, amount: 1, totalSupply: supplyToken ? supplyToken.amount : 'N/A' };
-              } else {
-                return { ...card, amount: getAmount.amount, totalSupply: supplyToken ? supplyToken.amount : 'Not available' };
-              }
+                 //hosky and auction house - amounts will be = 1 if they passed their amount checks previously
+                  if ((getAmount.tokenId === "6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189" && getAmount.amount == 1) ||
+                  (getAmount.tokenId === "18c938e1924fc3eadc266e75ec02d81fe73b56e4e9f4e268dffffcb30387c42d" && getAmount.amount == 1)){
+                  console.log(getAmount.tokenId, getAmount.amount);
+                  return { ...card, amount: 1, totalSupply: supplyToken ? supplyToken.amount : 'N/A' };
+                }
+                //for regular cards that a user owns that are not partner cards
+                else {
+                  return { ...card, amount: getAmount.amount, totalSupply: supplyToken ? supplyToken.amount : 'N/A' };
+                }
+              //for anything where we don't have an amount
             } else {
-              return { ...card, amount: 0, totalSupply: supplyToken ? supplyToken.amount : 'Not available' };
+              return { ...card, amount: 0, totalSupply: supplyToken ? supplyToken.amount : 'N/A' };
             }
           });
           const sortedCards = allCards.sort((a: any, b: any) => a.name.localeCompare(b.name))
@@ -587,14 +603,11 @@ this.loadSupplyTokens().pipe(
     :Common: Total ${this.userCardsDetail.common}
     :Uncommon: Total ${this.userCardsDetail.uncommon}
     :Rare: Total ${this.userCardsDetail.rare}
-     Legendary: Total ${this.userCardsDetail.legendary}\n`;
-
-    // Adding current sort description
-    const sortDescription = `Current Sort: ${this.filter.sort.name}`;
+    :Legendary: Total ${this.userCardsDetail.legendary}\n`;
 
 
     // Combine the sections
-    const data = `${sortDescription}\n${raritySummary}\n${ownedSection}${unownedSection}`;
+    const data = `${raritySummary}\n${ownedSection}${unownedSection}`;
 
     const blob = new Blob([data.trim()], { type: 'text/plain;charset=utf-8' }); // Trim to remove any leading/trailing newlines
     saveAs(blob, 'exported-cards-view.txt');
@@ -625,7 +638,7 @@ this.loadSupplyTokens().pipe(
     this.modalService.openModal({
       card: card,
       cards: cardsToSend,
-      modalType: "Market",
+      modalType: "Collectibles",
       showDetails: true
     });
 }

@@ -214,7 +214,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-buttons" *ngIf="modalType === 'Market'">
+                            <div class="card-buttons" *ngIf="modalType === 'Collectibles' && selectedCard?.totalSupply !== 'N/A'">
                               <a href="https://www.skyharbor.io/collection/blitztcg" target="_blank" class="card-btn market">SkyHarbor Market</a>
                               <a href="https://ergoauctions.org/collection/822ed9428a71bef65e667a6e35313c221711680f893614471a3c133049f9abfd?tab=1" target="_blank" class="card-btn market">Auction House</a>
                           </div>

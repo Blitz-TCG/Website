@@ -303,8 +303,10 @@ export class MarketComponent implements OnInit {
             const getAmount = this.myTokenIds.find((token: any) => token.tokenId === card.tokenId);
             const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
 
-            // Check and return only if getAmount is defined and amount is greater than zero
-            if (getAmount && getAmount.amount > 0 && getAmount.tokenId !== "6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189") {
+            // Check and return only if getAmount is defined and amount is greater than zero, exclude partner cards
+            if (getAmount && getAmount.amount > 0 && getAmount.tokenId !== "6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189" &&
+            getAmount.tokenId !== "18c938e1924fc3eadc266e75ec02d81fe73b56e4e9f4e268dffffcb30387c42d"
+            ) {
               return {
                 ...card,
                 amount: getAmount.amount,
