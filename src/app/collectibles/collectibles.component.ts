@@ -158,6 +158,7 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
       this.walletService.walletUpdated$.subscribe(walletID => {
         this.walletID = walletID; // Update local walletID state
         this.resetTokenState(); // Reset token state
+        this.clearFiltersWallet();
         if (walletID) {
           console.log(this.allowDcLoad);
           this.loadErgoTokens().pipe(
@@ -303,12 +304,12 @@ this.loadSupplyTokens().pipe(
               console.log(response);
               const dataObjects: any = response;
               for (const token of dataObjects.tokens) {
-                //const tokenDecimals = Math.pow(10, token.decimals);
-                if (token.amount >= 15000){
+                const tokenDecimals = Math.pow(10, token.decimals);
+                if (token.amount / tokenDecimals  >= 15000){
                   //only include auction house if amount is greater than 15000
                   this.tokenIds.push({tokenId: token.tokenId, amount: 1});// / tokenDecimals});
                 }
-                console.log (token.tokenId,token.amount )
+                console.log (token.tokenId, token.amount / tokenDecimals)
               }
             }
           })
@@ -801,6 +802,60 @@ this.loadSupplyTokens().pipe(
     // Reapply filters to update the display
     this.sortCardsByTab();
     this.applyFilter();
+}
+
+clearFiltersWallet(){
+    // Reset all filter object values to their defaults
+    this.filter = {
+      sort: {
+        name: "Alphabetical: A to Z",
+        value: "1"
+      },
+      edition: {
+        name: "All",
+        value: "All"
+      },
+      set: {
+        name: "All",
+        value: "All"
+      },
+      faction: {
+        name: "All",
+        value: "All"
+      },
+      rarity: {
+        name: "All",
+        value: "All"
+      },
+      bracket: {
+        name: "All",
+        value: "All"
+      },
+      artist: {
+        name: "All",
+        value: "All"
+      }
+    };
+
+      this.isUnownedChecked = false;
+      this.isUniqueChecked = false;
+      this.isNonUniqueChecked = false;
+
+      if (this.unownedCardsOnlyCheckbox) {
+        this.unownedCardsOnlyCheckbox.nativeElement.checked = false;
+    }
+      if (this.uniqueCardsOnlyCheckbox) {
+          this.uniqueCardsOnlyCheckbox.nativeElement.checked = false;
+      }
+      if (this.nonUniqueCardsOnlyCheckbox) {
+          this.nonUniqueCardsOnlyCheckbox.nativeElement.checked = false;
+      }
+
+      // Clear search input
+      if (this.cardNameInput) {
+          this.cardNameInput.nativeElement.value = '';
+      }
+
 }
 
 

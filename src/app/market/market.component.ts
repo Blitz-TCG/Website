@@ -115,6 +115,7 @@ export class MarketComponent implements OnInit {
     this.walletService.walletUpdated$.subscribe(walletID => {
       this.walletID = walletID; // Update local walletID state
       this.resetTokenState(); // Reset token state
+      this.clearFilters();
       if (walletID) {
         console.log('Wallet loaded')
         if (this.activeTab == "Buy"){
