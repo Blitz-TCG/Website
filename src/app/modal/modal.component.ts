@@ -13,9 +13,11 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 export class ModalComponent implements OnInit {
   activeIndex: any;
   selectedCard: any = null;
+  cards: any[] = [];
   displayStyle = "none";
   currency = 'erg';
   modalType: any = null;
+  sellActiveTab: any = null;
   showDetails = true;
   price: string = "";
   isValid: boolean = true;
@@ -32,11 +34,12 @@ export class ModalComponent implements OnInit {
   ngOnInit() {
     this.fetchWalletAndLoadErgoTokens();
     this.modalService.modalData$.subscribe(data => {
-      this.selectedCard = data;
+      this.cards = data.cards;
+      this.selectedCard = data.card;
       this.displayStyle = "block";
       this.showDetails = data.showDetails;
       this.modalType = data.modalType;
-      // Perform any additional logic with the data
+      this.sellActiveTab = data.sellActiveTab;
     });
     console.log(this.walletID)
   }
@@ -74,6 +77,42 @@ export class ModalComponent implements OnInit {
       if (modalElement && !modalElement.contains(clickedElement)) {
         this.closeModal();
       }
+    }
+  }
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.displayStyle === "block") {  // This assumes that `displayStyle` being "block" means the modal is open.
+      switch (event.key) {
+        case 'ArrowRight':
+          this.navigateNext();  // Method to navigate to the next card
+          break;
+        case 'ArrowLeft':
+          this.navigatePrevious();  // Method to navigate to the previous card
+          break;
+      }
+    }
+  }
+  navigateNext() {
+    if (!this.cards || this.cards.length === 0) {
+      console.error('Card array is not initialized or empty');
+      return;
+    }
+    let currentIndex = this.cards.findIndex(card => card === this.selectedCard);
+    let nextIndex = currentIndex + 1;
+    if (nextIndex < this.cards.length) {
+      this.selectedCard = this.cards[nextIndex];
+    }
+  }
+
+  navigatePrevious() {
+    if (!this.cards || this.cards.length === 0) {
+      console.error('Card array is not initialized or empty');
+      return;
+    }
+    let currentIndex = this.cards.findIndex(card => card === this.selectedCard);
+    let prevIndex = currentIndex - 1;
+    if (prevIndex >= 0) {
+      this.selectedCard = this.cards[prevIndex];
     }
   }
   closeModal() {

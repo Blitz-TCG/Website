@@ -121,6 +121,7 @@ export class MarketComponent implements OnInit {
     this.walletService.walletUpdated$.subscribe(walletID => {
       this.walletID = walletID; // Update local walletID state
       this.resetTokenState(); // Reset token state
+      this.clearFilters();
       if (walletID) {
         console.log('Wallet loaded')
         if (this.activeTab == "Buy"){
@@ -309,8 +310,10 @@ export class MarketComponent implements OnInit {
             const getAmount = this.myTokenIds.find((token: any) => token.tokenId === card.tokenId);
             const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
 
-            // Check and return only if getAmount is defined and amount is greater than zero
-            if (getAmount && getAmount.amount > 0 && getAmount.tokenId !== "6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189") {
+            // Check and return only if getAmount is defined and amount is greater than zero, exclude partner cards
+            if (getAmount && getAmount.amount > 0 && getAmount.tokenId !== "6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189" &&
+            getAmount.tokenId !== "18c938e1924fc3eadc266e75ec02d81fe73b56e4e9f4e268dffffcb30387c42d"
+            ) {
               return {
                 ...card,
                 amount: getAmount.amount,
@@ -393,7 +396,8 @@ export class MarketComponent implements OnInit {
 
   // Fetch and processind response
   fetchNFTs(): Observable<any[]> {
-    const url = `${this.baseUrl}?collection=blitztcg`;
+        //eventually refine this
+    const url = `${this.baseUrl}?collection=blitztcg&orderCol=list_time&order=desc`;
     return this.http.get<any[]>(url);
   }
 
@@ -601,45 +605,64 @@ export class MarketComponent implements OnInit {
       );
   }
 
-
-
-  // Modal actions
+ // Modal actions
   openPopup(card: any, showDetails = true, modalType = this.activeTab, sellActiveTab = this.sellActiveTab) {
-    //if (this.authService.isLoggedIn && this.walletConnected()) {
-      this.modalService.openModal({ ...card, showDetails, modalType, sellActiveTab });
-    //}
-  }
+    // Determine which cards array to send based on the contents of filteredCards
+    this.filterCardsCheck();
 
+    // Open the modal with the appropriate data
+    this.modalService.openModal({
+        card: card,
+        cards: this.showCards, // Pass the appropriate array of cards
+        showDetails: showDetails,
+        modalType: modalType,
+        sellActiveTab: sellActiveTab
+    });
+}
 
   closeModal() {
     this.modalService.close();
   }
+
+
   // Pagination functions
   updateDisplayedCards() {
     this.showCards = (this.appliedFilter ? this.filteredCards : this.cardsByTab)
     .slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
   }
 
+  filterCardsCheck(){
+    if (this.filteredCards != this.cardsByTab){
+      this.filteredCards = this.cardsByTab;
+    }
+  }
+
   nextPage() {
+    this.filterCardsCheck();
     if (this.currentCardPage < this.cardsPages) {
       this.currentCardPage++;
       this.showCards = (this.appliedFilter ? this.filteredCards : this.cardsByTab).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
     }
+    this.updateDisplayedCards();
   }
   prevPage() {
+    this.filterCardsCheck();
     if (this.currentCardPage > 1) {
       this.currentCardPage--;
       this.updateDisplayedCards();
     }
   }
   firstPage() {
+    this.filterCardsCheck();
     this.currentCardPage = 1;
     this.updateDisplayedCards();
   }
   lastPage() {
+    this.filterCardsCheck();
     this.currentCardPage = this.cardsPages;
     this.updateDisplayedCards();
   }
+
   // Filters and sort actions
   toggleMenu(index: number): void {
     this.activeIndex = this.activeIndex === index ? -1 : index;

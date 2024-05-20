@@ -214,14 +214,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-buttons" *ngIf="selectedCard?.modalType === 'Market'">
+                            <div class="card-buttons" *ngIf="modalType === 'Collectibles' && selectedCard?.totalSupply !== 'N/A'">
                               <a href="https://www.skyharbor.io/collection/blitztcg" target="_blank" class="card-btn market">SkyHarbor Market</a>
                               <a href="https://ergoauctions.org/collection/822ed9428a71bef65e667a6e35313c221711680f893614471a3c133049f9abfd?tab=1" target="_blank" class="card-btn market">Auction House</a>
                           </div>
-                            <div class="card-buttons" *ngIf="selectedCard?.modalType === 'Burn'">
+                            <div class="card-buttons" *ngIf="modalType === 'Burn'">
                                 <div class="card-btn burn" (click)="showDetails = false; modalType = 'Burn'">Burn</div>
                             </div>
-                            <div *ngIf="selectedCard?.modalType === 'Buy'">
+                            <div *ngIf="modalType === 'Buy'">
                                 <div class="card-buttons">
                                     <div [ngClass]="{'message': true, 'success-message': isSuccessful}">{{ message }}
                                     </div>
@@ -238,15 +238,15 @@
                                 <div class="listed-date"> {{selectedCard?.time_ago}}
                                 </div>
                             </div>
-                            <div *ngIf="selectedCard?.modalType === 'Sell'">
-                                <div class="price-row" *ngIf="selectedCard?.sellActiveTab === 'Sold'">
+                            <div *ngIf="modalType === 'Sell'">
+                                <div class="price-row" *ngIf="sellActiveTab === 'Sold'">
                                     <div class="price-in-erg">{{selectedCard?.price_erg}} ERG</div>
                                     <!-- <div class="price-in-usd">({{selectedCard?.price_usd}} USD)</div> -->
                                 </div>
                                 <div class="card-buttons">
-                                    <div class="card-btn sell" *ngIf="selectedCard?.sellActiveTab === 'Owned'"
+                                    <div class="card-btn sell" *ngIf="sellActiveTab === 'Owned'"
                                         (click)="showDetails = false; modalType = 'Sell'">Sell</div>
-                                    <div class="row-cancel" *ngIf="selectedCard?.sellActiveTab === 'For Sale'">
+                                    <div class="row-cancel" *ngIf="sellActiveTab === 'For Sale'">
                                         <div class="card-btn edit-cancel"
                                             (click)="showDetails = false; modalType = 'Cancel'">
                                             Cancel</div>
@@ -255,10 +255,10 @@
                                             Edit</div>
                                     </div>
                                 </div>
-                                <div class="price-row" *ngIf="selectedCard?.sellActiveTab === 'For Sale'">
+                                <div class="price-row" *ngIf="sellActiveTab === 'For Sale'">
                                   <div class="price-in-erg">{{selectedCard?.price_erg}} ERG</div>
                               </div>
-                                <div class="listed-date" *ngIf="selectedCard?.sellActiveTab === 'Sold' || 'For Sale'">
+                                <div class="listed-date" *ngIf="sellActiveTab === 'Sold' || 'For Sale'">
                                   <div class="price-in-erg">{{selectedCard?.time_ago}}</div>
                                 </div>
                             </div>
