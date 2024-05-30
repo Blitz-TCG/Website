@@ -16,6 +16,9 @@
     "prerender": "ng run blitz-tcg:prerender"
   },
   "private": true,
+  "resolutions": {
+    "webpack-dev-middleware": "5.3.4"
+  },
   "dependencies": {
     "@angular/animations": "^13.3.11",
     "@angular/common": "^13.3.11",
