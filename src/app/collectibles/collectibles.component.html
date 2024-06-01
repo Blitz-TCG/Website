@@ -18,7 +18,7 @@
       </div>
       <div class="username-bar">
         <div class="username-text">
-          {{ (authService.userData.displayName) ? authService.userData.displayName : 'Unknown User' }}
+          {{ authService.userData?.displayName ? authService.userData.displayName : 'Unknown User' }}
         </div>
       </div>
     </div>

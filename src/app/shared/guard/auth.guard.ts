@@ -1,17 +1,12 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Router,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 import { Observable } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuard  {
   constructor(public authService: AuthService, public router: Router, @Inject(PLATFORM_ID) private platformId: any) { }
   canActivate(
     next: ActivatedRouteSnapshot,
