@@ -37,6 +37,9 @@
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "file-saver"
             ]
           },
           "configurations": {
@@ -167,7 +170,6 @@
       }
     }
   },
-  "defaultProject": "blitz-tcg",
   "cli": {
     "analytics": "0a0abba7-f6a4-4d10-beff-6ec1aefdc531"
   }
