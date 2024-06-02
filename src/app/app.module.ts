@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Import this
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
@@ -71,6 +71,7 @@ import { MarketComponent } from './market/market.component';
     ReactiveFormsModule,
     SwiperModule,
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    BrowserAnimationsModule, // Add this
     AppRoutingModule,
     HttpClientModule,
     AngularSvgIconModule.forRoot(),
