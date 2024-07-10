@@ -842,41 +842,77 @@ export class MarketComponent implements OnInit {
   }
   buyNFT(boxId: string) {
     this.isLoading = boxId;
-    const testURL = `${skyHarborApi}/api/transactions/buy`;
+    // const testURL = `https://skyharbor.io/api/transactions/buy`;
+    const testURL = `https://testapi.skyharbor.io/api/transactions/buy`;
+
     const data = {
-      // DO NOT USE this.walletID - USE NAUTILUS CHANGE ADDRESS INSTEAD
-      "userAddresses": [this.walletID],
-      "buyBox": {
-        box_id: boxId
-      }
+      userAddresses: [this.walletID],
+      buyBox: {
+        box_id: boxId,
+      },
     };
     this.http.post(testURL, data).subscribe(
-      (response: Partial<TransactionResponse>) => {
-        this.isLoading = '';
-        this.isSuccessful = true;
-        if(!response?.transaction_to_sign) {
-          throw Error
-        }
+      (response) => {
+        // Nautilus tx:
+        if (typeof ergoConnector !== 'undefined' && ergoConnector.nautilus) {
+          ergoConnector.nautilus
+            .connect()
+            .then((access_granted) => {
+              if (!access_granted) {
+                console.error('Wallet connection not granted.');
+                this.message =
+                  'Wallet connection was not granted. Please ensure your wallet is connected.';
+                this.isSuccessful = false;
+                return;
+              }
 
-        // Sign the returned tx
-        ergo.sign_tx(response?.transaction_to_sign).then((txResponse: any) => {
-            // Submit the tx
-            ergo.submit_tx(txResponse).then((submitRes) => {
-              this.isSuccessful = true;
-              this.message = `Transaction successful with Box ID: ${boxId}`;  
+              // Define the transaction object
+              // @ts-ignore
+              const transactionObject = response?.transaction_to_sign;
+
+              // Now send the transaction using ergo
+              window.ergo
+                .sign_tx(transactionObject)
+                .then((response: any) => {
+                  ergo
+                    .submit_tx(response)
+                    .then((txRes) => {
+                      console.log('Transaction response:', response);
+                      this.isSuccessful = true;
+                      this.message = `Transaction successful with transaction ID: ${txRes}`;
+                    })
+                    .catch((err) => {
+                      this.isSuccessful = false;
+                      console.log("ERR", err)
+                      this.message = err.toString();
+                    });
+                })
+                .catch((error: { toString: () => string | null }) => {
+                  console.error('Transaction error:', error);
+                  this.isSuccessful = false;
+                  //@ts-ignore
+                  this.message = `Error purchasing NFT: ${error?.info || ""}`
+                });
             })
-        }).catch((error: { toString: () => string | null; }) => {
-            console.error('Transaction error:', error);
-            this.isSuccessful = false;
-            this.message = error.toString();
-        });
-        
-
-        console.log(response);
-        this.message = 'Purchase successful!';
+            .catch((error) => {
+              console.error(`Error connecting to the wallet: ${error}`);
+              this.isSuccessful = false;
+              this.message =
+                'Error connecting to the wallet. Please try again.';
+            });
+        } else {
+          console.log('Nautilus wallet extension is not detected.');
+          alert(
+            'Nautilus wallet is not detected. Please install the Nautilus wallet extension to proceed.'
+          );
+          this.isSuccessful = false;
+          this.message = 'Nautilus wallet extension is not detected.';
+        }
       },
-      error => {
-        const { error: { message } } = error
+      (error) => {
+        const {
+          error: { message },
+        } = error;
         console.log(error);
         this.isLoading = '';
         this.message = message;
