@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Import this
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
@@ -38,57 +38,51 @@ import { UseComponent } from './use/use.component';
 import { WhitepaperComponent } from './whitepaper/whitepaper.component';
 import { MarketComponent } from './market/market.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    FooterComponent,
-    HomeComponent,
-    HeaderCarouselComponent,
-    NewsComponent,
-    RoadmapComponent,
-    SignInComponent,
-    SignUpComponent,
-    ForgotPasswordComponent,
-    VerifyEmailComponent,
-    ConnectorComponent,
-    LoreComponent,
-    PrivacyComponent,
-    CookiepolicyComponent,
-    TermsComponent,
-    EulaComponent,
-    DisclaimerComponent,
-    UseComponent,
-    WhitepaperComponent,
-    CollectiblesComponent,
-    BuyPacksComponent,
-    OpenPacksComponent,
-    MarketComponent,
-    ModalComponent
-  ],
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    SwiperModule,
-    BrowserModule.withServerTransition({ appId: 'serverApp' }),
-    AppRoutingModule,
-    HttpClientModule,
-    AngularSvgIconModule.forRoot(),
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAuthModule,
-    AngularFirestoreModule,
-    AngularFireStorageModule,
-  ],
-  providers: [AuthService],
-  bootstrap: [AppComponent],
-  exports: [
-    PrivacyComponent,
-    CookiepolicyComponent,
-    TermsComponent,
-    EulaComponent,
-    DisclaimerComponent,
-    UseComponent,
-    WhitepaperComponent
-  ],
-})
+@NgModule({ declarations: [
+        AppComponent,
+        HeaderComponent,
+        FooterComponent,
+        HomeComponent,
+        HeaderCarouselComponent,
+        NewsComponent,
+        RoadmapComponent,
+        SignInComponent,
+        SignUpComponent,
+        ForgotPasswordComponent,
+        VerifyEmailComponent,
+        ConnectorComponent,
+        LoreComponent,
+        PrivacyComponent,
+        CookiepolicyComponent,
+        TermsComponent,
+        EulaComponent,
+        DisclaimerComponent,
+        UseComponent,
+        WhitepaperComponent,
+        CollectiblesComponent,
+        BuyPacksComponent,
+        OpenPacksComponent,
+        MarketComponent,
+        ModalComponent
+    ],
+    bootstrap: [AppComponent],
+    exports: [
+        PrivacyComponent,
+        CookiepolicyComponent,
+        TermsComponent,
+        EulaComponent,
+        DisclaimerComponent,
+        UseComponent,
+        WhitepaperComponent
+    ], imports: [FormsModule,
+        ReactiveFormsModule,
+        SwiperModule,
+        BrowserModule.withServerTransition({ appId: 'serverApp' }),
+        BrowserAnimationsModule, // Add this
+        AppRoutingModule,
+        AngularSvgIconModule.forRoot(),
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireAuthModule,
+        AngularFirestoreModule,
+        AngularFireStorageModule], providers: [AuthService, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }

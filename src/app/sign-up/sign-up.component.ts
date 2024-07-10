@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import {
   AbstractControl,
-  FormControl,
-  FormGroup,
+  UntypedFormControl,
+  UntypedFormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators,
@@ -28,7 +28,7 @@ export class SignUpComponent implements OnInit {
   @ViewChild('stickyElem', { static: false }) menuElement?: ElementRef;
   sticky: boolean = false;
   constructor(public authService: AuthService, private location: Location, @Inject(PLATFORM_ID) private platformId: any) { }
-  registerForm!: FormGroup;
+  registerForm!: UntypedFormGroup;
   errorMessage!: string;
   submitted: boolean = false;
 
@@ -49,9 +49,9 @@ export class SignUpComponent implements OnInit {
         })(i);
       }
     }
-    this.registerForm = new FormGroup(
+    this.registerForm = new UntypedFormGroup(
       {
-        email: new FormControl('', {
+        email: new UntypedFormControl('', {
           validators: [
             Validators.required,
             // Validators.email,
@@ -62,7 +62,7 @@ export class SignUpComponent implements OnInit {
           ],
           updateOn: 'submit',
         }),
-        username: new FormControl('', {
+        username: new UntypedFormControl('', {
           validators: [
             Validators.required,
             Validators.pattern(
@@ -74,7 +74,7 @@ export class SignUpComponent implements OnInit {
           ],
           updateOn: 'submit',
         }),
-        password: new FormControl('', {
+        password: new UntypedFormControl('', {
           validators: [
             Validators.required,
             Validators.minLength(8),
@@ -92,7 +92,7 @@ export class SignUpComponent implements OnInit {
           ],
           updateOn: 'submit',
         }),
-        confirmPassword: new FormControl('', {
+        confirmPassword: new UntypedFormControl('', {
           validators: [Validators.required],
           updateOn: 'submit',
         }),

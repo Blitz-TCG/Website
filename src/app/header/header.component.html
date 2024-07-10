@@ -77,8 +77,7 @@
             </a>
             <ul class="nav-sub-items">
               <li class="nav-sub-item" (click)="clickOnMenu(99,false)">
-                <a href="#">Hello: <strong class="display-name">{{(user.displayName) ? user.displayName :
-                    'User'}}</strong></a>
+                <a href="#">Hello: <strong class="display-name">{{ user?.displayName ? user.displayName : 'User' }}</strong></a>
               </li>
               <li class="nav-sub-item">
                 <a class="sign-out-btn" (click)="signout()">Sign Out</a>
@@ -110,8 +109,7 @@
                   class="auth-btn profile-btn-text"></span></button>
               <ul class="nav-sub-items">
                 <li class="nav-sub-item" (click)="clickOnMenu(99,false)">
-                  <a href="#">Hello: <strong class="display-name">{{(user.displayName) ? user.displayName :
-                      'User'}}</strong></a>
+                  <a href="#">Hello: <strong class="display-name">{{ user?.displayName ? user.displayName : 'User' }}</strong></a>
                 </li>
                 <li class="nav-sub-item">
                   <a class="sign-out-btn" (click)="signout()">Sign Out</a>

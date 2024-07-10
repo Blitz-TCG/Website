@@ -639,29 +639,34 @@ export class MarketComponent implements OnInit {
 
   nextPage() {
     this.filterCardsCheck();
-    if (this.currentCardPage < this.cardsPages) {
+    if (this.currentCardPage < this.cardsPages && this.cardsPages > 1) {
       this.currentCardPage++;
       this.showCards = (this.appliedFilter ? this.filteredCards : this.cardsByTab).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
+      this.updateDisplayedCards();
     }
-    this.updateDisplayedCards();
   }
   prevPage() {
     this.filterCardsCheck();
-    if (this.currentCardPage > 1) {
+    if (this.currentCardPage > 1 && this.cardsPages > 1) {
       this.currentCardPage--;
       this.updateDisplayedCards();
     }
   }
   firstPage() {
     this.filterCardsCheck();
+    if (this.cardsPages > 1) {
     this.currentCardPage = 1;
     this.updateDisplayedCards();
+    }
   }
   lastPage() {
     this.filterCardsCheck();
-    this.currentCardPage = this.cardsPages;
-    this.updateDisplayedCards();
+    if (this.cardsPages > 1) {
+      this.currentCardPage = this.cardsPages;
+      this.updateDisplayedCards();
+    }
   }
+
 
   // Filters and sort actions
   toggleMenu(index: number): void {
@@ -802,7 +807,10 @@ export class MarketComponent implements OnInit {
       }
     }
 
-    this.cardNameInput.nativeElement.value = '';
+    if (this.cardNameInput) {
+      this.cardNameInput.nativeElement.value = '';
+    }
+
     this.appliedFilter = false;
 
     if((tab === 'Sell' && tab2 === 'Owned') || (tab === 'Burn')){

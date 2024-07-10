@@ -37,6 +37,9 @@
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "file-saver"
             ]
           },
           "configurations": {
@@ -73,10 +76,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "blitz-tcg:build:production"
+              "buildTarget": "blitz-tcg:build:production"
             },
             "development": {
-              "browserTarget": "blitz-tcg:build:development"
+              "buildTarget": "blitz-tcg:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +87,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "blitz-tcg:build"
+            "buildTarget": "blitz-tcg:build"
           }
         },
         "test": {
@@ -126,13 +129,15 @@
             "development": {
               "optimization": false,
               "sourceMap": true,
-              "extractLicenses": false
+              "extractLicenses": false,
+              "vendorChunk": true,
+              "buildOptimizer": false
             }
           },
           "defaultConfiguration": "production"
         },
         "serve-ssr": {
-          "builder": "@nguniversal/builders:ssr-dev-server",
+          "builder": "@angular-devkit/build-angular:ssr-dev-server",
           "configurations": {
             "development": {
               "browserTarget": "blitz-tcg:build:development",
@@ -146,7 +151,7 @@
           "defaultConfiguration": "development"
         },
         "prerender": {
-          "builder": "@nguniversal/builders:prerender",
+          "builder": "@angular-devkit/build-angular:prerender",
           "options": {
             "routes": [
               "/"
@@ -167,7 +172,6 @@
       }
     }
   },
-  "defaultProject": "blitz-tcg",
   "cli": {
     "analytics": "0a0abba7-f6a4-4d10-beff-6ec1aefdc531"
   }

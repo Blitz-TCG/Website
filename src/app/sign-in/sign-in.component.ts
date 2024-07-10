@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../shared/services/auth.service';
 @Component({
   selector: 'app-sign-in',
@@ -12,7 +12,7 @@ export class SignInComponent implements OnInit {
   sticky: boolean = false;
   public showResetPasswordButton = false;
   constructor(public authService: AuthService, @Inject(PLATFORM_ID) private platformId: any) { }
-  signinForm!: FormGroup;
+  signinForm!: UntypedFormGroup;
   errorMessage!: string;
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -31,8 +31,8 @@ export class SignInComponent implements OnInit {
         })(i);
       }
     }
-    this.signinForm = new FormGroup({
-      email: new FormControl('', {
+    this.signinForm = new UntypedFormGroup({
+      email: new UntypedFormControl('', {
         validators: [
           Validators.required,
           Validators.pattern(
@@ -42,7 +42,7 @@ export class SignInComponent implements OnInit {
         ],
         updateOn: 'submit',
       }),
-      password: new FormControl('', {
+      password: new UntypedFormControl('', {
         validators: [Validators.required],
         updateOn: 'submit',
       }),

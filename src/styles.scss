@@ -1,5 +1,5 @@
-@import "~swiper/css";
-@import "~swiper/css/pagination";
+@import 'swiper/css';
+@import 'swiper/css/pagination';
 
 @font-face {
   font-family: "OPTIEdwallianMedium";
@@ -95,7 +95,6 @@ body {
 .form-container {
   width: 40%;
   margin: auto;
-  margin-bottom: 50px;
 }
 
 .input-container {
@@ -113,6 +112,7 @@ body {
   padding: 30px;
   //used to be 50px
   color: #fff;
+  margin-bottom: 100px;
 
   &::before {
     content: " ";
@@ -226,7 +226,6 @@ body {
     background-position: center;
     height: 41px;
     padding-bottom: 10px;
-    box-shadow: none !important;
     color: #fff !important;
     transition: all 0.2s ease-in-out;
     margin-top: 20px; // Adjusted space above the reset button
@@ -234,18 +233,31 @@ body {
     margin-right: auto; // Centers the button within its container
     display: block; // Ensures the button is a block-level eslement which respects margin: auto
     font-size: 12px; // Adjust this as needed to avoid text wrapping
+    outline: none; /* Ensure no outline is applied */
+    border: none; /* Ensure no border is applied */
+    box-shadow: none; /* Ensure no box shadow is applied */
 
     &:hover {
-      background-image: url(/assets/BTN_clear_selected.png);
+      background-image: url(/assets/BTN_clear_selected_red.png);
+      outline: none; /* Ensure no outline is applied */
+      border: none; /* Ensure no border is applied */
+      box-shadow: none; /* Ensure no box shadow is applied */
     }
 
     &:focus {
-      background-image: url(/assets/BTN_clear_selected.png);
+      background-image: url(/assets/BTN_clear_selected_red.png);
+      outline: none; /* Ensure no outline is applied */
+      border: none; /* Ensure no border is applied */
+      box-shadow: none; /* Ensure no box shadow is applied */
+      top: 1px !important;
     }
 
     &:active {
-      background-image: url(/assets/BTN_clear_pressed.png);
-      top: 1px;
+      background-image: url(/assets/BTN_clear_pressed_red.png);
+      outline: none; /* Ensure no outline is applied */
+      border: none; /* Ensure no border is applied */
+      box-shadow: none; /* Ensure no box shadow is applied */
+      top: 1px !important;
     }
   }
 
@@ -256,25 +268,36 @@ body {
     background-position: center;
     height: 41px;
     padding-bottom: 10px;
-    box-shadow: none !important;
     color: #fff !important;
     transition: all 0.2s ease-in-out;
     margin-top: 20px; // Adjusted space above the reset button
     margin-left: auto; // Centers the button within its container
     margin-right: auto; // Centers the button within its container
     display: block; // Ensures the button is a block-level eslement which respects margin: auto
+    outline: none; /* Ensure no outline is applied */
+    border: none; /* Ensure no border is applied */
+    box-shadow: none; /* Ensure no box shadow is applied */
 
     &:hover {
       background-image: url(/assets/BTN_clear_selected.png);
+      outline: none; /* Ensure no outline is applied */
+      border: none; /* Ensure no border is applied */
+      box-shadow: none; /* Ensure no box shadow is applied */
     }
 
     &:focus {
       background-image: url(/assets/BTN_clear_selected.png);
+      outline: none; /* Ensure no outline is applied */
+      border: none; /* Ensure no border is applied */
+      box-shadow: none; /* Ensure no box shadow is applied */
     }
 
     &:active {
       background-image: url(/assets/BTN_clear_pressed.png);
-      top: 1px;
+      outline: none; /* Ensure no outline is applied */
+      border: none; /* Ensure no border is applied */
+      box-shadow: none; /* Ensure no box shadow is applied */
+      top: 1px !important;
     }
   }
 
@@ -325,32 +348,31 @@ body {
   }
 
   ::placeholder {
-    color: #5d76a0;
-    opacity: 1;
+    color:  #5d76a0 !important;
     /* Firefox */
     font-style: italic !important;
   }
 
   :-ms-input-placeholder {
-    color: #5d76a0;
+    color:  #5d76a0 !important;
     font-style: italic !important;
   }
 
   ::-ms-input-placeholder {
-    color: #5d76a0;
+    color:  #5d76a0 !important;
     font-style: italic !important;
   }
 }
 
-.top-badge {
-  background-image: url(/assets/top_badge.png);
-  position: relative;
-  width: 100%;
-  height: 49px;
-  background-size: cover;
-  background-position: center;
-  display: block;
-}
+// .top-badge {
+//   background-image: url(/assets/top_badge.png);
+//   position: relative;
+//   width: 100%;
+//   height: 49px;
+//   background-size: cover;
+//   background-position: center;
+//   display: block;
+// }
 
 .select-story {
   .swiper-wrapper {
@@ -375,7 +397,6 @@ body {
   .form-container {
     width: 100%;
     margin: auto;
-    margin-bottom: 50px;
   }
 
   .form-block {
@@ -387,7 +408,6 @@ body {
   .form-container {
     width: 70%;
     margin: auto;
-    margin-bottom: 50px;
   }
 
   .form-block {
