@@ -24,6 +24,12 @@ import { collection, getDocs, getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { child, get, getDatabase, ref } from 'firebase/database';
 
+const skyHarborApi = "https://testapi.skyharbor.io"
+
+interface TransactionResponse {
+  error: boolean; transaction_to_sign: any
+}
+
 @Component({
   selector: 'app-market',
   templateUrl: './market.component.html',
@@ -836,22 +842,77 @@ export class MarketComponent implements OnInit {
   }
   buyNFT(boxId: string) {
     this.isLoading = boxId;
-    const testURL = `https://skyharbor.io/api/transactions/buy`;
+    // const testURL = `https://skyharbor.io/api/transactions/buy`;
+    const testURL = `https://testapi.skyharbor.io/api/transactions/buy`;
+
     const data = {
-      "userAddresses": [this.walletID],
-      "buyBox": {
-        box_id: boxId
-      }
+      userAddresses: [this.walletID],
+      buyBox: {
+        box_id: boxId,
+      },
     };
     this.http.post(testURL, data).subscribe(
-      response => {
-        this.isLoading = '';
-        this.isSuccessful = true;
-        console.log(response);
-        this.message = 'Purchase successful!';
+      (response) => {
+        // Nautilus tx:
+        if (typeof ergoConnector !== 'undefined' && ergoConnector.nautilus) {
+          ergoConnector.nautilus
+            .connect()
+            .then((access_granted) => {
+              if (!access_granted) {
+                console.error('Wallet connection not granted.');
+                this.message =
+                  'Wallet connection was not granted. Please ensure your wallet is connected.';
+                this.isSuccessful = false;
+                return;
+              }
+
+              // Define the transaction object
+              // @ts-ignore
+              const transactionObject = response?.transaction_to_sign;
+
+              // Now send the transaction using ergo
+              window.ergo
+                .sign_tx(transactionObject)
+                .then((response: any) => {
+                  ergo
+                    .submit_tx(response)
+                    .then((txRes) => {
+                      console.log('Transaction response:', response);
+                      this.isSuccessful = true;
+                      this.message = `Transaction successful with transaction ID: ${txRes}`;
+                    })
+                    .catch((err) => {
+                      this.isSuccessful = false;
+                      console.log("ERR", err)
+                      this.message = err.toString();
+                    });
+                })
+                .catch((error: { toString: () => string | null }) => {
+                  console.error('Transaction error:', error);
+                  this.isSuccessful = false;
+                  //@ts-ignore
+                  this.message = `Error purchasing NFT: ${error?.info || ""}`
+                });
+            })
+            .catch((error) => {
+              console.error(`Error connecting to the wallet: ${error}`);
+              this.isSuccessful = false;
+              this.message =
+                'Error connecting to the wallet. Please try again.';
+            });
+        } else {
+          console.log('Nautilus wallet extension is not detected.');
+          alert(
+            'Nautilus wallet is not detected. Please install the Nautilus wallet extension to proceed.'
+          );
+          this.isSuccessful = false;
+          this.message = 'Nautilus wallet extension is not detected.';
+        }
       },
-      error => {
-        const { error: { message } } = error
+      (error) => {
+        const {
+          error: { message },
+        } = error;
         console.log(error);
         this.isLoading = '';
         this.message = message;
