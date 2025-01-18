@@ -245,7 +245,7 @@ this.loadSupplyTokens().pipe(
   loadErgoTokens(): Observable<void> {
     console.log('This walletID:' + this.walletID)
     if (this.walletID) {
-      return this.httpClient.get('https://ergo-explorer.anetabtc.io/api/v1/addresses/' + this.walletID + '/balance/confirmed')
+      return this.httpClient.get('https://api.ergoplatform.com/api/v1/addresses/' + this.walletID + '/balance/confirmed')
         .pipe(
           catchError(error => {
             console.log('Error loading Ergo tokens:', error);
@@ -270,7 +270,7 @@ this.loadSupplyTokens().pipe(
         );
     } else {
       console.log('No wallet ID');
-      return this.httpClient.get('https://ergo-explorer.anetabtc.io/api/v1/addresses/' + "9gZzo1X96Nv7ggNkTX5giCXrcQZ6YZwJzGHzfBrzn9Wi5Zz2K5G" + '/balance/confirmed')
+      return this.httpClient.get('https://api.ergoplatform.com/api/v1/addresses/' + "9gZzo1X96Nv7ggNkTX5giCXrcQZ6YZwJzGHzfBrzn9Wi5Zz2K5G" + '/balance/confirmed')
       .pipe(
         catchError(error => {
           console.log('Error loading Ergo tokens:', error);
@@ -316,7 +316,7 @@ this.loadSupplyTokens().pipe(
         );
     } else {
       console.log('No wallet ID');
-      return this.httpClient.get('https://ergo-explorer.anetabtc.io/api/v1/addresses/' + "9gZzo1X96Nv7ggNkTX5giCXrcQZ6YZwJzGHzfBrzn9Wi5Zz2K5G" + '/balance/confirmed')
+      return this.httpClient.get('https://api.ergoplatform.com/api/v1/addresses/' + "9gZzo1X96Nv7ggNkTX5giCXrcQZ6YZwJzGHzfBrzn9Wi5Zz2K5G" + '/balance/confirmed')
       .pipe(
         catchError(error => {
           console.log('Error loading Ergo tokens:', error);
@@ -337,7 +337,7 @@ this.loadSupplyTokens().pipe(
 
 
   loadSupplyTokens(): Observable<void> {
-    return this.httpClient.get(`https://ergo-explorer.anetabtc.io/api/v1/addresses/${this.SUPPLY_ADDRESS}/balance/confirmed`)
+    return this.httpClient.get(`https://api.ergoplatform.com/api/v1/addresses/${this.SUPPLY_ADDRESS}/balance/confirmed`)
       .pipe(
         catchError(error => {
           console.error('Error loading supply tokens:', error);
