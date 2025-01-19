@@ -31,6 +31,7 @@
     "@angular/platform-server": "^18.2.12",
     "@angular/router": "^18.2.12",
     "@angular/ssr": "^18.2.12",
+    "@fleet-sdk/core": "^0.8.1",
     "@popperjs/core": "^2.11.8",
     "@types/file-saver": "^2.0.7",
     "angular-svg-icon": "^13.0.0",
