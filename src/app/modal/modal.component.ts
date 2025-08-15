@@ -6,10 +6,9 @@ import { WalletService } from '../wallet.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
-    selector: 'app-modal',
-    templateUrl: './modal.component.html',
-    styleUrls: ['./modal.component.scss'],
-    standalone: false
+  selector: 'app-modal',
+  templateUrl: './modal.component.html',
+  styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent implements OnInit {
   activeIndex: any;

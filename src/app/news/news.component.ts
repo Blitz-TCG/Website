@@ -6,10 +6,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, switchMap, interval, Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-news',
-    templateUrl: './news.component.html',
-    styleUrls: ['./news.component.scss'],
-    standalone: false
+  selector: 'app-news',
+  templateUrl: './news.component.html',
+  styleUrls: ['./news.component.scss'],
 })
 export class NewsComponent implements OnInit {
   homeBoxes$: Observable<any>;

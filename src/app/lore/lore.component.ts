@@ -11,7 +11,6 @@ SwiperCore.use([Pagination]);
     selector: 'app-lore',
     templateUrl: './lore.component.html',
     styleUrls: ['./lore.component.scss'],
-    standalone: false
 })
 export class LoreComponent implements OnInit {
     @ViewChild('stickySlider', { static: false }) menuElement?: ElementRef;

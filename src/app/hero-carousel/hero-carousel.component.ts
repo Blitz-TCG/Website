@@ -20,11 +20,10 @@ import { SwiperComponent } from 'swiper/angular';
 SwiperCore.use([Autoplay, Pagination]);
 
 @Component({
-    selector: 'app-hero-carousel',
-    templateUrl: './hero-carousel.component.html',
-    styleUrls: ['./hero-carousel.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+  selector: 'app-hero-carousel',
+  templateUrl: './hero-carousel.component.html',
+  styleUrls: ['./hero-carousel.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class HeaderCarouselComponent implements OnInit {
   @ViewChild('swiper', { static: false }) swiper?: SwiperComponent;

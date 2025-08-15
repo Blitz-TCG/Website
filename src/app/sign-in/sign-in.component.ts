@@ -3,10 +3,9 @@ import { Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewC
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../shared/services/auth.service';
 @Component({
-    selector: 'app-sign-in',
-    templateUrl: './sign-in.component.html',
-    styleUrls: ['./sign-in.component.scss'],
-    standalone: false
+  selector: 'app-sign-in',
+  templateUrl: './sign-in.component.html',
+  styleUrls: ['./sign-in.component.scss'],
 })
 export class SignInComponent implements OnInit {
   @ViewChild('stickyElem', { static: false }) menuElement?: ElementRef;

@@ -2,10 +2,9 @@ import { isPlatformBrowser } from '@angular/common';
 import { Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 
 @Component({
-    selector: 'app-eula',
-    templateUrl: './eula.component.html',
-    styleUrls: ['./eula.component.scss'],
-    standalone: false
+  selector: 'app-eula',
+  templateUrl: './eula.component.html',
+  styleUrls: ['./eula.component.scss']
 })
 export class EulaComponent implements OnInit {
 

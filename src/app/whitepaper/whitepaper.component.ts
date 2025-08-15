@@ -3,10 +3,9 @@ import { Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewC
 import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
-    selector: 'app-whitepaper',
-    templateUrl: './whitepaper.component.html',
-    styleUrls: ['./whitepaper.component.scss'],
-    standalone: false
+  selector: 'app-whitepaper',
+  templateUrl: './whitepaper.component.html',
+  styleUrls: ['./whitepaper.component.scss']
 })
 export class WhitepaperComponent implements OnInit {
 

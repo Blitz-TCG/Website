@@ -14,10 +14,9 @@ import { getDownloadURL, ref } from '@angular/fire/storage';
 import { map, Observable, switchMap } from 'rxjs';
 
 @Component({
-    selector: 'app-roadmap',
-    templateUrl: './roadmap.component.html',
-    styleUrls: ['./roadmap.component.scss'],
-    standalone: false
+  selector: 'app-roadmap',
+  templateUrl: './roadmap.component.html',
+  styleUrls: ['./roadmap.component.scss'],
 })
 export class RoadmapComponent implements OnInit {
   @ViewChild('stickySlider', { static: false }) menuElement?: ElementRef;

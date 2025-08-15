@@ -4,10 +4,9 @@ import { Router } from '@angular/router';
 import { AuthService } from './shared/services/auth.service';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   constructor(public router: Router, public authService: AuthService, @Inject(PLATFORM_ID) private platformId: any) {

@@ -2,10 +2,9 @@ import { isPlatformBrowser } from '@angular/common';
 import { Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 
 @Component({
-    selector: 'app-terms',
-    templateUrl: './terms.component.html',
-    styleUrls: ['./terms.component.scss'],
-    standalone: false
+  selector: 'app-terms',
+  templateUrl: './terms.component.html',
+  styleUrls: ['./terms.component.scss']
 })
 export class TermsComponent implements OnInit {
 

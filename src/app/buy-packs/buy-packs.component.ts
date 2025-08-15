@@ -3,10 +3,9 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { environment } from '../../environments/environment';
 
 @Component({
-    selector: 'app-buy-packs',
-    templateUrl: './buy-packs.component.html',
-    styleUrls: ['./buy-packs.component.scss'],
-    standalone: false
+  selector: 'app-buy-packs',
+  templateUrl: './buy-packs.component.html',
+  styleUrls: ['./buy-packs.component.scss']
 })
 export class BuyPacksComponent implements OnInit {
   allowedOrigin: SafeUrl

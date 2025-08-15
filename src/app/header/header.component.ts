@@ -22,10 +22,9 @@ import { AuthService } from '../shared/services/auth.service';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { isPlatformBrowser } from '@angular/common';
 @Component({
-    selector: 'app-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
-    standalone: false
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
   @ViewChild('stickyMenu', { static: false }) menuElement?: ElementRef;

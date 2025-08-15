@@ -20,10 +20,9 @@ import { CustomValidators } from '../custom-validators';
 import { AuthService } from '../shared/services/auth.service';
 import { blockedWords } from '../shared/services/blocked';
 @Component({
-    selector: 'app-sign-up',
-    templateUrl: './sign-up.component.html',
-    styleUrls: ['./sign-up.component.scss'],
-    standalone: false
+  selector: 'app-sign-up',
+  templateUrl: './sign-up.component.html',
+  styleUrls: ['./sign-up.component.scss'],
 })
 export class SignUpComponent implements OnInit {
   @ViewChild('stickyElem', { static: false }) menuElement?: ElementRef;
