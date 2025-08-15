@@ -382,7 +382,7 @@
     }
 
     .card-btn {
-      width: 100%;
+      width: 50%;
       height: 40px;
       font-size: 1.25rem;
       background-position: center;
@@ -397,6 +397,7 @@
       position: relative;
       margin: 0 auto;
       margin-top: 10px;
+      margin-bottom: 10px;
       cursor: url('/assets/Cursor_02-2_select_2.png'), url('/assets/Cursor_02-2_select_2.png'), auto !important;
       opacity: 1;
       transition: all 0.2s ease-in-out;
