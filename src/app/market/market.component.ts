@@ -31,9 +31,10 @@ interface TransactionResponse {
 }
 
 @Component({
-  selector: 'app-market',
-  templateUrl: './market.component.html',
-  styleUrls: ['./market.component.scss']
+    selector: 'app-market',
+    templateUrl: './market.component.html',
+    styleUrls: ['./market.component.scss'],
+    standalone: false
 })
 
 export class MarketComponent implements OnInit {

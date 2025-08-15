@@ -21,9 +21,10 @@ declare global {
 }
 
 @Component({
-  selector: 'app-connector',
-  templateUrl: './connector.component.html',
-  styleUrls: ['./connector.component.scss'],
+    selector: 'app-connector',
+    templateUrl: './connector.component.html',
+    styleUrls: ['./connector.component.scss'],
+    standalone: false
 })
 
 export class ConnectorComponent implements OnInit, OnDestroy {

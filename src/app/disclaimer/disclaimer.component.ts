@@ -2,9 +2,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-disclaimer',
-  templateUrl: './disclaimer.component.html',
-  styleUrls: ['./disclaimer.component.scss']
+    selector: 'app-disclaimer',
+    templateUrl: './disclaimer.component.html',
+    styleUrls: ['./disclaimer.component.scss'],
+    standalone: false
 })
 export class DisclaimerComponent implements OnInit {
 

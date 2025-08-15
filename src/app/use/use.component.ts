@@ -2,9 +2,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-use',
-  templateUrl: './use.component.html',
-  styleUrls: ['./use.component.scss']
+    selector: 'app-use',
+    templateUrl: './use.component.html',
+    styleUrls: ['./use.component.scss'],
+    standalone: false
 })
 export class UseComponent implements OnInit {
 

@@ -30,9 +30,10 @@ interface Token {
 }
 
 @Component({
-  selector: 'app-collectibles',
-  templateUrl: './collectibles.component.html',
-  styleUrls: ['./collectibles.component.scss']
+    selector: 'app-collectibles',
+    templateUrl: './collectibles.component.html',
+    styleUrls: ['./collectibles.component.scss'],
+    standalone: false
 })
 export class CollectiblesComponent implements OnInit, OnDestroy {
   @ViewChild('swiper', { static: false }) swiper?: SwiperComponent;

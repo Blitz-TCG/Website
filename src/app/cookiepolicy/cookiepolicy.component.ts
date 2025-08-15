@@ -2,9 +2,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { Component, ElementRef, HostListener, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-cookiepolicy',
-  templateUrl: './cookiepolicy.component.html',
-  styleUrls: ['./cookiepolicy.component.scss']
+    selector: 'app-cookiepolicy',
+    templateUrl: './cookiepolicy.component.html',
+    styleUrls: ['./cookiepolicy.component.scss'],
+    standalone: false
 })
 export class CookiepolicyComponent implements OnInit {
 
