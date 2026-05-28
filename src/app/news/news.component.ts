@@ -15,7 +15,7 @@ export class NewsComponent implements OnInit {
   // countdown: any;
   // private countdownSubscription!: Subscription;
 
-  private apiSubscription: Subscription;
+  //private apiSubscription: Subscription;
   public totalPacksSold: number = 0;
 
   constructor(
@@ -46,27 +46,27 @@ export class NewsComponent implements OnInit {
         })
       );
 
-      this.fetchPackStats(); // Call to fetch pack stats
-      // Set up an interval to regularly update the stats
-      this.apiSubscription = interval(10000).subscribe(() => {
-        this.fetchPackStats();
-      });
+      // this.fetchPackStats(); // Call to fetch pack stats
+      // // Set up an interval to regularly update the stats
+      // this.apiSubscription = interval(10000).subscribe(() => {
+      //   this.fetchPackStats();
+      // });
   }
 
   ngOnInit(): void {
     // this.setUpCountdown(new Date('2024-04-27T04:00:00Z')); // Replace with your event end date
   }
 
-  private fetchPackStats() {
-    this.http.get<any>('https://api.ergopad.io/pratir/sale/92be4d0d-3e17-4273-9082-5626d3b5c1ea/packsStats')
-      .subscribe(data => {
-        // Make sure to specify the type of the accumulator and the current value
-        this.totalPacksSold = data.tokenStats.reduce((acc: number, tokenStat: { sold: number }) => acc + tokenStat.sold, 0);
-        // Optionally, handle "remaining" as well
-      }, error => {
-        console.error('Error fetching pack stats:', error);
-      });
-  }
+  // private fetchPackStats() {
+  //   this.http.get<any>('https://api.ergopad.io/pratir/sale/92be4d0d-3e17-4273-9082-5626d3b5c1ea/packsStats')
+  //     .subscribe(data => {
+  //       // Make sure to specify the type of the accumulator and the current value
+  //       this.totalPacksSold = data.tokenStats.reduce((acc: number, tokenStat: { sold: number }) => acc + tokenStat.sold, 0);
+  //       // Optionally, handle "remaining" as well
+  //     }, error => {
+  //       console.error('Error fetching pack stats:', error);
+  //     });
+  // }
 
   // private setUpCountdown(endDate: Date) {
   //   this.countdownSubscription = interval(1000).subscribe(() => {
@@ -93,6 +93,6 @@ export class NewsComponent implements OnInit {
 
   ngOnDestroy(): void {
     //this.countdownSubscription?.unsubscribe();
-    this.apiSubscription?.unsubscribe();
+    //this.apiSubscription?.unsubscribe();
   }
 }

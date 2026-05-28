@@ -3,21 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
-import { getAuth } from 'firebase/auth';
 import { child, get, getDatabase, ref } from 'firebase/database';
-import { addDoc, collection, getDocs, getFirestore, query, where, writeBatch } from 'firebase/firestore';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, switchMap, take, tap } from 'rxjs/operators';
+import { collection, getDocs, getFirestore } from 'firebase/firestore';
+import { forkJoin, from, Observable, of, Subscription } from 'rxjs';
+import { catchError, finalize, map, switchMap, take, tap, timeout } from 'rxjs/operators';
 import SwiperCore, { Pagination, SwiperOptions } from 'swiper';
 import { SwiperComponent } from 'swiper/angular';
 import { ModalService } from '../modal/modal.service';
 import { AuthService } from '../shared/services/auth.service';
 import { WalletService } from '../wallet.service';
-import { Subscription } from 'rxjs';
 import { saveAs } from 'file-saver';
 
 SwiperCore.use([Pagination]);
-
 
 interface TokenData {
   tokens: Token[];
@@ -41,9 +38,11 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
   @ViewChild('unownedCardsOnlyCheckbox') unownedCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
   @ViewChild('uniqueCardsOnlyCheckbox') uniqueCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
   @ViewChild('nonUniqueCardsOnlyCheckbox') nonUniqueCardsOnlyCheckbox!: ElementRef<HTMLInputElement>;
+
   sticky: boolean = false;
   isCalculatingCards: boolean = false;
   activeIndex: any;
+
   userCardsDetail = {
     total: 0,
     cardsCollected: 0,
@@ -53,59 +52,59 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
     uncommon: 0,
     rare: 0,
     legendary: 0
-  }
+  };
+
   filter = {
     sort: {
-      name: "Alphabetical: A to Z",
-      value: "1"
+      name: 'Alphabetical: A to Z',
+      value: '1'
     },
     edition: {
-      name: "All",
-      value: "All"
+      name: 'All',
+      value: 'All'
     },
     set: {
-      name: "All",
-      value: "All"
+      name: 'All',
+      value: 'All'
     },
     faction: {
-      name: "All",
-      value: "All"
+      name: 'All',
+      value: 'All'
     },
     rarity: {
-      name: "All",
-      value: "All"
+      name: 'All',
+      value: 'All'
     },
     bracket: {
-      name: "All",
-      value: "All"
+      name: 'All',
+      value: 'All'
     },
     artist: {
-      name: "All",
-      value: "All"
+      name: 'All',
+      value: 'All'
     }
-  }
-  //isOwnedChecked = false;
+  };
+
   isUniqueChecked = false;
   isNonUniqueChecked = false;
   isUnownedChecked = false;
+
   cardsPages = 7;
   perPage = 24;
   currentCardPage = 1;
+
   walletID: string | null = null;
-  tokenIds: any = [];
-  cards: any = [];
-  filteredCards: any = [];
-  showCards: any = [];
+  tokenIds: any[] = [];
+  cards: any[] = [];
+  filteredCards: any[] = [];
+  showCards: any[] = [];
   appliedFilter: boolean = false;
   selectedCard: any = null;
 
-  readonly SUPPLY_ADDRESS = "3n7SxSJCvFGp9xfumeQY8925QQpZifkpwAgnxoF3Hc3NWi9oraoXwNV1xcZpVP8A9LcXLef1krdvjoEKtiEUHDQy6AQ4suJsQyJ8EY2L36hErdvuindtN2dxTU8rLWTwMY18PH6g6XXyvrVQ25w57YSiDR1xF8ZN2sdqgQ9V9";
-  supplyIds: any = [];
+  readonly SUPPLY_ADDRESS = '3n7SxSJCvFGp9xfumeQY8925QQpZifkpwAgnxoF3Hc3NWi9oraoXwNV1xcZpVP8A9LcXLef1krdvjoEKtiEUHDQy6AQ4suJsQyJ8EY2L36hErdvuindtN2dxTU8rLWTwMY18PH6g6XXyvrVQ25w57YSiDR1xF8ZN2sdqgQ9V9';
+  supplyIds: any[] = [];
 
   allowDcLoad = false;
-
-
-  constructor(private walletService: WalletService, private modalService: ModalService, public adb: AngularFireDatabase, private httpClient: HttpClient, public afAuth: AngularFireAuth, public authService: AuthService, @Inject(PLATFORM_ID) private platformId: any) { }
 
   config: SwiperOptions = {
     spaceBetween: 6,
@@ -113,10 +112,10 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
     scrollbar: { draggable: true },
     breakpoints: {
       500: {
-        slidesPerView: 1,
+        slidesPerView: 1
       },
       768: {
-        slidesPerView: 2,
+        slidesPerView: 2
       },
       992: {
         slidesPerView: 3
@@ -131,10 +130,313 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
   };
 
   private subscriptions: Subscription[] = [];
+  private collectionLoadSub?: Subscription;
+  private stakedLoadSub?: Subscription;
+  private initialPageLoadComplete = false;
 
-  resetTokenState() {
-    this.tokenIds = []; // Clear the tokenIds array
-    this.cards = []; // Clear the cards array
+  constructor(
+    private walletService: WalletService,
+    private modalService: ModalService,
+    public adb: AngularFireDatabase,
+    private httpClient: HttpClient,
+    public afAuth: AngularFireAuth,
+    public authService: AuthService,
+    @Inject(PLATFORM_ID) private platformId: any
+  ) {}
+
+  ngOnInit(): void {
+    this.allowDcLoad = false;
+
+    this.loadCollectionForCurrentUser();
+
+    const walletSub = this.walletService.walletUpdated$.subscribe(walletID => {
+      console.log('Wallet service update:', walletID);
+
+      if (!this.initialPageLoadComplete && !walletID) {
+        console.log('Ignoring initial empty wallet update during page-load wallet resolution.');
+        return;
+      }
+
+      this.clearFiltersWallet();
+      this.loadCollectionForCurrentUser(walletID);
+    });
+
+    this.subscriptions.push(walletSub);
+  }
+
+  ngOnDestroy(): void {
+    this.collectionLoadSub?.unsubscribe();
+    this.stakedLoadSub?.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  private loadCollectionForCurrentUser(walletOverride?: string | null): void {
+    this.collectionLoadSub?.unsubscribe();
+    this.stakedLoadSub?.unsubscribe();
+
+    this.resetTokenState();
+
+    const walletLoad$ = walletOverride !== undefined
+      ? this.resolveWalletOverride(walletOverride)
+      : this.resolveWalletForPageLoad();
+
+    this.collectionLoadSub = walletLoad$.pipe(
+      tap(() => console.log('Starting card load for wallet:', this.walletID)),
+
+      switchMap(() => forkJoin([
+        this.loadSupplyTokens(),
+        this.loadErgoTokens()
+      ])),
+
+      tap(() => {
+        console.log('Supply tokens loaded:', this.supplyIds.length);
+        console.log('User token IDs before queryCards:', this.tokenIds);
+      }),
+
+      switchMap(() => this.queryCards()),
+      tap(cards => console.log('After queryCards:', cards.length, 'cards,', this.showCards.length, 'shown')),
+
+      finalize(() => {
+        this.initialPageLoadComplete = true;
+        console.log('Main card load finished or cancelled.');
+      })
+    ).subscribe({
+      next: () => {
+        console.log('Collection loaded successfully.');
+        this.loadStakedTokensInBackground();
+      },
+      error: error => {
+        this.initialPageLoadComplete = true;
+        console.error('Collection load failed:', error);
+      }
+    });
+  }
+
+  private resolveWalletOverride(walletOverride: string | null): Observable<void> {
+    return this.afAuth.authState.pipe(
+      take(1),
+      tap(user => {
+        if (!user) {
+          this.walletID = null;
+          this.clearSavedWalletState();
+
+          console.log('Ignoring wallet override because no user is signed in.');
+          return;
+        }
+
+        if (walletOverride) {
+          this.walletID = walletOverride;
+          this.saveWalletState(walletOverride);
+
+          console.log('Using wallet override:', this.walletID);
+        } else {
+          this.walletID = null;
+          this.clearSavedWalletState();
+
+          console.log('Wallet override was empty. Loading all cards as unowned.');
+        }
+      }),
+      map(() => void 0)
+    );
+  }
+
+  private resolveWalletForPageLoad(): Observable<void> {
+    return this.afAuth.authState.pipe(
+      take(1),
+
+      switchMap(user => {
+        if (!user) {
+          this.walletID = null;
+          this.clearSavedWalletState();
+
+          console.log('No signed-in user on page load. Loading all cards as unowned.');
+
+          return of(void 0);
+        }
+
+        return this.getWalletAddress(user).pipe(
+          switchMap(() => {
+            if (this.walletID) {
+              this.saveWalletState(this.walletID);
+              console.log('Wallet resolved from Firebase:', this.walletID);
+              return of(void 0);
+            }
+
+            return from(this.getWalletFromBrowserOrNautilus()).pipe(
+              tap(walletAddress => {
+                if (walletAddress) {
+                  this.walletID = walletAddress;
+                  this.saveWalletState(walletAddress);
+
+                  console.log('Wallet resolved from browser/Nautilus:', this.walletID);
+                } else {
+                  this.walletID = null;
+                  this.clearSavedWalletState();
+
+                  console.log('No connected wallet found on page load.');
+                }
+              }),
+              map(() => void 0)
+            );
+          })
+        );
+      })
+    );
+  }
+
+  private saveWalletState(walletAddress: string): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    localStorage.setItem('walletAddress', walletAddress);
+    localStorage.setItem('userIsConnected', 'true');
+  }
+
+  private clearSavedWalletState(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    localStorage.removeItem('walletAddress');
+    localStorage.removeItem('walletID');
+    localStorage.removeItem('wallet');
+    localStorage.setItem('userIsConnected', 'false');
+  }
+
+  private async getWalletFromBrowserOrNautilus(): Promise<string | null> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return null;
+    }
+
+    const savedWallet =
+      localStorage.getItem('walletAddress') ||
+      localStorage.getItem('walletID') ||
+      localStorage.getItem('wallet');
+
+    const userIsConnected = localStorage.getItem('userIsConnected');
+
+    if (
+      savedWallet &&
+      savedWallet !== 'none' &&
+      savedWallet !== 'null' &&
+      savedWallet !== 'undefined' &&
+      userIsConnected !== 'false'
+    ) {
+      console.log('Using saved wallet from localStorage:', savedWallet);
+      return savedWallet;
+    }
+
+    return await this.getConnectedNautilusAddress();
+  }
+
+  private async getConnectedNautilusAddress(): Promise<string | null> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return null;
+    }
+
+    const nautilus = await this.waitForNautilus(3000);
+
+    if (!nautilus) {
+      console.log('Nautilus connector not found on page load.');
+      return null;
+    }
+
+    try {
+      const isConnected =
+        typeof nautilus.isConnected === 'function'
+          ? await nautilus.isConnected()
+          : false;
+
+      if (!isConnected) {
+        console.log('Nautilus is installed but not connected.');
+        return null;
+      }
+
+      if (!(window as any).ergo && typeof nautilus.connect === 'function') {
+        await nautilus.connect();
+      }
+
+      const ergo = (window as any).ergo;
+
+      if (ergo?.get_change_address) {
+        return await ergo.get_change_address();
+      }
+
+      if (ergo?.get_unused_addresses) {
+        const addresses = await ergo.get_unused_addresses();
+        return addresses?.[0] || null;
+      }
+
+      console.log('Nautilus is connected, but no address method was available.');
+      return null;
+    } catch (error) {
+      console.warn('Could not read connected Nautilus address:', error);
+      return null;
+    }
+  }
+
+  private waitForNautilus(timeoutMs = 3000): Promise<any | null> {
+    return new Promise(resolve => {
+      const started = Date.now();
+
+      const check = () => {
+        const nautilus = (window as any).ergoConnector?.nautilus;
+
+        if (nautilus) {
+          resolve(nautilus);
+          return;
+        }
+
+        if (Date.now() - started >= timeoutMs) {
+          resolve(null);
+          return;
+        }
+
+        setTimeout(check, 100);
+      };
+
+      check();
+    });
+  }
+
+  private loadStakedTokensInBackground(): void {
+    if (!this.walletID) {
+      console.log('No wallet ID. Skipping background staked token load.');
+      return;
+    }
+
+    const tokenCountBeforeStakedLoad = this.tokenIds.length;
+
+    this.stakedLoadSub = this.loadStakedTokens().subscribe({
+      next: () => {
+        console.log('After background loadStakedTokens:', this.tokenIds);
+
+        if (this.tokenIds.length !== tokenCountBeforeStakedLoad) {
+          console.log('Staked tokens changed ownership list. Refreshing cards.');
+
+          this.queryCards().subscribe({
+            next: cards => console.log('Cards refreshed after staked token load:', cards.length, 'cards,', this.showCards.length, 'shown'),
+            error: error => console.error('Failed to refresh cards after staked token load:', error)
+          });
+        } else {
+          console.log('No staked token changes found. No card refresh needed.');
+        }
+      },
+      error: error => console.error('Background staked token load failed:', error)
+    });
+  }
+
+  resetTokenState(): void {
+    this.tokenIds = [];
+    this.supplyIds = [];
+    this.cards = [];
+    this.filteredCards = [];
+    this.showCards = [];
+    this.appliedFilter = false;
+    this.currentCardPage = 1;
+    this.cardsPages = 1;
+
     this.userCardsDetail = {
       total: 0,
       cardsCollected: 0,
@@ -146,221 +448,188 @@ export class CollectiblesComponent implements OnInit, OnDestroy {
       legendary: 0
     };
   }
-    // Unsubscribe when the component is destroyed
-    ngOnDestroy(): void {
-      this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    }
 
-    ngOnInit(): void {
-
-      this.allowDcLoad = false;
-
-      this.walletService.walletUpdated$.subscribe(walletID => {
-        this.walletID = walletID; // Update local walletID state
-        this.resetTokenState(); // Reset token state
-        this.clearFiltersWallet();
-        if (walletID) {
-          console.log(this.allowDcLoad);
-          this.loadErgoTokens().pipe(
-            switchMap(() => this.loadStakedTokens()),
-            switchMap(() => this.queryCards())
-          ).subscribe(
-            () => console.log('Wallet Service loaded.'),
-            error => console.error('Failed to load tokens and cards:', error)
-          );
-        }
-        else if (this.allowDcLoad == true) {
-          console.log('Walled DC loaded.');
-          console.log(this.allowDcLoad);
-          this.queryCards().subscribe({
-            next: (cards) => {},
-            error: (error) => {},
-            complete: () => {}
-          });
-        }
-    });
-
-this.afAuth.authState.pipe(
-  take(1),
-  switchMap(() => this.getWalletAddress()),
-  switchMap(() => this.loadErgoTokens()),
-  switchMap(() => this.loadStakedTokens()),
-  tap(() => console.log('Auth state loaded')), // Log the loaded Ergo tokens
-  switchMap(() => this.queryCards())
-).subscribe({
-  next: (cards) => {},
-  error: (error) => {}
-});
-
-this.loadSupplyTokens().pipe(
-  switchMap(() => this.querySupplyCards()), // Load supply tokens and then query supply cards
-  catchError(error => {
-    console.error('Failed to load supply tokens:', error);
-    return throwError(() => new Error('Failed to load supply tokens'));
-  })
-).subscribe(
-  () => console.log('Supply tokens loaded successfully.'),
-  error => console.error(error)
-);
-
-  }
-
-  getWalletAddress(): Observable<any> {
-    return new Observable((observer) => {
+  getWalletAddress(user: any): Observable<void> {
+    return new Observable<void>((observer) => {
       try {
-        const auth = getAuth();
-        const user = auth.currentUser;
         const database = getDatabase();
         const dbRef = ref(database);
+
         if (user) {
-          get(child(dbRef, `users/${user?.uid}/wallet`))
-            .then((snapshot) => {
+          get(child(dbRef, `users/${user.uid}/wallet`))
+            .then(snapshot => {
               if (snapshot.exists()) {
                 if (snapshot.val() === 'none') {
-                  if (isPlatformBrowser(this.platformId)) {
-                    localStorage.setItem('userIsConnected', 'false');
-                    this.walletID = null;
-                  }
+                  this.walletID = null;
+                  this.clearSavedWalletState();
                 } else {
-                  this.walletID = snapshot.val();
+                  const walletAddress = snapshot.val();
+
+                  if (walletAddress) {
+                    this.walletID = walletAddress;
+                    this.saveWalletState(walletAddress);
+                  } else {
+                    this.walletID = null;
+                    this.clearSavedWalletState();
+                  }
                 }
+              } else {
+                this.walletID = null;
+                this.clearSavedWalletState();
               }
-              observer.next(); // Emit a value to indicate completion
-              observer.complete(); // Complete the observable
+
+              console.log('Wallet ID:', this.walletID);
+
+              observer.next();
+              observer.complete();
             })
-            .catch((error) => {
-              observer.error(error); // Emit an error if there's an exception
+            .catch(error => {
+              observer.error(error);
             });
         } else {
-          observer.next(); // Emit a value to indicate completion
-          observer.complete(); // Complete the observable
+          this.walletID = null;
+          this.clearSavedWalletState();
+
+          observer.next();
+          observer.complete();
         }
       } catch (error) {
-        observer.error(error); // Emit an error if there's an exception
+        observer.error(error);
       }
     });
   }
 
-
   loadErgoTokens(): Observable<void> {
-    console.log('This walletID:' + this.walletID)
-    if (this.walletID) {
-      return this.httpClient.get('https://api.ergoplatform.com/api/v1/addresses/' + this.walletID + '/balance/confirmed')
-        .pipe(
-          catchError(error => {
-            console.log('Error loading Ergo tokens:', error);
-            return of(); // Return an empty observable
-          }),
-          tap((response: any) => {
-            if (response) {
-              const dataObjects: any = response;
-              console.log("Ergo tokens loaded successfully");
-              for (const token of dataObjects.tokens) {
-                const tokenDecimals = Math.pow(10, token.decimals);
-                  if (token.tokenId === "18c938e1924fc3eadc266e75ec02d81fe73b56e4e9f4e268dffffcb30387c42d") {
-                    continue;} // for Staked Tokens, skip them here
-                  if (token.tokenId === "6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189" && (token.amount / tokenDecimals) > 1) {
-                    this.tokenIds.push({ tokenId: token.tokenId, amount: 1 });
-                    console.log(token.tokenId)
-                    continue;} // only include hosky if amount is greater than 1
-                this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
-              }
-            }
-          })
-        );
-    } else {
-      console.log('No wallet ID');
-      return this.httpClient.get('https://api.ergoplatform.com/api/v1/addresses/' + "9gZzo1X96Nv7ggNkTX5giCXrcQZ6YZwJzGHzfBrzn9Wi5Zz2K5G" + '/balance/confirmed')
-      .pipe(
-        catchError(error => {
-          console.log('Error loading Ergo tokens:', error);
-          return of(); // Return an empty observable
-        }),
-        tap((response: any) => {
-          if (response) {
-            const dataObjects: any = response;
-            for (const token of dataObjects.tokens) {
-              const tokenDecimals = Math.pow(10, token.decimals);
-              this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount / tokenDecimals });
-            }
-          }
-        })
-      );
+    if (!this.walletID) {
+      console.log('No wallet ID. Skipping Ergo token load.');
+      return of(void 0);
     }
-  }
 
+    console.log('Loading Ergo tokens for walletID:', this.walletID);
+
+    return this.httpClient
+      .get(`https://api.ergoplatform.com/api/v1/addresses/${this.walletID}/balance/confirmed`)
+      .pipe(
+        timeout(8000),
+
+        catchError(error => {
+          console.error('Error or timeout loading Ergo tokens:', error);
+          return of(null);
+        }),
+
+        tap((response: any) => {
+          const tokens = Array.isArray(response?.tokens) ? response.tokens : [];
+
+          console.log('Ergo tokens loaded successfully');
+          console.log('Ergo token count:', tokens.length);
+
+          for (const token of tokens) {
+            const tokenDecimals = Math.pow(10, token.decimals || 0);
+            const normalizedAmount = token.amount / tokenDecimals;
+
+            if (token.tokenId === '18c938e1924fc3eadc266e75ec02d81fe73b56e4e9f4e268dffffcb30387c42d') {
+              continue;
+            }
+
+            if (
+              token.tokenId === '6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189' &&
+              normalizedAmount > 1
+            ) {
+              this.tokenIds.push({
+                tokenId: token.tokenId,
+                amount: 1
+              });
+
+              console.log('Added Hosky partner token:', token.tokenId);
+              continue;
+            }
+
+            this.tokenIds.push({
+              tokenId: token.tokenId,
+              amount: normalizedAmount
+            });
+          }
+        }),
+
+        map(() => void 0)
+      );
+  }
 
   loadStakedTokens(): Observable<void> {
-    if (this.walletID) {
-      //for Auction House staked tokens
-      return this.httpClient.get('https://ergoauctions.org/api/stake/stakeByAddress?address=' + this.walletID)
-        .pipe(
-          catchError(error => {
-            console.log('Error loading Staked tokens:', error);
-            return of(); // Return an empty observable
-          }),
-          tap((response: any) => {
-            if (response) {
-              console.log(response);
-              const dataObjects: any = response;
-              for (const token of dataObjects.tokens) {
-                const tokenDecimals = Math.pow(10, token.decimals);
-                if (token.amount / tokenDecimals  >= 15000){
-                  //only include auction house if amount is greater than 15000
-                  this.tokenIds.push({tokenId: token.tokenId, amount: 1});// / tokenDecimals});
-                }
-                console.log (token.tokenId, token.amount / tokenDecimals)
-              }
-            }
-          })
-        );
-    } else {
-      console.log('No wallet ID');
-      return this.httpClient.get('https://api.ergoplatform.com/api/v1/addresses/' + "9gZzo1X96Nv7ggNkTX5giCXrcQZ6YZwJzGHzfBrzn9Wi5Zz2K5G" + '/balance/confirmed')
-      .pipe(
-        catchError(error => {
-          console.log('Error loading Ergo tokens:', error);
-          return of(); // Return an empty observable
-        }),
-        tap((response: any) => {
-          if (response) {
-            const dataObjects: any = response;
-            for (const token of dataObjects.tokens) {
-              //const tokenDecimals = Math.pow(10, token.decimals);
-              this.tokenIds.push({ tokenId: token.tokenId, amount: token.amount});// / tokenDecimals });
-            }
-          }
-        })
-      );
+    if (!this.walletID) {
+      console.log('No wallet ID. Skipping staked token load.');
+      return of(void 0);
     }
-  }
 
+    console.log('Loading staked tokens for walletID:', this.walletID);
+
+    return this.httpClient
+      .get(`https://ergoauctions.org/api/stake/stakeByAddress?address=${this.walletID}`)
+      .pipe(
+        timeout(2000),
+
+        catchError(error => {
+          console.warn('Skipping staked tokens because they were slow or failed:', error);
+          return of(null);
+        }),
+
+        tap((response: any) => {
+          const tokens = Array.isArray(response?.tokens) ? response.tokens : [];
+
+          console.log('Staked token count:', tokens.length);
+
+          for (const token of tokens) {
+            const tokenDecimals = Math.pow(10, token.decimals || 0);
+            const normalizedAmount = token.amount / tokenDecimals;
+
+            if (normalizedAmount >= 15000) {
+              this.tokenIds.push({
+                tokenId: token.tokenId,
+                amount: 1
+              });
+            }
+
+            console.log(token.tokenId, normalizedAmount);
+          }
+        }),
+
+        map(() => void 0)
+      );
+  }
 
   loadSupplyTokens(): Observable<void> {
-    return this.httpClient.get(`https://api.ergoplatform.com/api/v1/addresses/${this.SUPPLY_ADDRESS}/balance/confirmed`)
+    return this.httpClient
+      .get(`https://api.ergoplatform.com/api/v1/addresses/${this.SUPPLY_ADDRESS}/balance/confirmed`)
       .pipe(
+        timeout(8000),
+
         catchError(error => {
-          console.error('Error loading supply tokens:', error);
-          return of(); // Return an empty observable in case of error
+          console.error('Error or timeout loading supply tokens:', error);
+          return of(null);
         }),
+
         tap((response: any) => {
-          if (response) {
-            const dataObjects: any = response;
-            for (const token of dataObjects.tokens) {
-              const tokenDecimals = Math.pow(10, token.decimals);
-              const normalizedAmount = token.amount / tokenDecimals;
-              const remainingSupply = 100000 - normalizedAmount;
-              this.supplyIds.push({ tokenId: token.tokenId, amount:  remainingSupply});
-            }
+          const tokens = Array.isArray(response?.tokens) ? response.tokens : [];
+
+          if (!tokens.length) {
+            console.log('No supply token data returned. Check the API or supply address.');
           }
-          else {
-            // Log to console if the response is invalid or empty
-            console.log('No data returned for supply tokens. Check the API or the address.');
+
+          for (const token of tokens) {
+            const tokenDecimals = Math.pow(10, token.decimals || 0);
+            const normalizedAmount = token.amount / tokenDecimals;
+            const remainingSupply = 100000 - normalizedAmount;
+
+            this.supplyIds.push({
+              tokenId: token.tokenId,
+              amount: remainingSupply
+            });
           }
-        })
+        }),
+
+        map(() => void 0)
       );
   }
-
 
   queryCards(): Observable<any[]> {
     const db = getFirestore();
@@ -368,54 +637,76 @@ this.loadSupplyTokens().pipe(
 
     return new Observable<any[]>((observer) => {
       getDocs(cardsCollection)
-        .then((querySnapshot) => {
-            const allCards = querySnapshot.docs.map((doc) => {
+        .then(querySnapshot => {
+          const allCards = querySnapshot.docs.map(doc => {
             const card: any = doc.data();
             const getAmount = this.tokenIds.find((token: any) => token.tokenId === card.tokenId);
             const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
 
             if (getAmount) {
-                 //hosky and auction house - amounts will be = 1 if they passed their amount checks previously
-                  if ((getAmount.tokenId === "6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189" && getAmount.amount == 1) ||
-                  (getAmount.tokenId === "18c938e1924fc3eadc266e75ec02d81fe73b56e4e9f4e268dffffcb30387c42d" && getAmount.amount == 1)){
-                  console.log(getAmount.tokenId, getAmount.amount);
-                  return { ...card, amount: 1, totalSupply: supplyToken ? supplyToken.amount : 'N/A' };
-                }
-                //for regular cards that a user owns that are not partner cards
-                else {
-                  return { ...card, amount: getAmount.amount, totalSupply: supplyToken ? supplyToken.amount : 'N/A' };
-                }
-              //for anything where we don't have an amount
-            } else {
-              return { ...card, amount: 0, totalSupply: supplyToken ? supplyToken.amount : 'N/A' };
-            }
-          });
-          const sortedCards = allCards.sort((a: any, b: any) => a.name.localeCompare(b.name))
-            .sort((a: any, b: any) => {
-              const aHasTokenId = this.tokenIds.map((token: any) => token.tokenId).includes(a.tokenId);
-              const bHasTokenId = this.tokenIds.map((token: any) => token.tokenId).includes(b.tokenId);
+              if (
+                (
+                  getAmount.tokenId === '6ad70cdbf928a2bdd397041a36a5c2490a35beb4d20eabb5666f004b103c7189' &&
+                  getAmount.amount === 1
+                ) ||
+                (
+                  getAmount.tokenId === '18c938e1924fc3eadc266e75ec02d81fe73b56e4e9f4e268dffffcb30387c42d' &&
+                  getAmount.amount === 1
+                )
+              ) {
+                console.log(getAmount.tokenId, getAmount.amount);
 
-              if (aHasTokenId && !bHasTokenId) {
-                return -1;
+                return {
+                  ...card,
+                  amount: 1,
+                  totalSupply: supplyToken ? supplyToken.amount : 'N/A'
+                };
               }
-              return 1;
-            });
+
+              return {
+                ...card,
+                amount: getAmount.amount,
+                totalSupply: supplyToken ? supplyToken.amount : 'N/A'
+              };
+            }
+
+            return {
+              ...card,
+              amount: 0,
+              totalSupply: supplyToken ? supplyToken.amount : 'N/A'
+            };
+          });
+
+          const sortedCards = allCards.sort((a: any, b: any) => {
+            const aOwned = this.tokenIds.some((token: any) => token.tokenId === a.tokenId);
+            const bOwned = this.tokenIds.some((token: any) => token.tokenId === b.tokenId);
+
+            if (aOwned && !bOwned) return -1;
+            if (!aOwned && bOwned) return 1;
+
+            return a.name.localeCompare(b.name);
+          });
 
           this.cards = sortedCards;
+          this.filteredCards = sortedCards;
           this.showCards = sortedCards.slice(0, this.perPage);
           this.cardsPages = Math.ceil(sortedCards.length / this.perPage) || 1;
+          this.appliedFilter = false;
+
           if (!this.isCalculatingCards) {
             this.isCalculatingCards = true;
             this.calcUserCards(allCards.filter((c: any) => c.amount));
             this.isCalculatingCards = false;
           }
+
+          this.allowDcLoad = true;
+
           observer.next(sortedCards);
           observer.complete();
-          this.allowDcLoad = true;
         })
-        .catch((error) => {
-          observer.error(error);
+        .catch(error => {
           this.allowDcLoad = true;
+          observer.error(error);
         });
     });
   }
@@ -425,32 +716,35 @@ this.loadSupplyTokens().pipe(
     const cardsCollection = collection(db, 'cards');
 
     return new Observable<any[]>((observer) => {
-      getDocs(cardsCollection).then((querySnapshot) => {
-        const supplyCards = querySnapshot.docs.map((doc) => {
-          const card: any = doc.data();
-          const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
-          const cardDetail = {
-            ...card,
-            totalSupply: supplyToken ? supplyToken.amount : 'Not available' // Total supply from the supply address
-          };
+      getDocs(cardsCollection)
+        .then(querySnapshot => {
+          const supplyCards = querySnapshot.docs.map(doc => {
+            const card: any = doc.data();
+            const supplyToken = this.supplyIds.find((token: any) => token.tokenId === card.tokenId);
 
-          // Debug log for each card
-       // console.log(`Card Name: ${card.name}, Total Supply: ${cardDetail.totalSupply}, Rarity: ${cardDetail.rarity}, Bracket: ${cardDetail.bracket}`);
+            return {
+              ...card,
+              amount: 0,
+              totalSupply: supplyToken ? supplyToken.amount : 'Not available'
+            };
+          });
 
-          return cardDetail;
+          this.cards = supplyCards;
+          this.filteredCards = supplyCards;
+          this.showCards = supplyCards.slice(0, this.perPage);
+          this.cardsPages = Math.ceil(supplyCards.length / this.perPage) || 1;
+          this.appliedFilter = false;
+
+          observer.next(supplyCards);
+          observer.complete();
+        })
+        .catch(error => {
+          observer.error(error);
         });
-
-        this.cards = supplyCards; // You might want to handle this differently if this.cards should not be overwritten
-        observer.next(supplyCards);
-        observer.complete();
-      }).catch((error) => {
-        observer.error(error);
-      });
     });
   }
 
-
-  calcUserCards(cards: any) {
+  calcUserCards(cards: any): void {
     this.userCardsDetail.cardsCollected = 0;
     this.userCardsDetail.total = 0;
     this.userCardsDetail.firstEdition = 0;
@@ -462,50 +756,51 @@ this.loadSupplyTokens().pipe(
 
     for (let index = 0; index < cards.length; index++) {
       this.userCardsDetail.cardsCollected = cards.length;
+
       const c = cards[index];
+
       this.userCardsDetail.total += c.amount;
+
       if (c.edition == 1) {
         this.userCardsDetail.firstEdition += c.amount;
       } else {
         this.userCardsDetail.unlEdition += c.amount;
       }
 
-      if (c.rarity === 'Common') this.userCardsDetail.common += (c.amount);
-      if (c.rarity === 'Uncommon') this.userCardsDetail.uncommon += (c.amount);
-      if (c.rarity === 'Rare') this.userCardsDetail.rare += (c.amount);
-      if (c.rarity === 'Legendary') this.userCardsDetail.legendary += (c.amount);
+      if (c.rarity === 'Common') this.userCardsDetail.common += c.amount;
+      if (c.rarity === 'Uncommon') this.userCardsDetail.uncommon += c.amount;
+      if (c.rarity === 'Rare') this.userCardsDetail.rare += c.amount;
+      if (c.rarity === 'Legendary') this.userCardsDetail.legendary += c.amount;
     }
-    console.log("Calculating Total Cards Triggered");
+
+    console.log('Calculating Total Cards Triggered');
   }
 
-  applyFilter(event: any = null) {
+  applyFilter(event: any = null): void {
     this.appliedFilter = true;
+
     const searchText = event ? event.target.value : null;
     this.currentCardPage = 1;
 
-    // When neither is checked, we want to show all cards.
-    const showAll = !this.isUniqueChecked && !this.isNonUniqueChecked && !this.isUnownedChecked;// && !this.isOwnedChecked;
+    const showAll = !this.isUniqueChecked && !this.isNonUniqueChecked && !this.isUnownedChecked;
 
     this.filteredCards = this.cards.filter((card: any) => {
-      // If showing all, skip checking isUnique, isNonUnique, and isUnknown conditions.
       if (showAll) {
         return this.filterCard(card, searchText);
       }
 
-      // Check the unique, non-unique, and unknown conditions only if showAll is false.
       const isUnique = this.isUniqueChecked && card.amount === 1;
       const isNonUnique = this.isNonUniqueChecked && card.amount > 1;
       const isUnowned = this.isUnownedChecked && card.amount === 0;
 
-      return this.filterCard(card, searchText) && (isUnique || isNonUnique || isUnowned)// || isOwned);
+      return this.filterCard(card, searchText) && (isUnique || isNonUnique || isUnowned);
     });
 
     this.showCards = this.filteredCards.slice(0, this.perPage);
     this.cardsPages = Math.ceil(this.filteredCards.length / this.perPage) || 1;
   }
 
-
-  filterCard(card: any, searchText: string) {
+  filterCard(card: any, searchText: string): boolean {
     return (
       (this.filter.edition.value === 'All' || card.edition == this.filter.edition.value) &&
       (this.filter.set.value === 'All' || card.set === this.filter.set.value) &&
@@ -527,56 +822,52 @@ this.loadSupplyTokens().pipe(
 
   sortCardsByTab(): void {
     this.cards.sort((a: any, b: any) => {
-      // First sort by ownership (assuming owned cards have amount > 0)
       if ((a.amount > 0 && b.amount === 0) || (a.amount === 0 && b.amount > 0)) {
-          return b.amount - a.amount; // Owned cards come before unowned
+        return b.amount - a.amount;
       }
 
-      // Proceed with other sorting conditions based on the updated options
       const nameA = a.name.toLowerCase();
       const nameB = b.name.toLowerCase();
 
       switch (this.filter.sort.value) {
-          case '1':
-              return nameA.localeCompare(nameB); // Alphabetical A to Z
-          case '2':
-              return nameB.localeCompare(nameA); // Alphabetical Z to A
-          case '3':
-              return b.amount - a.amount; // Count: Most to Least
-          case '4':
-              return a.amount - b.amount; // Count: Least to Most
-          default:
-              return 0;
+        case '1':
+          return nameA.localeCompare(nameB);
+        case '2':
+          return nameB.localeCompare(nameA);
+        case '3':
+          return b.amount - a.amount;
+        case '4':
+          return a.amount - b.amount;
+        default:
+          return 0;
       }
     });
   }
 
-
-
   exportCurrentView(): void {
-    let dataToExport = [];
+    let dataToExport: any[] = [];
 
     const rarityOrder: { [key: string]: number } = {
-      'Common': 1,
-      'Uncommon': 2,
-      'Rare': 3,
-      'Legendary': 4
+      Common: 1,
+      Uncommon: 2,
+      Rare: 3,
+      Legendary: 4
     };
 
     const bracketToLetter = (bracket: number): string => {
       switch (bracket) {
-          case 1:
-              return "S";
-          case 3:
-              return "L";
-          case 6:
-              return "M";
-          case 10:
-              return "U";
-          default:
-              return "";
+        case 1:
+          return 'S';
+        case 3:
+          return 'L';
+        case 6:
+          return 'M';
+        case 10:
+          return 'U';
+        default:
+          return '';
       }
-  };
+    };
 
     if (this.appliedFilter && this.filteredCards.length) {
       dataToExport = this.filteredCards;
@@ -584,106 +875,119 @@ this.loadSupplyTokens().pipe(
       dataToExport = this.cards;
     }
 
-    // Function to format cards into a string
     const formatCards = (cards: any[]) =>
       cards.map(card => `:${card.rarity}:(${bracketToLetter(card.bracket)}): ${card.name} - ${card.amount}`).join('\n');
-    // Split the cards into owned and unowned arrays
-    const ownedCards = dataToExport.filter((card: { amount: number; }) => card.amount > 0);
-    const unownedCards = dataToExport.filter((card: { amount: number; }) => card.amount === 0);
 
-    // Sort each array by rarity order
-    ownedCards.sort((a: { rarity: string | number; }, b: { rarity: string | number; }) => rarityOrder[a.rarity] - rarityOrder[b.rarity]);
-    unownedCards.sort((a: { rarity: string | number; }, b: { rarity: string | number; }) => rarityOrder[a.rarity] - rarityOrder[b.rarity]);
+    const ownedCards = dataToExport.filter((card: { amount: number }) => card.amount > 0);
+    const unownedCards = dataToExport.filter((card: { amount: number }) => card.amount === 0);
 
-    // Sections with headers
+    ownedCards.sort((a: any, b: any) => rarityOrder[a.rarity] - rarityOrder[b.rarity]);
+    unownedCards.sort((a: any, b: any) => rarityOrder[a.rarity] - rarityOrder[b.rarity]);
+
     const ownedSection = ownedCards.length > 0 ? `Have these:\n${formatCards(ownedCards)}\n` : '';
     const unownedSection = unownedCards.length > 0 ? `\nMissing these:\n${formatCards(unownedCards)}` : '';
 
-    // Rarity summary from userCardsDetail
     const raritySummary = `Total Cards: ${this.userCardsDetail.total}
     :Common: Total ${this.userCardsDetail.common}
     :Uncommon: Total ${this.userCardsDetail.uncommon}
     :Rare: Total ${this.userCardsDetail.rare}
     :Legendary: Total ${this.userCardsDetail.legendary}\n`;
 
-
-    // Combine the sections
     const data = `${raritySummary}\n${ownedSection}${unownedSection}`;
 
-    const blob = new Blob([data.trim()], { type: 'text/plain;charset=utf-8' }); // Trim to remove any leading/trailing newlines
+    const blob = new Blob([data.trim()], { type: 'text/plain;charset=utf-8' });
     saveAs(blob, 'exported-cards-view.txt');
   }
 
-  filterBracket(value: number, bracketName: string) {
+  filterBracket(value: number, bracketName: string): boolean {
     switch (bracketName) {
-      case "Lower":
+      case 'Lower':
         return value >= 2 && value <= 4;
-      case "Middle":
+      case 'Middle':
         return value >= 5 && value <= 8;
-      case "Upper":
+      case 'Upper':
         return value >= 9 && value <= 10;
       default:
         return value === 1;
     }
   }
-  clickOnMenu(
-    itemIndex: number,
-  ) {
-    if (this.activeIndex === itemIndex) this.activeIndex = null;
-    else this.activeIndex = itemIndex;
+
+  clickOnMenu(itemIndex: number): void {
+    if (this.activeIndex === itemIndex) {
+      this.activeIndex = null;
+    } else {
+      this.activeIndex = itemIndex;
+    }
   }
 
-  openPopup(card: any) {
+  openPopup(card: any): void {
     const cardsToSend = this.showCards.length > 0 ? this.showCards : this.cards;
 
     this.modalService.openModal({
       card: card,
       cards: cardsToSend,
-      modalType: "Collectibles",
+      modalType: 'Collectibles',
       showDetails: true
     });
-}
+  }
 
-
-  closeModal() {
+  closeModal(): void {
     this.modalService.close();
   }
 
-  slideNext() {
+  slideNext(): void {
     this.swiper?.swiperRef.slideNext(1000);
   }
 
-  slidePrev() {
+  slidePrev(): void {
     this.swiper?.swiperRef.slidePrev(1000);
   }
 
-  nextPage() {
+  nextPage(): void {
     if (this.currentCardPage < this.cardsPages) {
       this.currentCardPage++;
-      this.showCards = (this.appliedFilter ? this.filteredCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
+      this.showCards = (this.appliedFilter ? this.filteredCards : this.cards).slice(
+        this.perPage * (this.currentCardPage - 1),
+        this.perPage * this.currentCardPage
+      );
     }
   }
 
-  prevPage() {
-    if (this.currentCardPage > 1)
+  prevPage(): void {
+    if (this.currentCardPage > 1) {
       this.currentCardPage--;
-    this.showCards = (this.appliedFilter ? this.filteredCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
+    }
 
+    this.showCards = (this.appliedFilter ? this.filteredCards : this.cards).slice(
+      this.perPage * (this.currentCardPage - 1),
+      this.perPage * this.currentCardPage
+    );
   }
-  firstPage() {
+
+  firstPage(): void {
     this.currentCardPage = 1;
-    this.showCards = (this.appliedFilter ? this.filteredCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
+
+    this.showCards = (this.appliedFilter ? this.filteredCards : this.cards).slice(
+      this.perPage * (this.currentCardPage - 1),
+      this.perPage * this.currentCardPage
+    );
   }
 
-  lastPage() {
+  lastPage(): void {
     this.currentCardPage = this.cardsPages;
-    this.showCards = (this.appliedFilter ? this.filteredCards : this.cards).slice(this.perPage * (this.currentCardPage - 1), this.perPage * this.currentCardPage);
+
+    this.showCards = (this.appliedFilter ? this.filteredCards : this.cards).slice(
+      this.perPage * (this.currentCardPage - 1),
+      this.perPage * this.currentCardPage
+    );
   }
 
   walletConnected(): any {
     if (isPlatformBrowser(this.platformId)) {
       return localStorage.getItem('userIsConnected') != 'false';
     }
+
+    return false;
   }
 
   toggleMenu(index: number): void {
@@ -697,21 +1001,24 @@ this.loadSupplyTokens().pipe(
     this.toggleMenu(0);
   }
 
-  unownedCardsOnly(event: any) {
+  unownedCardsOnly(event: any): void {
     const target = event.target as HTMLInputElement;
     this.isUnownedChecked = target.checked;
     this.applyFilter();
   }
-  uniqueCardsOnly(event: any) {
+
+  uniqueCardsOnly(event: any): void {
     const target = event.target as HTMLInputElement;
     this.isUniqueChecked = target.checked;
     this.applyFilter();
   }
-  nonUniqueCardsOnly(event: any) {
+
+  nonUniqueCardsOnly(event: any): void {
     const target = event.target as HTMLInputElement;
     this.isNonUniqueChecked = target.checked;
     this.applyFilter();
   }
+
   selectSet(value: string, name: string): void {
     this.filter.set.value = value;
     this.filter.set.name = name;
@@ -747,38 +1054,37 @@ this.loadSupplyTokens().pipe(
     this.toggleMenu(5);
   }
 
-  clearFilters() {
-  // Reset all filter object values to their defaults
-  this.filter = {
-    sort: {
-      name: "Alphabetical: A to Z",
-      value: "1"
-    },
-    edition: {
-      name: "All",
-      value: "All"
-    },
-    set: {
-      name: "All",
-      value: "All"
-    },
-    faction: {
-      name: "All",
-      value: "All"
-    },
-    rarity: {
-      name: "All",
-      value: "All"
-    },
-    bracket: {
-      name: "All",
-      value: "All"
-    },
-    artist: {
-      name: "All",
-      value: "All"
-    }
-  };
+  clearFilters(): void {
+    this.filter = {
+      sort: {
+        name: 'Alphabetical: A to Z',
+        value: '1'
+      },
+      edition: {
+        name: 'All',
+        value: 'All'
+      },
+      set: {
+        name: 'All',
+        value: 'All'
+      },
+      faction: {
+        name: 'All',
+        value: 'All'
+      },
+      rarity: {
+        name: 'All',
+        value: 'All'
+      },
+      bracket: {
+        name: 'All',
+        value: 'All'
+      },
+      artist: {
+        name: 'All',
+        value: 'All'
+      }
+    };
 
     this.isUnownedChecked = false;
     this.isUniqueChecked = false;
@@ -786,90 +1092,82 @@ this.loadSupplyTokens().pipe(
 
     if (this.unownedCardsOnlyCheckbox) {
       this.unownedCardsOnlyCheckbox.nativeElement.checked = false;
-  }
+    }
+
     if (this.uniqueCardsOnlyCheckbox) {
-        this.uniqueCardsOnlyCheckbox.nativeElement.checked = false;
+      this.uniqueCardsOnlyCheckbox.nativeElement.checked = false;
     }
+
     if (this.nonUniqueCardsOnlyCheckbox) {
-        this.nonUniqueCardsOnlyCheckbox.nativeElement.checked = false;
+      this.nonUniqueCardsOnlyCheckbox.nativeElement.checked = false;
     }
 
-    // Clear search input
     if (this.cardNameInput) {
-        this.cardNameInput.nativeElement.value = '';
+      this.cardNameInput.nativeElement.value = '';
     }
 
-    // Reapply filters to update the display
     this.sortCardsByTab();
     this.applyFilter();
-}
+  }
 
-clearFiltersWallet(){
-    // Reset all filter object values to their defaults
+  clearFiltersWallet(): void {
     this.filter = {
       sort: {
-        name: "Alphabetical: A to Z",
-        value: "1"
+        name: 'Alphabetical: A to Z',
+        value: '1'
       },
       edition: {
-        name: "All",
-        value: "All"
+        name: 'All',
+        value: 'All'
       },
       set: {
-        name: "All",
-        value: "All"
+        name: 'All',
+        value: 'All'
       },
       faction: {
-        name: "All",
-        value: "All"
+        name: 'All',
+        value: 'All'
       },
       rarity: {
-        name: "All",
-        value: "All"
+        name: 'All',
+        value: 'All'
       },
       bracket: {
-        name: "All",
-        value: "All"
+        name: 'All',
+        value: 'All'
       },
       artist: {
-        name: "All",
-        value: "All"
+        name: 'All',
+        value: 'All'
       }
     };
 
-      this.isUnownedChecked = false;
-      this.isUniqueChecked = false;
-      this.isNonUniqueChecked = false;
+    this.isUnownedChecked = false;
+    this.isUniqueChecked = false;
+    this.isNonUniqueChecked = false;
 
-      if (this.unownedCardsOnlyCheckbox) {
-        this.unownedCardsOnlyCheckbox.nativeElement.checked = false;
+    if (this.unownedCardsOnlyCheckbox) {
+      this.unownedCardsOnlyCheckbox.nativeElement.checked = false;
     }
-      if (this.uniqueCardsOnlyCheckbox) {
-          this.uniqueCardsOnlyCheckbox.nativeElement.checked = false;
-      }
-      if (this.nonUniqueCardsOnlyCheckbox) {
-          this.nonUniqueCardsOnlyCheckbox.nativeElement.checked = false;
-      }
 
-      // Clear search input
-      if (this.cardNameInput) {
-          this.cardNameInput.nativeElement.value = '';
-      }
+    if (this.uniqueCardsOnlyCheckbox) {
+      this.uniqueCardsOnlyCheckbox.nativeElement.checked = false;
+    }
 
-}
+    if (this.nonUniqueCardsOnlyCheckbox) {
+      this.nonUniqueCardsOnlyCheckbox.nativeElement.checked = false;
+    }
 
-
-
-  @HostListener('window:scroll', ['$event'])
-  handleScroll() {
-    if (isPlatformBrowser(this.platformId)) {
-      const windowScroll = window.pageYOffset;
-      if (windowScroll > 0) {
-        this.sticky = true;
-      } else {
-        this.sticky = false;
-      }
+    if (this.cardNameInput) {
+      this.cardNameInput.nativeElement.value = '';
     }
   }
 
+  @HostListener('window:scroll')
+  handleScroll(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const windowScroll = window.pageYOffset;
+      this.sticky = windowScroll > 0;
+    }
+  }
 }
