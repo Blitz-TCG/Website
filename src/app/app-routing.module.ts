@@ -58,8 +58,8 @@ const routes: Routes = [
   { path: 'use', component: UseComponent },
   { path: 'whitepaper', component: WhitepaperComponent },
   { path: 'collectibles', component: CollectiblesComponent },
-  { path: 'buy-packs', component: BuyPacksComponent },
-  { path: 'open-packs', component: OpenPacksComponent },
+ // { path: 'buy-packs', component: BuyPacksComponent },
+  //{ path: 'open-packs', component: OpenPacksComponent },
   { path: 'market', component: MarketComponent },
   { path: '404', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent }

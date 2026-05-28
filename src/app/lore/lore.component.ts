@@ -20,6 +20,7 @@ export class LoreComponent implements OnInit {
     selectedCover: number | null = null;
     selectedPages: any = null;
     showMobileBook: boolean = false;
+    isOpeningBook: boolean = false;
     mobilePages: any = [];
     selectedMobilePage: number = 0;
     @ViewChild('swiper', { static: false }) swiper?: SwiperComponent;
@@ -66,18 +67,14 @@ export class LoreComponent implements OnInit {
         this.showMobileBook = false;
     }
 
-    selectStory(book: any) {
-        if (!book.show) return;
-        if (isPlatformBrowser(this.platformId)) {
-            const coverOpen = document.querySelector<HTMLElement>('.book-opening');
-            if (coverOpen) {
-                this.renderer.setStyle(coverOpen, 'animation', 'none');
-            }
-        }
-        this.selectedPages = null;
-        this.selectedCoverContainer = null;
-        this.selectedCover = book.position;
-    }
+  selectStory(book: any) {
+    if (!book.show) return;
+
+    this.isOpeningBook = false;
+    this.selectedPages = null;
+    this.selectedCoverContainer = null;
+    this.selectedCover = book.position;
+}
 
     selectMobileStory(book: any) {
         if (!book.show) return;
@@ -91,22 +88,34 @@ export class LoreComponent implements OnInit {
         }
     }
 
-    openCover(item: number) {
-        if (isPlatformBrowser(this.platformId)) {
-            const coverOpen = document.querySelector<HTMLElement>('.book-opening');
-            const closeSound = document.getElementById('close-sound') as HTMLAudioElement;
-            if (coverOpen && closeSound) {
-                closeSound.currentTime = 0;
-                closeSound.play();
-                this.selectedCover = null;
-                this.selectedCoverContainer = item;
-                this.renderer.setStyle(coverOpen, 'animation', 'flip-next-gif steps(40) 1s both');
-                setTimeout(() => {
-                    this.selectedPages = 0;
-                }, 1000);
-            }
-        }
+openCover(item: number) {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const closeSound = document.getElementById('close-sound') as HTMLAudioElement;
+
+    if (closeSound) {
+        closeSound.currentTime = 0;
+        closeSound.play().catch(error => {
+            console.warn('Book opening sound could not play:', error);
+        });
     }
+
+    this.selectedCover = null;
+    this.selectedCoverContainer = item;
+    this.selectedPages = null;
+
+    // Reset the animation class so it can replay every time.
+    this.isOpeningBook = false;
+
+    setTimeout(() => {
+        this.isOpeningBook = true;
+    }, 0);
+
+    setTimeout(() => {
+        this.isOpeningBook = false;
+        this.selectedPages = 0;
+    }, 1000);
+}
 
     flipNext() {
         if (isPlatformBrowser(this.platformId)) {

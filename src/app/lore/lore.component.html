@@ -50,7 +50,7 @@
           *ngIf="selectedCover == book?.position">
         </div>
       </div>
-      <div id="book-opening" class="book-bg book-opening"></div>
+      <div id="book-opening" class="book-bg book-opening" [class.opening-active]="isOpeningBook"></div>
       <div id="flip" class="book-bg flip" *ngIf="selectedPages != null"></div>
     </div>
     <div *ngIf="selectedCoverContainer !== null && (booksData$ | async)?.[selectedCoverContainer - 1]?.pages?.length > 0">

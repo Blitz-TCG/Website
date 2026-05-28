@@ -15,37 +15,43 @@
       </button>
       <div class="collapse navbar-collapse" [ngClass]="{'show': navbarCollapsed}" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item" *ngFor="let item of items$ | async; let i = index"
-            [ngClass]="{
-              'show-sub-items': activeIndex === i,
-              'active': activeIndex === i,
-              'disabled': item.disabled
-            }">
-            <span class="tooltip-message" *ngIf="item['disabled']">Coming soon!</span>
-            <a class="nav-link" *ngIf="item.url && item.url!== '#'" [href]="item.url"
-              [attr.target]="item.name === 'Market' ? '_blank' : null">
-              <span class="nav-link-text">
-                <span class="nav-link-name">{{ item.name }}</span>
-              </span>
-            </a>
-            <a class="nav-link" *ngIf="!item.url || item.url === '#'"
-              (click)="clickOnMenu(i,item.disabled, item['sub-menu']?.length )">
-              <span class="nav-link-text">
-                <span class="nav-link-name">{{item.name}}</span>
-                <span *ngIf="item['sub-menu']?.length > 0" [class]="'nav-icon-arrow nav-icon-down-arrow'"></span>
-              </span>
-            </a>
-            <ul class="nav-sub-items" *ngIf="item['sub-menu']?.length > 0">
-              <li class="nav-sub-item" *ngFor="let subItem of item['sub-menu']"
-                [ngClass]="{'disabled': subItem.disabled}">
-                <span class="tooltip-message">Coming soon!</span>
-                <a *ngIf="subItem.external" target="_blank" [href]="subItem.url"
-                  (click)="clickOnMenu(i,subItem.disabled)">{{subItem.name}}</a>
-                <a *ngIf="!subItem.external" [routerLink]="subItem.url"
-                  (click)="clickOnMenu(i,subItem.disabled)">{{subItem.name}}</a>
-              </li>
-            </ul>
-          </li>
+          <ng-container *ngFor="let item of items$ | async; let i = index">
+            <li class="nav-item"
+              *ngIf="item.name !== 'Buy Packs' && item.name !== 'Open Packs' && item.url !== '/buy-packs' && item.url !== '/open-packs'"
+              [ngClass]="{
+                'show-sub-items': activeIndex === i,
+                'active': activeIndex === i,
+                'disabled': item.disabled
+              }">
+              <span class="tooltip-message" *ngIf="item['disabled']">Coming soon!</span>
+              <a class="nav-link" *ngIf="item.url && item.url!== '#'" [href]="item.url"
+                [attr.target]="item.name === 'Market' ? '_blank' : null">
+                <span class="nav-link-text">
+                  <span class="nav-link-name">{{ item.name }}</span>
+                </span>
+              </a>
+              <a class="nav-link" *ngIf="!item.url || item.url === '#'"
+                (click)="clickOnMenu(i,item.disabled, item['sub-menu']?.length )">
+                <span class="nav-link-text">
+                  <span class="nav-link-name">{{item.name}}</span>
+                  <span *ngIf="item['sub-menu']?.length > 0" [class]="'nav-icon-arrow nav-icon-down-arrow'"></span>
+                </span>
+              </a>
+              <ul class="nav-sub-items" *ngIf="item['sub-menu']?.length > 0">
+                <ng-container *ngFor="let subItem of item['sub-menu']">
+                  <li class="nav-sub-item"
+                    *ngIf="subItem.name !== 'Buy Packs' && subItem.name !== 'Open Packs' && subItem.url !== '/buy-packs' && subItem.url !== '/open-packs'"
+                    [ngClass]="{'disabled': subItem.disabled}">
+                    <span class="tooltip-message">Coming soon!</span>
+                    <a *ngIf="subItem.external" target="_blank" [href]="subItem.url"
+                      (click)="clickOnMenu(i,subItem.disabled)">{{subItem.name}}</a>
+                    <a *ngIf="!subItem.external" [routerLink]="subItem.url"
+                      (click)="clickOnMenu(i,subItem.disabled)">{{subItem.name}}</a>
+                  </li>
+                </ng-container>
+              </ul>
+            </li>
+          </ng-container>
         </ul>
         <ul class="navbar-nav profile-info ms-auto">
           <li [ngStyle]="{'padding':authService.userData ? '0px 12px': '0px'}" class="connect-link nav-item">
